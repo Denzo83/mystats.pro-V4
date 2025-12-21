@@ -6,7 +6,8 @@
     "number": "37",
     "position": "G/F",
     "teams": [
-      "pretty-good"
+      "pretty-good",
+      "Pretty good"
     ],
     "images": {
       "portrait": "assets/players/kyle-denzin.png"
@@ -19,7 +20,8 @@
     "number": "43",
     "position": "G",
     "teams": [
-      "pretty-good"
+      "pretty-good",
+      "Pretty good"
     ],
     "images": {
       "portrait": "assets/players/levi-denzin.png"
@@ -33,7 +35,8 @@
     "position": "F",
     "teams": [
       "pretty-good",
-      "chuckers-chuckers"
+      "chuckers-chuckers",
+      "Pretty good"
     ],
     "images": {
       "portrait": "assets/players/findlay-wendtman.png"
@@ -86,7 +89,8 @@
     "number": "11",
     "position": "C",
     "teams": [
-      "pretty-good"
+      "pretty-good",
+      "Pretty good"
     ],
     "images": {
       "portrait": "assets/players/placeholder6.png"
@@ -99,7 +103,8 @@
     "number": "5",
     "position": "G",
     "teams": [
-      "pretty-good"
+      "pretty-good",
+      "Pretty good"
     ],
     "images": {
       "portrait": "assets/players/placeholder5.png"
@@ -116,6 +121,58 @@
     ],
     "images": {
       "portrait": "assets/players/placeholder4.png"
+    }
+  },
+  "1": {
+    "id": "r-ogle",
+    "display_name": "R. Ogle",
+    "name": "R. Ogle",
+    "number": "1",
+    "position": "",
+    "teams": [
+      "Pretty good"
+    ],
+    "images": {
+      "portrait": "assets/players/r-ogle.png"
+    }
+  },
+  "2": {
+    "id": "c-beamish",
+    "display_name": "C. Beamish",
+    "name": "C. Beamish",
+    "number": "2",
+    "position": "",
+    "teams": [
+      "Pretty good"
+    ],
+    "images": {
+      "portrait": "assets/players/c-beamish.png"
+    }
+  },
+  "10": {
+    "id": "j-neaves",
+    "display_name": "J. Neaves",
+    "name": "J. Neaves",
+    "number": "10",
+    "position": "",
+    "teams": [
+      "Pretty good"
+    ],
+    "images": {
+      "portrait": "assets/players/j-neaves.png"
+    }
+  },
+  "27": {
+    "id": "e-todd",
+    "display_name": "E. Todd",
+    "name": "E. Todd",
+    "number": "27",
+    "position": "",
+    "teams": [
+      "Pretty good"
+    ],
+    "images": {
+      "portrait": "assets/players/e-todd.png"
     }
   }
 }
