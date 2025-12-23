@@ -151,7 +151,7 @@ class EasyStatsParser:
         
         return derived
     
-    def parse_html(self, html_file):
+    def parse_html(self, html_file, is_playoff=False, force_season=None):
         """Parse EasyStats HTML file and extract game data"""
         with open(html_file, 'r', encoding='utf-8') as f:
             soup = BeautifulSoup(f, 'html.parser')
@@ -169,9 +169,14 @@ class EasyStatsParser:
         date_elem = soup.find('span', class_='detail')
         date = self.parse_date(date_elem.text) if date_elem else datetime.now().strftime('%Y-%m-%d')
         
+        # Override season if specified
+        if force_season:
+            year = date[:4]  # Get current year from date
+            date = date.replace(year, force_season)
+        
         # Determine if our team is home or away (Pretty good is our team)
-        our_team = "Pretty good"
-        is_home = game_info['home_team'].lower() == our_team.lower()
+        our_team = "pretty-good"  # Standardized team name
+        is_home = game_info['home_team'].lower().replace(' ', '-') == our_team.lower()
         
         opponent = game_info['away_team'] if is_home else game_info['home_team']
         our_score = game_info['home_score'] if is_home else game_info['away_score']
@@ -239,7 +244,7 @@ class EasyStatsParser:
                 'them': their_score
             },
             'result': 'W' if our_score > their_score else 'L',
-            'isPlayoff': False,  # Default to regular season, can be manually updated
+            'isPlayoff': is_playoff,  # Use the parameter instead of default False
             'stats': player_stats
         }
         
@@ -404,13 +409,17 @@ class EasyStatsParser:
             self.save_json(season_file, season_data)
             print(f"✓ Updated season: {year}")
     
-    def process_file(self, html_file):
+    def process_file(self, html_file, is_playoff=False, force_season=None):
         """Process a single HTML file"""
         print(f"\nProcessing: {html_file}")
+        if is_playoff:
+            print("📍 Marking as PLAYOFF game")
+        if force_season:
+            print(f"📅 Forcing season: {force_season}")
         
         try:
             # Parse HTML
-            game, date, opponent = self.parse_html(html_file)
+            game, date, opponent = self.parse_html(html_file, is_playoff, force_season)
             
             # Save game
             self.save_game(game, date, opponent)
@@ -431,20 +440,42 @@ class EasyStatsParser:
 
 def main():
     import sys
+    import argparse
     
-    if len(sys.argv) < 2:
-        print("Usage: python parse_easystats.py <html_file>")
-        print("Example: python parse_easystats.py 'Macho men vs Pretty good box-scores-16 Dec 2025.html'")
-        sys.exit(1)
+    # Set up argument parser
+    parser_args = argparse.ArgumentParser(
+        description='Parse EasyStats HTML exports and update basketball statistics',
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  # Parse regular season game (default)
+  python parse_easystats.py game.html
+  
+  # Parse playoff game
+  python parse_easystats.py game.html --playoff
+  
+  # Parse game for specific season
+  python parse_easystats.py game.html --season 2024
+  
+  # Parse playoff game for 2024 season
+  python parse_easystats.py game.html --playoff --season 2024
+        """
+    )
     
-    html_file = sys.argv[1]
+    parser_args.add_argument('html_file', help='EasyStats HTML export file')
+    parser_args.add_argument('--playoff', action='store_true', 
+                           help='Mark this game as a playoff game')
+    parser_args.add_argument('--season', type=str, default=None,
+                           help='Specify season year (default: auto-detect from game date)')
     
-    if not os.path.exists(html_file):
-        print(f"Error: File not found: {html_file}")
+    args = parser_args.parse_args()
+    
+    if not os.path.exists(args.html_file):
+        print(f"Error: File not found: {args.html_file}")
         sys.exit(1)
     
     parser = EasyStatsParser()
-    parser.process_file(html_file)
+    parser.process_file(args.html_file, is_playoff=args.playoff, force_season=args.season)
     
     print("\n" + "="*50)
     print("All data updated successfully!")
