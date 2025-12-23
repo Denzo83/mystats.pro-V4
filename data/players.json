@@ -5,10 +5,7 @@
     "name": "Kyle Denzin",
     "number": "37",
     "position": "G/F",
-    "teams": [
-      "pretty-good",
-      "Pretty good"
-    ],
+    "teams": ["Pretty good"],
     "images": {
       "portrait": "assets/players/kyle-denzin.png"
     }
@@ -18,9 +15,8 @@
     "display_name": "Levi Denzin",
     "name": "Levi Denzin",
     "number": "43",
-    "position": "G",
+    "position": "F",
     "teams": [
-      "pretty-good",
       "Pretty good"
     ],
     "images": {
@@ -32,10 +28,9 @@
     "display_name": "Findlay Wendtman",
     "name": "Findlay Wendtman",
     "number": "28",
-    "position": "F",
+    "position": "G",
     "teams": [
-      "pretty-good",
-      "chuckers-chuckers",
+      "chuckers chuckers",
       "Pretty good"
     ],
     "images": {
@@ -46,37 +41,37 @@
     "id": "jackson-neaves",
     "display_name": "Jackson Neaves",
     "name": "Jackson Neaves",
-    "number": "15",
-    "position": "G",
+    "number": "10",
+    "position": "C",
     "teams": [
-      "pretty-good",
-      "chuckers-chuckers"
+      "Pretty good",
+      "chuckers chuckers"
     ],
     "images": {
-      "portrait": "assets/players/placeholder3.png"
+      "portrait": "assets/players/placeholder4.png"
     }
   },
   "7": {
     "id": "ethan-todd",
     "display_name": "Ethan Todd",
     "name": "Ethan Todd",
-    "number": "7",
+    "number": "27",
     "position": "G",
     "teams": [
-      "pretty-good"
+      "Pretty good"
     ],
     "images": {
-      "portrait": "assets/players/placeholder7.png"
+      "portrait": "assets/players/placeholder6.png"
     }
   },
   "24": {
     "id": "josh-todd",
     "display_name": "Josh Todd",
     "name": "Josh Todd",
-    "number": "24",
+    "number": "11",
     "position": "F",
     "teams": [
-      "pretty-good"
+      "Pretty good"
     ],
     "images": {
       "portrait": "assets/players/josh-todd.png"
@@ -86,14 +81,13 @@
     "id": "callan-beamish",
     "display_name": "Callan Beamish",
     "name": "Callan Beamish",
-    "number": "11",
+    "number": "21",
     "position": "C",
     "teams": [
-      "pretty-good",
       "Pretty good"
     ],
     "images": {
-      "portrait": "assets/players/placeholder6.png"
+      "portrait": "assets/players/placeholder3.png"
     }
   },
   "5": {
@@ -103,7 +97,6 @@
     "number": "5",
     "position": "G",
     "teams": [
-      "pretty-good",
       "Pretty good"
     ],
     "images": {
@@ -114,65 +107,13 @@
     "id": "rhys-ogle",
     "display_name": "Rhys Ogle",
     "name": "Rhys Ogle",
-    "number": "14",
+    "number": "6",
     "position": "F",
     "teams": [
-      "pretty-good"
-    ],
-    "images": {
-      "portrait": "assets/players/placeholder4.png"
-    }
-  },
-  "1": {
-    "id": "r-ogle",
-    "display_name": "R. Ogle",
-    "name": "R. Ogle",
-    "number": "1",
-    "position": "",
-    "teams": [
       "Pretty good"
     ],
     "images": {
-      "portrait": "assets/players/r-ogle.png"
-    }
-  },
-  "2": {
-    "id": "c-beamish",
-    "display_name": "C. Beamish",
-    "name": "C. Beamish",
-    "number": "2",
-    "position": "",
-    "teams": [
-      "Pretty good"
-    ],
-    "images": {
-      "portrait": "assets/players/c-beamish.png"
-    }
-  },
-  "10": {
-    "id": "j-neaves",
-    "display_name": "J. Neaves",
-    "name": "J. Neaves",
-    "number": "10",
-    "position": "",
-    "teams": [
-      "Pretty good"
-    ],
-    "images": {
-      "portrait": "assets/players/j-neaves.png"
-    }
-  },
-  "27": {
-    "id": "e-todd",
-    "display_name": "E. Todd",
-    "name": "E. Todd",
-    "number": "27",
-    "position": "",
-    "teams": [
-      "Pretty good"
-    ],
-    "images": {
-      "portrait": "assets/players/e-todd.png"
+      "portrait": "assets/players/placeholder7.png"
     }
   }
 }

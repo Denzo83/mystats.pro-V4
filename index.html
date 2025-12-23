@@ -3,373 +3,119 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pretty Good Basketball Stats</title>
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <title>Basketball Stats - Select Team</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { 
+            margin: 0; 
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .team-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .team-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        .logo-container {
+            width: 200px;
+            height: 200px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .logo-placeholder {
+            font-size: 4rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+    </style>
 </head>
 <body>
-    <div id="root"></div>
-    
-    <script type="text/babel">
-        const { useState, useMemo, useEffect } = React;
+    <div class="min-h-screen flex items-center justify-center p-4">
+        <div class="max-w-6xl w-full">
+            <!-- Header -->
+            <div class="text-center mb-12">
+                <h1 class="text-5xl md:text-6xl font-bold text-white mb-4">
+                    Basketball Stats
+                </h1>
+                <p class="text-xl text-white/80">
+                    Select Your Team
+                </p>
+            </div>
 
-        // Icon components
-        const BarChart3 = ({size = 24}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>;
-        const Trophy = ({size = 24}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>;
-        const Users = ({size = 24}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>;
-        const Calendar = ({size = 24}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>;
-        const Moon = ({size = 24}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>;
-        const Sun = ({size = 24}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>;
-        const ChevronDown = ({size = 24, className = ""}) => <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="6 9 12 15 18 9"/></svg>;
-        const ChevronUp = ({size = 24}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="18 15 12 9 6 15"/></svg>;
-        const TrendingUp = ({size = 24}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>;
-        const AlertCircle = ({size = 24, className = ""}) => <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>;
-
-        function BasketballStatsApp() {
-            const [darkMode, setDarkMode] = useState(false);
-            const [activeTab, setActiveTab] = useState('leaderboards');
-            const [selectedSeason, setSelectedSeason] = useState('2025');
-            const [gameType, setGameType] = useState('regular');
-            const [statCategory, setStatCategory] = useState('ppg');
-            const [expandedPlayer, setExpandedPlayer] = useState(null);
-            
-            const [currentView, setCurrentView] = useState('main');
-            const [selectedPlayerNumber, setSelectedPlayerNumber] = useState(null);
-            const [selectedGameId, setSelectedGameId] = useState(null);
-            
-            const [players, setPlayers] = useState({});
-            const [seasonStats, setSeasonStats] = useState({});
-            const [records, setRecords] = useState({});
-            const [games, setGames] = useState([]);
-            const [allGames, setAllGames] = useState({});
-            const [loading, setLoading] = useState(true);
-            const [error, setError] = useState(null);
-
-            useEffect(() => {
-                loadData();
-            }, []);
-
-            useEffect(() => {
-                if (!loading) {
-                    loadData();
-                }
-            }, [selectedSeason]);
-
-            const loadData = async () => {
-                try {
-                    setLoading(true);
-                    setError(null);
-
-                    const responses = await Promise.all([
-                        fetch('data/players.json').catch(() => null),
-                        fetch(`data/seasons/${selectedSeason}.json`).catch(() => null),
-                        fetch('data/records.json').catch(() => null),
-                        fetch('data/games_index.json').catch(() => null)
-                    ]);
-
-                    if (responses[0]) {
-                        const playersData = await responses[0].json();
-                        setPlayers(playersData);
-                    } else {
-                        setPlayers({});
-                    }
-
-                    if (responses[1]) {
-                        const seasonData = await responses[1].json();
-                        setSeasonStats(seasonData);
-                    } else {
-                        setSeasonStats({});
-                    }
-
-                    if (responses[2]) {
-                        const recordsData = await responses[2].json();
-                        setRecords(recordsData);
-                    } else {
-                        setRecords({});
-                    }
-
-                    if (responses[3]) {
-                        const gamesIndexData = await responses[3].json();
-                        const loadedGames = {};
-                        
-                        for (const [gameId, gameInfo] of Object.entries(gamesIndexData)) {
-                            if (gameInfo.date && gameInfo.date.startsWith(selectedSeason)) {
-                                try {
-                                    const gameResponse = await fetch(`data/games/${gameInfo.filename}`);
-                                    loadedGames[gameId] = await gameResponse.json();
-                                } catch (e) {
-                                    console.log(`Could not load game: ${gameInfo.filename}`);
-                                }
-                            }
-                        }
-                        
-                        setAllGames(loadedGames);
-                        setGames(Object.values(loadedGames));
-                    }
-
-                    setLoading(false);
-                } catch (err) {
-                    setError('Please upload your data files to the repo');
-                    setLoading(false);
-                }
-            };
-
-            const statCategories = [
-                { key: 'ppg', label: 'PPG', desc: 'Points Per Game' },
-                { key: 'rpg', label: 'RPG', desc: 'Rebounds Per Game' },
-                { key: 'apg', label: 'APG', desc: 'Assists Per Game' },
-                { key: 'spg', label: 'SPG', desc: 'Steals Per Game' },
-                { key: 'bpg', label: 'BPG', desc: 'Blocks Per Game' },
-                { key: 'fg_pct', label: 'FG%', desc: 'Field Goal %' },
-                { key: '3pt_pct', label: '3P%', desc: 'Three Point %' },
-                { key: 'ft_pct', label: 'FT%', desc: 'Free Throw %' }
-            ];
-
-            const sortedPlayers = useMemo(() => {
-                if (!seasonStats[gameType]) return [];
-                return Object.entries(seasonStats[gameType])
-                    .map(([num, stats]) => ({
-                        ...(players[num] || { name: `Player #${num}`, number: num }),
-                        ...stats,
-                        number: num
-                    }))
-                    .filter(p => p.gp > 0)
-                    .sort((a, b) => (b[statCategory] || 0) - (a[statCategory] || 0));
-            }, [seasonStats, gameType, statCategory, players]);
-
-            const bgClass = darkMode ? 'bg-gray-900' : 'bg-gray-50';
-            const cardClass = darkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-900';
-            const textClass = darkMode ? 'text-gray-300' : 'text-gray-600';
-            const borderClass = darkMode ? 'border-gray-700' : 'border-gray-200';
-            const accentClass = 'bg-gradient-to-r from-blue-600 to-blue-400';
-
-            if (loading) {
-                return (
-                    <div className={`min-h-screen ${bgClass} flex items-center justify-center`}>
-                        <div className="text-center">
-                            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-                            <p className={textClass}>Loading stats...</p>
+            <!-- Team Cards -->
+            <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                <!-- Pretty Good Card -->
+                <a href="pretty-good.html" class="team-card">
+                    <div class="bg-white rounded-2xl p-8 shadow-2xl">
+                        <div class="logo-container">
+                            <img 
+                                src="assets/teams/pretty-good-logo.png" 
+                                alt="Pretty Good Logo"
+                                class="w-full h-full object-contain"
+                                onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+                            />
+                            <div class="logo-placeholder" style="display: none;">PG</div>
+                        </div>
+                        <h2 class="text-3xl font-bold text-center mb-2 text-gray-800">
+                            Pretty Good
+                        </h2>
+                        <p class="text-center text-gray-600">
+                            Basketball Team
+                        </p>
+                        <div class="mt-6 text-center">
+                            <span class="inline-block px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-400 text-white rounded-full font-semibold">
+                                View Stats →
+                            </span>
                         </div>
                     </div>
-                );
-            }
+                </a>
 
-            if (error || Object.keys(players).length === 0) {
-                return (
-                    <div className={`min-h-screen ${bgClass}`}>
-                        <header className={`${accentClass} text-white`}>
-                            <div className="max-w-7xl mx-auto px-4 py-4">
-                                <h1 className="text-2xl font-bold">Pretty Good Basketball</h1>
-                                <p className="text-blue-100 text-sm">Team Statistics</p>
-                            </div>
-                        </header>
-                        <div className="max-w-7xl mx-auto px-4 py-12">
-                            <div className={`${cardClass} rounded-lg p-8 text-center`}>
-                                <AlertCircle size={48} className="mx-auto mb-4 opacity-50" />
-                                <h2 className="text-2xl font-bold mb-4">Welcome to Pretty Good Basketball Stats!</h2>
-                                <p className={`${textClass} mb-4`}>Your stats site is ready, but no data has been uploaded yet.</p>
-                                <div className={`${textClass} text-left max-w-2xl mx-auto space-y-3`}>
-                                    <p className="font-bold text-lg">Next Steps:</p>
-                                    <ol className="list-decimal list-inside space-y-2">
-                                        <li>Run the parser script on your EasyStats HTML files</li>
-                                        <li>Upload the generated <code className="bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded">data/</code> folder to your GitHub repo</li>
-                                        <li>Commit and push to GitHub</li>
-                                        <li>Wait 5-10 minutes for GitHub Pages to update</li>
-                                    </ol>
-                                    <p className="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-                                        <strong>Quick command:</strong><br/>
-                                        <code className="text-sm">python parse_easystats.py "your-game-file.html"</code>
-                                    </p>
-                                </div>
-                            </div>
+                <!-- Chuckers Chuckers Card -->
+                <a href="chuckers-chuckers.html" class="team-card">
+                    <div class="bg-white rounded-2xl p-8 shadow-2xl">
+                        <div class="logo-container">
+                            <img 
+                                src="assets/teams/chuckers-chuckers-logo.png" 
+                                alt="Chuckers Chuckers Logo"
+                                class="w-full h-full object-contain"
+                                onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+                            />
+                            <div class="logo-placeholder" style="display: none;">CC</div>
+                        </div>
+                        <h2 class="text-3xl font-bold text-center mb-2 text-gray-800">
+                            Chuckers Chuckers
+                        </h2>
+                        <p class="text-center text-gray-600">
+                            Basketball Team
+                        </p>
+                        <div class="mt-6 text-center">
+                            <span class="inline-block px-6 py-3 bg-gradient-to-r from-purple-600 to-purple-400 text-white rounded-full font-semibold">
+                                View Stats →
+                            </span>
                         </div>
                     </div>
-                );
-            }
+                </a>
+            </div>
 
-            return (
-                <div className={`min-h-screen ${bgClass} transition-colors duration-300`}>
-                    <header className={`${accentClass} text-white sticky top-0 z-50 shadow-lg`}>
-                        <div className="max-w-7xl mx-auto px-4 py-4">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <h1 className="text-2xl font-bold">Pretty Good Basketball</h1>
-                                    <p className="text-blue-100 text-sm">Team Statistics</p>
-                                </div>
-                                <button
-                                    onClick={() => setDarkMode(!darkMode)}
-                                    className="p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors"
-                                >
-                                    {darkMode ? <Sun size={24} /> : <Moon size={24} />}
-                                </button>
-                            </div>
-                        </div>
-                    </header>
-
-                    <div className={`${cardClass} sticky top-[72px] z-40 border-b ${borderClass} shadow-md`}>
-                        <div className="max-w-7xl mx-auto px-4 py-3">
-                            <div className="flex flex-wrap gap-3 items-center justify-between">
-                                <div className="flex gap-2">
-                                    <select
-                                        value={selectedSeason}
-                                        onChange={(e) => setSelectedSeason(e.target.value)}
-                                        className={`px-3 py-2 rounded-lg border ${borderClass} ${cardClass} text-sm font-medium`}
-                                    >
-                                        <option value="2025">2025 Season</option>
-                                        <option value="2024">2024 Season</option>
-                                    </select>
-                                    
-                                    <select
-                                        value={gameType}
-                                        onChange={(e) => setGameType(e.target.value)}
-                                        className={`px-3 py-2 rounded-lg border ${borderClass} ${cardClass} text-sm font-medium`}
-                                    >
-                                        <option value="regular">Regular Season</option>
-                                        <option value="playoff">Playoffs</option>
-                                        <option value="all">All Games</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="max-w-7xl mx-auto px-4 py-6">
-                        <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
-                            {[
-                                { id: 'leaderboards', icon: TrendingUp, label: 'Leaderboards' },
-                                { id: 'records', icon: Trophy, label: 'Records' },
-                                { id: 'players', icon: Users, label: 'Players' },
-                                { id: 'games', icon: Calendar, label: 'Games' }
-                            ].map(tab => (
-                                <button
-                                    key={tab.id}
-                                    onClick={() => setActiveTab(tab.id)}
-                                    className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium whitespace-nowrap transition-colors ${
-                                        activeTab === tab.id
-                                            ? `${accentClass} text-white shadow-lg`
-                                            : `${cardClass} hover:opacity-80`
-                                    }`}
-                                >
-                                    <tab.icon size={18} />
-                                    {tab.label}
-                                </button>
-                            ))}
-                        </div>
-
-                        {activeTab === 'leaderboards' && (
-                            <div>
-                                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
-                                    {statCategories.map(cat => (
-                                        <button
-                                            key={cat.key}
-                                            onClick={() => setStatCategory(cat.key)}
-                                            className={`p-4 rounded-lg border-2 transition-all ${
-                                                statCategory === cat.key
-                                                    ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
-                                                    : `border-transparent ${cardClass}`
-                                            }`}
-                                        >
-                                            <div className="text-2xl font-bold text-blue-600">{cat.label}</div>
-                                            <div className={`text-xs ${textClass}`}>{cat.desc}</div>
-                                        </button>
-                                    ))}
-                                </div>
-
-                                <div className="space-y-3">
-                                    {sortedPlayers.map((player, idx) => (
-                                        <div key={player.number} className={`${cardClass} rounded-lg border ${borderClass} p-4 hover:shadow-lg transition-shadow`}>
-                                            <div className="flex items-center gap-4">
-                                                <div className={`text-3xl font-bold ${idx < 3 ? 'text-blue-600' : textClass} w-12 text-center`}>
-                                                    {idx + 1}
-                                                </div>
-                                                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold text-xl flex-shrink-0">
-                                                    #{player.number}
-                                                </div>
-                                                <div className="flex-1 min-w-0">
-                                                    <div className="font-bold text-lg truncate">{player.display_name || player.name}</div>
-                                                    <div className={`text-sm ${textClass}`}>
-                                                        {player.gp} GP{player.teams ? ` • ${player.teams.join(', ')}` : ''}
-                                                    </div>
-                                                </div>
-                                                <div className="text-right">
-                                                    <div className="text-3xl font-bold text-blue-600">
-                                                        {typeof player[statCategory] === 'number' 
-                                                            ? player[statCategory].toFixed(1) 
-                                                            : '0.0'}
-                                                    </div>
-                                                    <div className={`text-xs ${textClass}`}>{statCategory.toUpperCase()}</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-
-                        {activeTab === 'players' && (
-                            <div className="space-y-4">
-                                <h2 className="text-2xl font-bold mb-4">Team Roster</h2>
-                                <div className="grid md:grid-cols-2 gap-4">
-                                    {Object.values(players).map(player => {
-                                        const stats = seasonStats[gameType]?.[player.number] || {};
-                                        return (
-                                            <div key={player.number} className={`${cardClass} rounded-lg border ${borderClass} p-4`}>
-                                                <div className="flex items-center gap-4">
-                                                    <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold text-2xl flex-shrink-0">
-                                                        #{player.number}
-                                                    </div>
-                                                    <div className="flex-1 min-w-0">
-                                                        <div className="font-bold text-xl truncate">{player.display_name || player.name}</div>
-                                                        <div className={textClass}>#{player.number}</div>
-                                                        {player.teams && player.teams.length > 0 && (
-                                                            <div className={`text-sm ${textClass} mt-1`}>
-                                                                {player.teams.join(' • ')}
-                                                            </div>
-                                                        )}
-                                                        {stats.gp > 0 && (
-                                                            <div className="flex gap-3 mt-2 text-sm">
-                                                                <div>
-                                                                    <span className="font-bold text-blue-600">{stats.ppg?.toFixed(1) || '0.0'}</span>
-                                                                    <span className={textClass}> PPG</span>
-                                                                </div>
-                                                                <div>
-                                                                    <span className="font-bold text-blue-600">{stats.rpg?.toFixed(1) || '0.0'}</span>
-                                                                    <span className={textClass}> RPG</span>
-                                                                </div>
-                                                                <div>
-                                                                    <span className="font-bold text-blue-600">{stats.apg?.toFixed(1) || '0.0'}</span>
-                                                                    <span className={textClass}> APG</span>
-                                                                </div>
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-                            </div>
-                        )}
-
-                        {(activeTab === 'records' || activeTab === 'games') && (
-                            <div className={`${cardClass} rounded-lg p-8 text-center`}>
-                                <p className={textClass}>This section will appear once you've processed games!</p>
-                            </div>
-                        )}
-                    </div>
-
-                    <footer className={`${cardClass} border-t ${borderClass} mt-12 py-6`}>
-                        <div className={`max-w-7xl mx-auto px-4 text-center ${textClass}`}>
-                            <p>Pretty Good Basketball Team • Season Stats • Powered by EasyStats</p>
-                        </div>
-                    </footer>
-                </div>
-            );
-        }
-
-        ReactDOM.render(<BasketballStatsApp />, document.getElementById('root'));
-    </script>
+            <!-- Footer -->
+            <div class="text-center mt-12">
+                <p class="text-white/60 text-sm">
+                    Powered by EasyStats
+                </p>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
