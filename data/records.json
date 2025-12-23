@@ -1,0 +1,170 @@
+{
+  "regular": {
+    "most_pts": {
+      "player": null,
+      "value": 0,
+      "date": null,
+      "opponent": null
+    },
+    "most_reb": {
+      "player": null,
+      "value": 0,
+      "date": null,
+      "opponent": null
+    },
+    "most_asst": {
+      "player": null,
+      "value": 0,
+      "date": null,
+      "opponent": null
+    },
+    "most_stl": {
+      "player": null,
+      "value": 0,
+      "date": null,
+      "opponent": null
+    },
+    "most_blk": {
+      "player": null,
+      "value": 0,
+      "date": null,
+      "opponent": null
+    },
+    "most_to": {
+      "player": null,
+      "value": 0,
+      "date": null,
+      "opponent": null
+    },
+    "most_fg": {
+      "player": null,
+      "value": 0,
+      "date": null,
+      "opponent": null
+    },
+    "most_3pt": {
+      "player": null,
+      "value": 0,
+      "date": null,
+      "opponent": null
+    },
+    "most_ft": {
+      "player": null,
+      "value": 0,
+      "date": null,
+      "opponent": null
+    }
+  },
+  "playoff": {
+    "most_pts": {
+      "player": "R. Ogle",
+      "value": 11,
+      "date": "2025 Spring-12-16",
+      "opponent": "Macho men"
+    },
+    "most_reb": {
+      "player": "R. Ogle",
+      "value": 9,
+      "date": "2025 Spring-12-16",
+      "opponent": "Macho men"
+    },
+    "most_asst": {
+      "player": "C. Beamish",
+      "value": 3,
+      "date": "2025 Spring-12-16",
+      "opponent": "Macho men"
+    },
+    "most_stl": {
+      "player": "R. Ogle",
+      "value": 3,
+      "date": "2025 Spring-12-16",
+      "opponent": "Macho men"
+    },
+    "most_blk": {
+      "player": "R. Ogle",
+      "value": 3,
+      "date": "2025 Spring-12-16",
+      "opponent": "Macho men"
+    },
+    "most_to": {
+      "player": "Jarren Owen",
+      "value": 3,
+      "date": "2025 Spring-12-16",
+      "opponent": "Macho men"
+    },
+    "most_fg": {
+      "player": "R. Ogle",
+      "value": 4,
+      "date": "2025 Spring-12-16",
+      "opponent": "Macho men"
+    },
+    "most_3pt": {
+      "player": "Callan Beamish",
+      "value": 2,
+      "date": "2025 Spring-12-16",
+      "opponent": "Macho men"
+    },
+    "most_ft": {
+      "player": "Callan Beamish",
+      "value": 3,
+      "date": "2025 Spring-12-16",
+      "opponent": "Macho men"
+    }
+  },
+  "all": {
+    "most_pts": {
+      "player": "R. Ogle",
+      "value": 11,
+      "date": "2025 Spring-12-16",
+      "opponent": "Macho men"
+    },
+    "most_reb": {
+      "player": "R. Ogle",
+      "value": 9,
+      "date": "2025 Spring-12-16",
+      "opponent": "Macho men"
+    },
+    "most_asst": {
+      "player": "C. Beamish",
+      "value": 3,
+      "date": "2025 Spring-12-16",
+      "opponent": "Macho men"
+    },
+    "most_stl": {
+      "player": "R. Ogle",
+      "value": 3,
+      "date": "2025 Spring-12-16",
+      "opponent": "Macho men"
+    },
+    "most_blk": {
+      "player": "R. Ogle",
+      "value": 3,
+      "date": "2025 Spring-12-16",
+      "opponent": "Macho men"
+    },
+    "most_to": {
+      "player": "Jarren Owen",
+      "value": 3,
+      "date": "2025 Spring-12-16",
+      "opponent": "Macho men"
+    },
+    "most_fg": {
+      "player": "R. Ogle",
+      "value": 4,
+      "date": "2025 Spring-12-16",
+      "opponent": "Macho men"
+    },
+    "most_3pt": {
+      "player": "Callan Beamish",
+      "value": 2,
+      "date": "2025 Spring-12-16",
+      "opponent": "Macho men"
+    },
+    "most_ft": {
+      "player": "Callan Beamish",
+      "value": 3,
+      "date": "2025 Spring-12-16",
+      "opponent": "Macho men"
+    }
+  }
+}
