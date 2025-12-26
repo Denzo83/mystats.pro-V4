@@ -57,21 +57,32 @@
         const AlertCircle = ({size = 24, className = ""}) => <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>;
         const ArrowLeft = ({size = 24}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>;
 
-        // Player Image Component with fallback
+        // Player Image Component - Rectangular portrait style with fallback
         const PlayerImage = ({ player, size = 'md', className = '' }) => {
             const [imgError, setImgError] = useState(false);
-            const sizeClasses = {
-                sm: 'w-10 h-10 text-sm',
-                md: 'w-16 h-16 text-xl',
-                lg: 'w-20 h-20 text-2xl',
-                xl: 'w-24 h-24 text-3xl'
+            // Rectangular portrait dimensions (taller than wide)
+            const sizeStyles = {
+                sm: { width: '40px', height: '52px' },
+                md: { width: '56px', height: '72px' },
+                lg: { width: '64px', height: '84px' },
+                xl: { width: '80px', height: '104px' }
+            };
+            const textSizes = {
+                sm: 'text-xs',
+                md: 'text-sm',
+                lg: 'text-lg',
+                xl: 'text-xl'
             };
             
             const imgSrc = player?.images?.portrait;
+            const style = sizeStyles[size];
             
             if (!imgError && imgSrc) {
                 return (
-                    <div className={`${sizeClasses[size]} rounded-full overflow-hidden flex-shrink-0 ${className}`}>
+                    <div 
+                        className={`rounded-lg overflow-hidden flex-shrink-0 bg-gray-200 ${className}`}
+                        style={style}
+                    >
                         <img 
                             src={imgSrc}
                             alt={player?.name || 'Player'}
@@ -83,7 +94,10 @@
             }
             
             return (
-                <div className={`${sizeClasses[size]} rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold flex-shrink-0 ${className}`}>
+                <div 
+                    className={`rounded-lg bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold flex-shrink-0 ${textSizes[size]} ${className}`}
+                    style={style}
+                >
                     #{player?.number || '?'}
                 </div>
             );
@@ -95,6 +109,7 @@
             const [selectedSeason, setSelectedSeason] = useState('2025');
             const [gameType, setGameType] = useState('all');
             const [statCategory, setStatCategory] = useState('ppg');
+            const [showTotals, setShowTotals] = useState(false); // Toggle for totals vs averages
             const [expandedPlayer, setExpandedPlayer] = useState(null);
             
             const [currentView, setCurrentView] = useState('main');
@@ -102,6 +117,7 @@
             const [selectedGameId, setSelectedGameId] = useState(null);
             
             const [players, setPlayers] = useState({});
+            const [allPlayersData, setAllPlayersData] = useState({}); // Store all players for reference
             const [seasonStats, setSeasonStats] = useState({});
             const [records, setRecords] = useState({});
             const [games, setGames] = useState([]);
@@ -137,8 +153,10 @@
                         fetch('data/seasons_meta.json').catch(() => null)
                     ]);
 
-                    if (responses[0]) {
+                    if (responses[0] && responses[0].ok) {
                         const playersData = await responses[0].json();
+                        setAllPlayersData(playersData); // Store all players
+                        
                         // Filter players by current team (case-insensitive, ignores hyphens/spaces)
                         const teamPlayers = {};
                         const normalizeTeam = (name) => name.toLowerCase().replace(/[\s-]/g, '');
@@ -152,59 +170,85 @@
                         setPlayers(teamPlayers);
                     } else {
                         setPlayers({});
+                        setAllPlayersData({});
                     }
 
-                    if (responses[1]) {
+                    if (responses[1] && responses[1].ok) {
                         const seasonData = await responses[1].json();
+                        console.log('Season stats loaded:', seasonData);
+                        console.log('Available game types:', Object.keys(seasonData));
+                        if (seasonData.playoff) {
+                            console.log('Playoff player keys:', Object.keys(seasonData.playoff));
+                            console.log('Sample playoff stats (player 6):', seasonData.playoff['6']);
+                        }
                         setSeasonStats(seasonData);
                     } else {
+                        console.log('Failed to load season stats');
                         setSeasonStats({});
                     }
 
-                    if (responses[2]) {
+                    if (responses[2] && responses[2].ok) {
                         const recordsData = await responses[2].json();
                         setRecords(recordsData);
                     } else {
                         setRecords({});
                     }
 
-                    if (responses[4]) {
+                    if (responses[4] && responses[4].ok) {
                         const metaData = await responses[4].json();
                         setSeasonsMeta(metaData);
                     } else {
                         setSeasonsMeta({});
                     }
 
-                    if (responses[3]) {
+                    if (responses[3] && responses[3].ok) {
                         const gamesIndexData = await responses[3].json();
                         const loadedGames = {};
                         
+                        console.log('Games index loaded:', gamesIndexData);
+                        console.log('Selected season:', selectedSeason);
+                        
                         for (const [gameId, gameInfo] of Object.entries(gamesIndexData)) {
-                            // Match by season key or date prefix
-                            const gameSeason = gameInfo.season || gameInfo.date?.substring(0, 4);
-                            if (gameSeason === selectedSeason) {
+                            // Match by season key - the season in games_index should match selectedSeason
+                            const gameSeason = gameInfo.season || '';
+                            const dateYear = gameInfo.date?.substring(0, 4) || '';
+                            
+                            console.log(`Game ${gameId}: season=${gameSeason}, dateYear=${dateYear}, selected=${selectedSeason}`);
+                            
+                            // Match if season matches OR if date year matches
+                            if (gameSeason === selectedSeason || dateYear === selectedSeason) {
                                 try {
                                     const gameResponse = await fetch(`data/games/${gameInfo.filename}`);
-                                    loadedGames[gameId] = await gameResponse.json();
+                                    if (gameResponse.ok) {
+                                        const gameData = await gameResponse.json();
+                                        loadedGames[gameId] = gameData;
+                                        console.log(`Loaded game: ${gameId}`, gameData);
+                                    }
                                 } catch (e) {
-                                    console.log(`Could not load game: ${gameInfo.filename}`);
+                                    console.log(`Could not load game: ${gameInfo.filename}`, e);
                                 }
                             }
                         }
                         
+                        console.log('Total games loaded:', Object.keys(loadedGames).length);
                         setAllGames(loadedGames);
                         setGames(Object.values(loadedGames));
+                    } else {
+                        console.log('No games_index.json found or failed to load');
+                        setAllGames({});
+                        setGames([]);
                     }
 
                     setLoading(false);
                 } catch (err) {
-                    setError('Please upload your data files to the repo');
+                    console.error('Error loading data:', err);
+                    setError('Error loading data. Check console for details.');
                     setLoading(false);
                 }
             };
 
-            // All stat categories - expanded list
-            const statCategories = [
+            // Stat categories - separate averages and totals
+            const averageCategories = [
                 { key: 'ppg', label: 'PPG', desc: 'Points Per Game' },
                 { key: 'rpg', label: 'RPG', desc: 'Rebounds Per Game' },
                 { key: 'apg', label: 'APG', desc: 'Assists Per Game' },
@@ -213,31 +257,86 @@
                 { key: 'fg_pct', label: 'FG%', desc: 'Field Goal %' },
                 { key: '3pt_pct', label: '3P%', desc: 'Three Point %' },
                 { key: 'ft_pct', label: 'FT%', desc: 'Free Throw %' },
-                { key: 'gp', label: 'GP', desc: 'Games Played' },
+                { key: '2pt_pct', label: '2P%', desc: 'Two Point %' },
                 { key: 'tpg', label: 'TPG', desc: 'Turnovers Per Game' },
                 { key: 'fpg', label: 'FPG', desc: 'Fouls Per Game' },
-                { key: '2pt_pct', label: '2P%', desc: 'Two Point %' },
+                { key: 'orebpg', label: 'ORPG', desc: 'Off. Reb Per Game' },
+                { key: 'drebpg', label: 'DRPG', desc: 'Def. Reb Per Game' },
                 { key: 'fga_pg', label: 'FGA', desc: 'FG Attempts Per Game' },
                 { key: '3pa_pg', label: '3PA', desc: '3PT Attempts Per Game' },
                 { key: 'fta_pg', label: 'FTA', desc: 'FT Attempts Per Game' },
-                { key: 'orebpg', label: 'OREB', desc: 'Off. Rebounds Per Game' },
-                { key: 'drebpg', label: 'DREB', desc: 'Def. Rebounds Per Game' },
                 { key: 'fgm_pg', label: 'FGM', desc: 'FG Made Per Game' },
                 { key: '3pm_pg', label: '3PM', desc: '3PT Made Per Game' },
                 { key: 'ftm_pg', label: 'FTM', desc: 'FT Made Per Game' }
             ];
+            
+            const totalCategories = [
+                { key: 'pts', label: 'PTS', desc: 'Total Points' },
+                { key: 'reb', label: 'REB', desc: 'Total Rebounds' },
+                { key: 'asst', label: 'AST', desc: 'Total Assists' },
+                { key: 'stl', label: 'STL', desc: 'Total Steals' },
+                { key: 'blk', label: 'BLK', desc: 'Total Blocks' },
+                { key: 'to', label: 'TO', desc: 'Total Turnovers' },
+                { key: 'foul', label: 'PF', desc: 'Total Fouls' },
+                { key: 'oreb', label: 'OREB', desc: 'Total Off. Rebounds' },
+                { key: 'dreb', label: 'DREB', desc: 'Total Def. Rebounds' },
+                { key: 'gp', label: 'GP', desc: 'Games Played' }
+            ];
+            
+            const statCategories = showTotals ? totalCategories : averageCategories;
+
+            // Reset stat category when switching between totals and averages
+            useEffect(() => {
+                if (showTotals && !totalCategories.find(c => c.key === statCategory)) {
+                    setStatCategory('pts');
+                } else if (!showTotals && !averageCategories.find(c => c.key === statCategory)) {
+                    setStatCategory('ppg');
+                }
+            }, [showTotals]);
 
             const sortedPlayers = useMemo(() => {
-                if (!seasonStats[gameType]) return [];
-                return Object.entries(seasonStats[gameType])
-                    .map(([num, stats]) => ({
-                        ...(players[num] || { name: `Player #${num}`, number: num }),
-                        ...stats,
-                        number: num
-                    }))
+                console.log('Computing sortedPlayers');
+                console.log('seasonStats:', seasonStats);
+                console.log('gameType:', gameType);
+                console.log('statCategory:', statCategory);
+                
+                if (!seasonStats[gameType]) {
+                    console.log(`No stats for gameType: ${gameType}`);
+                    return [];
+                }
+                
+                console.log(`Stats available for ${gameType}:`, Object.keys(seasonStats[gameType]));
+                
+                const result = Object.entries(seasonStats[gameType])
+                    .map(([num, stats]) => {
+                        const playerInfo = players[num] || allPlayersData[num] || { name: `Player #${num}`, number: num };
+                        const merged = {
+                            ...playerInfo,
+                            ...stats,
+                            number: num
+                        };
+                        console.log(`Player ${num} (${playerInfo.name}): ${statCategory} = ${stats[statCategory]}`);
+                        return merged;
+                    })
                     .filter(p => p.gp > 0)
-                    .sort((a, b) => (b[statCategory] || 0) - (a[statCategory] || 0));
-            }, [seasonStats, gameType, statCategory, players]);
+                    .sort((a, b) => {
+                        // Handle both integer and float values, treating undefined/null as 0
+                        const aVal = Number(a[statCategory]) || 0;
+                        const bVal = Number(b[statCategory]) || 0;
+                        return bVal - aVal;
+                    });
+                
+                console.log('Sorted players result:', result.map(p => ({ name: p.name, stat: p[statCategory] })));
+                return result;
+            }, [seasonStats, gameType, statCategory, players, allPlayersData]);
+
+            // Format date for display - ensures YYYY-MM-DD format even if season name got mixed in
+            const formatDate = (dateStr) => {
+                if (!dateStr) return '';
+                // Extract just the date part if season name got concatenated
+                const match = dateStr.match(/(\d{4}-\d{2}-\d{2})/);
+                return match ? match[1] : dateStr;
+            };
 
             // Get season display name
             const getSeasonDisplayName = (key) => {
@@ -261,6 +360,20 @@
             const accentClass = `bg-gradient-to-r ${teamConfig.colors.primary}`;
             const accentColor = teamConfig.colors.accent;
 
+            // Format stat value for display
+            const formatStatValue = (value, isPercentage = false) => {
+                if (value === null || value === undefined) return '0';
+                const num = Number(value);
+                if (isNaN(num)) return '0';
+                if (isPercentage || statCategory.includes('pct')) {
+                    return num.toFixed(1);
+                }
+                if (showTotals) {
+                    return Math.round(num).toString();
+                }
+                return num.toFixed(1);
+            };
+
             if (loading) {
                 return (
                     <div className={`min-h-screen ${bgClass} flex items-center justify-center`}>
@@ -282,17 +395,14 @@
                                     <span>Back to Team Selection</span>
                                 </a>
                                 <div className="flex items-center gap-4">
-                                    <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center overflow-hidden">
-                                        <img 
-                                            src={teamConfig.logo} 
-                                            alt={teamConfig.name}
-                                            className="w-full h-full object-contain p-2"
-                                            onError={(e) => {
-                                                e.target.style.display = 'none';
-                                                e.target.parentElement.innerHTML = `<span class="text-2xl font-bold">${teamConfig.name.substring(0,2)}</span>`;
-                                            }}
-                                        />
-                                    </div>
+                                    <img 
+                                        src={teamConfig.logo} 
+                                        alt={teamConfig.name}
+                                        className="w-12 h-12 object-contain"
+                                        onError={(e) => {
+                                            e.target.style.display = 'none';
+                                        }}
+                                    />
                                     <div>
                                         <h1 className="text-2xl font-bold">{teamConfig.displayName}</h1>
                                         <p className="text-blue-100 text-sm">Team Statistics</p>
@@ -380,7 +490,7 @@
                                             {Object.entries(game.stats || {})
                                                 .sort((a, b) => (b[1].pts || 0) - (a[1].pts || 0))
                                                 .map(([playerNum, stats]) => {
-                                                    const player = players[playerNum] || { name: `#${playerNum}`, number: playerNum };
+                                                    const player = players[playerNum] || allPlayersData[playerNum] || { name: `#${playerNum}`, number: playerNum };
                                                     return (
                                                         <tr key={playerNum} className={`border-t ${borderClass} hover:${darkMode ? 'bg-gray-700' : 'bg-gray-50'}`}>
                                                             <td className="px-4 py-3">
@@ -467,17 +577,14 @@
                             </a>
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-4">
-                                    <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center overflow-hidden">
-                                        <img 
-                                            src={teamConfig.logo} 
-                                            alt={teamConfig.name}
-                                            className="w-full h-full object-contain p-1"
-                                            onError={(e) => {
-                                                e.target.style.display = 'none';
-                                                e.target.parentElement.innerHTML = `<span class="text-lg font-bold">${teamConfig.name.substring(0,2)}</span>`;
-                                            }}
-                                        />
-                                    </div>
+                                    <img 
+                                        src={teamConfig.logo} 
+                                        alt={teamConfig.name}
+                                        className="w-12 h-12 object-contain"
+                                        onError={(e) => {
+                                            e.target.style.display = 'none';
+                                        }}
+                                    />
                                     <div>
                                         <h1 className="text-2xl font-bold">{teamConfig.displayName}</h1>
                                         <p className="text-white/80 text-sm">Team Statistics</p>
@@ -548,6 +655,33 @@
 
                         {activeTab === 'leaderboards' && (
                             <div>
+                                {/* Totals/Averages Toggle */}
+                                <div className="flex items-center gap-4 mb-4">
+                                    <span className={`text-sm font-medium ${headingClass}`}>Show:</span>
+                                    <div className={`flex rounded-lg border ${borderClass} overflow-hidden`}>
+                                        <button
+                                            onClick={() => setShowTotals(false)}
+                                            className={`px-4 py-2 text-sm font-medium transition-colors ${
+                                                !showTotals 
+                                                    ? `${accentClass} text-white` 
+                                                    : `${cardClass} hover:opacity-80`
+                                            }`}
+                                        >
+                                            Averages
+                                        </button>
+                                        <button
+                                            onClick={() => setShowTotals(true)}
+                                            className={`px-4 py-2 text-sm font-medium transition-colors ${
+                                                showTotals 
+                                                    ? `${accentClass} text-white` 
+                                                    : `${cardClass} hover:opacity-80`
+                                            }`}
+                                        >
+                                            Totals
+                                        </button>
+                                    </div>
+                                </div>
+
                                 <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-2 mb-6">
                                     {statCategories.map(cat => (
                                         <button
@@ -566,30 +700,39 @@
                                 </div>
 
                                 <div className="space-y-3">
-                                    {sortedPlayers.map((player, idx) => (
-                                        <div key={player.number} className={`${cardClass} rounded-lg border ${borderClass} p-4 hover:shadow-lg transition-shadow`}>
-                                            <div className="flex items-center gap-4">
-                                                <div className={`text-3xl font-bold ${idx < 3 ? 'text-blue-600' : textClass} w-12 text-center`}>
-                                                    {idx + 1}
-                                                </div>
-                                                <PlayerImage player={player} size="md" />
-                                                <div className="flex-1 min-w-0">
-                                                    <div className={`font-bold text-lg truncate ${headingClass}`}>{player.display_name || player.name}</div>
-                                                    <div className={`text-sm ${textClass}`}>
-                                                        {player.gp} GP{player.teams ? ` • ${player.teams.join(', ')}` : ''}
+                                    {sortedPlayers.length === 0 ? (
+                                        <div className={`${cardClass} rounded-lg border ${borderClass} p-8 text-center ${textClass}`}>
+                                            <p>No player stats available for this selection.</p>
+                                            <p className="text-sm mt-2">Try selecting "All Games" or a different filter.</p>
+                                        </div>
+                                    ) : (
+                                        sortedPlayers.map((player, idx) => (
+                                            <div key={player.number} className={`${cardClass} rounded-lg border ${borderClass} p-4 hover:shadow-lg transition-shadow`}>
+                                                <div className="flex items-center gap-4">
+                                                    <div className={`text-3xl font-bold ${idx < 3 ? 'text-blue-600' : textClass} w-12 text-center`}>
+                                                        {idx + 1}
                                                     </div>
-                                                </div>
-                                                <div className="text-right">
-                                                    <div className="text-3xl font-bold text-blue-600">
-                                                        {typeof player[statCategory] === 'number' 
-                                                            ? player[statCategory].toFixed(1) 
-                                                            : '0.0'}
+                                                    <PlayerImage player={player} size="md" />
+                                                    <div className="flex-1 min-w-0">
+                                                        <div className={`font-bold text-lg truncate ${headingClass}`}>{player.display_name || player.name}</div>
+                                                        <div className={`text-sm ${textClass}`}>
+                                                            {player.gp} GP{player.teams ? ` • ${player.teams.join(', ')}` : ''}
+                                                        </div>
                                                     </div>
-                                                    <div className={`text-xs ${textClass}`}>{statCategory.toUpperCase()}</div>
+                                                    <div className="text-right">
+                                                        <div className="text-3xl font-bold text-blue-600">
+                                                            {formatStatValue(player[statCategory])}
+                                                        </div>
+                                                        <div className={`text-xs ${textClass}`}>
+                                                            {(averageCategories.find(c => c.key === statCategory) || 
+                                                              totalCategories.find(c => c.key === statCategory))?.label || 
+                                                             statCategory.replace(/_pg$/i, '').toUpperCase()}
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    ))}
+                                        ))
+                                    )}
                                 </div>
                             </div>
                         )}
@@ -667,8 +810,8 @@
                                         
                                         // Get player data for the image
                                         const recordPlayer = record.player_number 
-                                            ? players[record.player_number] 
-                                            : Object.values(players).find(p => p.name === record.player || p.display_name === record.player);
+                                            ? (players[record.player_number] || allPlayersData[record.player_number])
+                                            : Object.values(allPlayersData).find(p => p.name === record.player || p.display_name === record.player);
                                         
                                         return (
                                             <div key={key} className={`${cardClass} rounded-lg border ${borderClass} p-4`}>
@@ -679,7 +822,7 @@
                                                         <div className={textClass}>
                                                             {record.player} • vs {record.opponent}
                                                         </div>
-                                                        <div className={`text-sm ${textClass}`}>{record.date}</div>
+                                                        <div className={`text-sm ${textClass}`}>{formatDate(record.date)}</div>
                                                     </div>
                                                     <div className={`text-4xl font-bold text-${accentColor}`}>{record.value}</div>
                                                 </div>
@@ -697,8 +840,8 @@
                                 {Object.keys(allGames).length === 0 ? (
                                     <div className={`${cardClass} rounded-lg border ${borderClass} p-6 text-center ${textClass}`}>
                                         <Calendar size={48} className="mx-auto mb-4 opacity-50" />
-                                        <p>No games found yet.</p>
-                                        <p className="text-sm mt-2">Games will appear after processing with the parser script</p>
+                                        <p>No games found for this season.</p>
+                                        <p className="text-sm mt-2">Make sure your data/games/ folder contains game files and games_index.json is updated.</p>
                                     </div>
                                 ) : (
                                     <div className="space-y-3">

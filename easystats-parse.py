@@ -139,12 +139,12 @@ class EasyStatsParser:
         if fg and three_pt:
             # Calculate 2PT (FG - 3PT)
             derived['2pt'] = [fg[0] - three_pt[0], fg[1] - three_pt[1]]
-            derived['2pt_pct'] = round((derived['2pt'][0] / derived['2pt'][1] * 100), 1) if derived['2pt'][1] > 0 else 0
+            derived['2pt_pct'] = round((derived['2pt'][0] / derived['2pt'][1] * 100), 1) if derived['2pt'][1] > 0 else 0.0
         
         # Calculate percentages
-        derived['fg_pct'] = round((fg[0] / fg[1] * 100), 1) if fg and fg[1] > 0 else 0
-        derived['3pt_pct'] = round((three_pt[0] / three_pt[1] * 100), 1) if three_pt and three_pt[1] > 0 else 0
-        derived['ft_pct'] = round((ft[0] / ft[1] * 100), 1) if ft and ft[1] > 0 else 0
+        derived['fg_pct'] = round((fg[0] / fg[1] * 100), 1) if fg and fg[1] > 0 else 0.0
+        derived['3pt_pct'] = round((three_pt[0] / three_pt[1] * 100), 1) if three_pt and three_pt[1] > 0 else 0.0
+        derived['ft_pct'] = round((ft[0] / ft[1] * 100), 1) if ft and ft[1] > 0 else 0.0
         
         # Total rebounds
         oreb = stats.get('oreb', 0) or 0
@@ -167,22 +167,19 @@ class EasyStatsParser:
         if not game_info:
             raise ValueError(f"Could not parse title: {title.text}")
         
-        # Get date
+        # Get date from HTML
         date_elem = soup.find('span', class_='detail')
         date = self.parse_date(date_elem.text) if date_elem else datetime.now().strftime('%Y-%m-%d')
         
-        # Extract just the year from the date for the season key
-        # The season name is stored separately in seasons_meta
-        season_key = date[:4]  # Always use YYYY format for keys
-        season_display = season_key  # Default display name
+        # Season key is ALWAYS just the year (YYYY format)
+        # This ensures dates remain in YYYY-MM-DD format
+        season_key = date[:4]  # Extract year from date
         
-        # If a season name is specified, save it to meta
+        # If a season name is specified, save the display name to meta
         if force_season:
-            # Clean up the season name - extract just the display name
-            # e.g., "2025 spring" or "2025spring" -> display as "2025 Spring"
             force_season = force_season.strip()
             
-            # If the season contains a year and name like "2025 spring", parse them
+            # Parse season string - could be "2025", "2025 Spring", "2025spring", etc.
             season_match = re.match(r'(\d{4})\s*(.+)?', force_season)
             if season_match:
                 season_key = season_match.group(1)  # Use just the year as the key
@@ -191,9 +188,9 @@ class EasyStatsParser:
                     # Capitalize the season suffix (e.g., "spring" -> "Spring")
                     season_display = f"{season_key} {season_suffix.strip().title()}"
                 else:
-                    season_display = season_key
+                    season_display = f"{season_key} Season"
             else:
-                # If no year in the string, use current year
+                # No year found, use current year from date
                 season_display = force_season.title()
             
             # Store the season display name in meta
@@ -281,10 +278,10 @@ class EasyStatsParser:
             
             player_stats[number] = stats
         
-        # Create game object
+        # Create game object - date stays in YYYY-MM-DD format
         game = {
-            'date': date,
-            'season': season_key,
+            'date': date,  # Always YYYY-MM-DD format
+            'season': season_key,  # Always just the year (YYYY)
             'opponent': opponent,
             'homeAway': 'home' if is_home else 'away',
             'score': {
@@ -347,6 +344,9 @@ class EasyStatsParser:
             game = self.load_json(game_file, {})
             game_type = 'playoff' if game.get('isPlayoff') else 'regular'
             
+            # Use the game date directly (should be YYYY-MM-DD format)
+            game_date = game.get('date', '')
+            
             for player_num, stats in game.get('stats', {}).items():
                 player_name = self.players.get(player_num, {}).get('name', f"#{player_num}")
                 
@@ -369,7 +369,7 @@ class EasyStatsParser:
                             'player': player_name,
                             'player_number': player_num,
                             'value': value,
-                            'date': game['date'],
+                            'date': game_date,
                             'opponent': game['opponent']
                         }
                     
@@ -379,7 +379,7 @@ class EasyStatsParser:
                             'player': player_name,
                             'player_number': player_num,
                             'value': value,
-                            'date': game['date'],
+                            'date': game_date,
                             'opponent': game['opponent']
                         }
         
@@ -442,7 +442,7 @@ class EasyStatsParser:
                 for player_num, stats in season_data[category].items():
                     gp = stats['gp']
                     if gp > 0:
-                        # Calculate averages
+                        # Calculate averages (always as floats)
                         stats['ppg'] = round(stats['pts'] / gp, 1)
                         stats['rpg'] = round(stats['reb'] / gp, 1)
                         stats['apg'] = round(stats['asst'] / gp, 1)
@@ -453,23 +453,23 @@ class EasyStatsParser:
                         stats['orebpg'] = round(stats['oreb'] / gp, 1)
                         stats['drebpg'] = round(stats['dreb'] / gp, 1)
                         
-                        # Calculate per game attempts
-                        stats['fga_pg'] = round(stats['fg'][1] / gp, 1) if stats['fg'][1] > 0 else 0
-                        stats['3pa_pg'] = round(stats['3pt'][1] / gp, 1) if stats['3pt'][1] > 0 else 0
-                        stats['fta_pg'] = round(stats['ft'][1] / gp, 1) if stats['ft'][1] > 0 else 0
-                        stats['2pa_pg'] = round(stats['2pt'][1] / gp, 1) if stats['2pt'][1] > 0 else 0
+                        # Calculate per game attempts (always as floats)
+                        stats['fga_pg'] = round(stats['fg'][1] / gp, 1)
+                        stats['3pa_pg'] = round(stats['3pt'][1] / gp, 1)
+                        stats['fta_pg'] = round(stats['ft'][1] / gp, 1)
+                        stats['2pa_pg'] = round(stats['2pt'][1] / gp, 1)
                         
-                        # Calculate per game makes
-                        stats['fgm_pg'] = round(stats['fg'][0] / gp, 1) if stats['fg'][0] > 0 else 0
-                        stats['3pm_pg'] = round(stats['3pt'][0] / gp, 1) if stats['3pt'][0] > 0 else 0
-                        stats['ftm_pg'] = round(stats['ft'][0] / gp, 1) if stats['ft'][0] > 0 else 0
-                        stats['2pm_pg'] = round(stats['2pt'][0] / gp, 1) if stats['2pt'][0] > 0 else 0
+                        # Calculate per game makes (always as floats)
+                        stats['fgm_pg'] = round(stats['fg'][0] / gp, 1)
+                        stats['3pm_pg'] = round(stats['3pt'][0] / gp, 1)
+                        stats['ftm_pg'] = round(stats['ft'][0] / gp, 1)
+                        stats['2pm_pg'] = round(stats['2pt'][0] / gp, 1)
                         
-                        # Calculate percentages
-                        stats['fg_pct'] = round((stats['fg'][0] / stats['fg'][1] * 100), 1) if stats['fg'][1] > 0 else 0
-                        stats['2pt_pct'] = round((stats['2pt'][0] / stats['2pt'][1] * 100), 1) if stats['2pt'][1] > 0 else 0
-                        stats['3pt_pct'] = round((stats['3pt'][0] / stats['3pt'][1] * 100), 1) if stats['3pt'][1] > 0 else 0
-                        stats['ft_pct'] = round((stats['ft'][0] / stats['ft'][1] * 100), 1) if stats['ft'][1] > 0 else 0
+                        # Calculate percentages (always as floats)
+                        stats['fg_pct'] = round((stats['fg'][0] / stats['fg'][1] * 100), 1) if stats['fg'][1] > 0 else 0.0
+                        stats['2pt_pct'] = round((stats['2pt'][0] / stats['2pt'][1] * 100), 1) if stats['2pt'][1] > 0 else 0.0
+                        stats['3pt_pct'] = round((stats['3pt'][0] / stats['3pt'][1] * 100), 1) if stats['3pt'][1] > 0 else 0.0
+                        stats['ft_pct'] = round((stats['ft'][0] / stats['ft'][1] * 100), 1) if stats['ft'][1] > 0 else 0.0
             
             # Save season file
             season_file = self.seasons_dir / f"{season_key}.json"
