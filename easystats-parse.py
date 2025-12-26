@@ -121,7 +121,7 @@ class EasyStatsParser:
                 'position': '',  # Can be manually updated
                 'teams': [],
                 'images': {
-                    'portrait': f'assets/players/{player_id}.png'
+                    'portrait': f'Assets/players/{player_id}.png'
                 }
             }
     
