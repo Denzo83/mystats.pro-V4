@@ -1,0 +1,260 @@
+{
+  "regular": {
+    "most_pts": {
+      "player": null,
+      "player_number": null,
+      "value": 0,
+      "date": null,
+      "opponent": null
+    },
+    "most_reb": {
+      "player": null,
+      "player_number": null,
+      "value": 0,
+      "date": null,
+      "opponent": null
+    },
+    "most_asst": {
+      "player": null,
+      "player_number": null,
+      "value": 0,
+      "date": null,
+      "opponent": null
+    },
+    "most_stl": {
+      "player": null,
+      "player_number": null,
+      "value": 0,
+      "date": null,
+      "opponent": null
+    },
+    "most_blk": {
+      "player": null,
+      "player_number": null,
+      "value": 0,
+      "date": null,
+      "opponent": null
+    },
+    "most_to": {
+      "player": null,
+      "player_number": null,
+      "value": 0,
+      "date": null,
+      "opponent": null
+    },
+    "most_fg": {
+      "player": null,
+      "player_number": null,
+      "value": 0,
+      "date": null,
+      "opponent": null
+    },
+    "most_3pt": {
+      "player": null,
+      "player_number": null,
+      "value": 0,
+      "date": null,
+      "opponent": null
+    },
+    "most_ft": {
+      "player": null,
+      "player_number": null,
+      "value": 0,
+      "date": null,
+      "opponent": null
+    },
+    "most_oreb": {
+      "player": null,
+      "player_number": null,
+      "value": 0,
+      "date": null,
+      "opponent": null
+    },
+    "most_dreb": {
+      "player": null,
+      "player_number": null,
+      "value": 0,
+      "date": null,
+      "opponent": null
+    },
+    "most_foul": {
+      "player": null,
+      "player_number": null,
+      "value": 0,
+      "date": null,
+      "opponent": null
+    }
+  },
+  "playoff": {
+    "most_pts": {
+      "player": "Rhys Ogle",
+      "player_number": "6",
+      "value": 11,
+      "date": "2025-12-16",
+      "opponent": "Macho men"
+    },
+    "most_reb": {
+      "player": "Rhys Ogle",
+      "player_number": "6",
+      "value": 9,
+      "date": "2025-12-16",
+      "opponent": "Macho men"
+    },
+    "most_asst": {
+      "player": "Callan Beamish",
+      "player_number": "21",
+      "value": 3,
+      "date": "2025-12-16",
+      "opponent": "Macho men"
+    },
+    "most_stl": {
+      "player": "Rhys Ogle",
+      "player_number": "6",
+      "value": 3,
+      "date": "2025-12-16",
+      "opponent": "Macho men"
+    },
+    "most_blk": {
+      "player": "Rhys Ogle",
+      "player_number": "6",
+      "value": 3,
+      "date": "2025-12-16",
+      "opponent": "Macho men"
+    },
+    "most_to": {
+      "player": "Jarren Owen",
+      "player_number": "5",
+      "value": 3,
+      "date": "2025-12-16",
+      "opponent": "Macho men"
+    },
+    "most_fg": {
+      "player": "Rhys Ogle",
+      "player_number": "6",
+      "value": 4,
+      "date": "2025-12-16",
+      "opponent": "Macho men"
+    },
+    "most_3pt": {
+      "player": "Josh Todd",
+      "player_number": "11",
+      "value": 2,
+      "date": "2025-12-16",
+      "opponent": "Macho men"
+    },
+    "most_ft": {
+      "player": "Josh Todd",
+      "player_number": "11",
+      "value": 3,
+      "date": "2025-12-16",
+      "opponent": "Macho men"
+    },
+    "most_oreb": {
+      "player": "Callan Beamish",
+      "player_number": "21",
+      "value": 3,
+      "date": "2025-12-16",
+      "opponent": "Macho men"
+    },
+    "most_dreb": {
+      "player": "Rhys Ogle",
+      "player_number": "6",
+      "value": 7,
+      "date": "2025-12-16",
+      "opponent": "Macho men"
+    },
+    "most_foul": {
+      "player": "Josh Todd",
+      "player_number": "11",
+      "value": 4,
+      "date": "2025-12-16",
+      "opponent": "Macho men"
+    }
+  },
+  "all": {
+    "most_pts": {
+      "player": "Rhys Ogle",
+      "player_number": "6",
+      "value": 11,
+      "date": "2025-12-16",
+      "opponent": "Macho men"
+    },
+    "most_reb": {
+      "player": "Rhys Ogle",
+      "player_number": "6",
+      "value": 9,
+      "date": "2025-12-16",
+      "opponent": "Macho men"
+    },
+    "most_asst": {
+      "player": "Callan Beamish",
+      "player_number": "21",
+      "value": 3,
+      "date": "2025-12-16",
+      "opponent": "Macho men"
+    },
+    "most_stl": {
+      "player": "Rhys Ogle",
+      "player_number": "6",
+      "value": 3,
+      "date": "2025-12-16",
+      "opponent": "Macho men"
+    },
+    "most_blk": {
+      "player": "Rhys Ogle",
+      "player_number": "6",
+      "value": 3,
+      "date": "2025-12-16",
+      "opponent": "Macho men"
+    },
+    "most_to": {
+      "player": "Jarren Owen",
+      "player_number": "5",
+      "value": 3,
+      "date": "2025-12-16",
+      "opponent": "Macho men"
+    },
+    "most_fg": {
+      "player": "Rhys Ogle",
+      "player_number": "6",
+      "value": 4,
+      "date": "2025-12-16",
+      "opponent": "Macho men"
+    },
+    "most_3pt": {
+      "player": "Josh Todd",
+      "player_number": "11",
+      "value": 2,
+      "date": "2025-12-16",
+      "opponent": "Macho men"
+    },
+    "most_ft": {
+      "player": "Josh Todd",
+      "player_number": "11",
+      "value": 3,
+      "date": "2025-12-16",
+      "opponent": "Macho men"
+    },
+    "most_oreb": {
+      "player": "Callan Beamish",
+      "player_number": "21",
+      "value": 3,
+      "date": "2025-12-16",
+      "opponent": "Macho men"
+    },
+    "most_dreb": {
+      "player": "Rhys Ogle",
+      "player_number": "6",
+      "value": 7,
+      "date": "2025-12-16",
+      "opponent": "Macho men"
+    },
+    "most_foul": {
+      "player": "Josh Todd",
+      "player_number": "11",
+      "value": 4,
+      "date": "2025-12-16",
+      "opponent": "Macho men"
+    }
+  }
+}
