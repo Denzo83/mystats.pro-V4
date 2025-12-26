@@ -6,11 +6,10 @@
     "number": "37",
     "position": "G/F",
     "teams": [
-      "Pretty good",
-      "pretty-good"
+      "Pretty good"
     ],
     "images": {
-      "portrait": "assets/players/kyle-denzin.png"
+      "portrait": "Assets/players/kyle-denzin.png"
     }
   },
   "43": {
@@ -20,11 +19,10 @@
     "number": "43",
     "position": "F",
     "teams": [
-      "Pretty good",
-      "pretty-good"
+      "Pretty good"    
     ],
     "images": {
-      "portrait": "assets/players/levi-denzin.png"
+      "portrait": "Assets/players/levi-denzin.png"
     }
   },
   "28": {
@@ -35,11 +33,10 @@
     "position": "G",
     "teams": [
       "chuckers chuckers",
-      "Pretty good",
-      "pretty-good"
+      "Pretty good"
     ],
     "images": {
-      "portrait": "assets/players/findlay-wendtman.png"
+      "portrait": "Assets/players/findlay-wendtman.png"
     }
   },
   "15": {
@@ -53,7 +50,7 @@
       "chuckers chuckers"
     ],
     "images": {
-      "portrait": "assets/players/placeholder4.png"
+      "portrait": "Assets/players/placeholder4.png"
     }
   },
   "7": {
@@ -66,7 +63,7 @@
       "Pretty good"
     ],
     "images": {
-      "portrait": "assets/players/placeholder6.png"
+      "portrait": "Assets/players/placeholder6.png"
     }
   },
   "24": {
@@ -79,7 +76,7 @@
       "Pretty good"
     ],
     "images": {
-      "portrait": "assets/players/josh-todd.png"
+      "portrait": "Assets/players/josh-todd.png"
     }
   },
   "11": {
@@ -89,11 +86,10 @@
     "number": "21",
     "position": "C",
     "teams": [
-      "Pretty good",
-      "pretty-good"
+      "Pretty good"
     ],
     "images": {
-      "portrait": "assets/players/placeholder3.png"
+      "portrait": "Assets/players/placeholder3.png"
     }
   },
   "5": {
@@ -103,76 +99,23 @@
     "number": "5",
     "position": "G",
     "teams": [
-      "Pretty good",
-      "pretty-good"
-    ],
-    "images": {
-      "portrait": "assets/players/placeholder5.png"
-    }
-  },
-  "14": {
-    "id": "rhys-ogle",
-    "display_name": "Rhys Ogle",
-    "name": "Rhys Ogle",
-    "number": "6",
-    "position": "F",
-    "teams": [
       "Pretty good"
     ],
     "images": {
-      "portrait": "assets/players/placeholder7.png"
+      "portrait": "Assets/players/placeholder5.png"
     }
   },
-  "1": {
-    "id": "r-ogle",
-    "display_name": "R. Ogle",
-    "name": "R. Ogle",
-    "number": "1",
-    "position": "",
-    "teams": [
-      "pretty-good"
-    ],
-    "images": {
-      "portrait": "assets/players/r-ogle.png"
-    }
-  },
-  "2": {
-    "id": "c-beamish",
-    "display_name": "C. Beamish",
-    "name": "C. Beamish",
-    "number": "2",
-    "position": "",
-    "teams": [
-      "pretty-good"
-    ],
-    "images": {
-      "portrait": "assets/players/c-beamish.png"
-    }
-  },
-  "10": {
-    "id": "j-neaves",
-    "display_name": "J. Neaves",
-    "name": "J. Neaves",
-    "number": "10",
-    "position": "",
-    "teams": [
-      "pretty-good"
-    ],
-    "images": {
-      "portrait": "assets/players/j-neaves.png"
-    }
-  },
-  "27": {
-    "id": "e-todd",
-    "display_name": "E. Todd",
-    "name": "E. Todd",
-    "number": "27",
-    "position": "",
-    "teams": [
-      "pretty-good"
-    ],
-    "images": {
-      "portrait": "assets/players/e-todd.png"
+    "14": {
+      "id": "rhys-ogle",
+      "display_name": "Rhys Ogle",
+      "name": "Rhys Ogle",
+      "number": "6",
+      "position": "F",
+      "teams": [
+        "Pretty good"
+      ],
+      "images": {
+        "portrait": "Assets/players/placeholder7.png"
+      }
     }
   }
-}
