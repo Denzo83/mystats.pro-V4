@@ -1,11 +1,12 @@
 {
-  "2025 Spring-12-16-macho-men": {
-    "filename": "2025 Spring-12-16-macho-men.json",
-    "date": "2025 Spring-12-16",
+  "2025-12-16-macho-men": {
+    "filename": "2025-12-16-macho-men.json",
+    "date": "2025-12-16",
+    "season": "2025",
     "opponent": "Macho men",
     "score": {
       "us": 32,
-      "them": 0
+      "them": 18
     },
     "result": "W",
     "isPlayoff": true
