@@ -175,7 +175,7 @@ class EasyStatsParser:
             date = date.replace(year, force_season)
         
         # Determine if our team is home or away (Pretty good is our team)
-        our_team = "pretty-good"  # Standardized team name
+        our_team = "Pretty good"  # Standardized team name
         is_home = game_info['home_team'].lower().replace(' ', '-') == our_team.lower()
         
         opponent = game_info['away_team'] if is_home else game_info['home_team']
