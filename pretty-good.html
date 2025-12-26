@@ -110,6 +110,7 @@
             const [gameType, setGameType] = useState('all');
             const [statCategory, setStatCategory] = useState('ppg');
             const [showTotals, setShowTotals] = useState(false); // Toggle for totals vs averages
+            const [showPlayerTotals, setShowPlayerTotals] = useState(false); // Toggle for player detail page
             const [expandedPlayer, setExpandedPlayer] = useState(null);
             
             const [currentView, setCurrentView] = useState('main');
@@ -567,6 +568,303 @@
                 );
             }
 
+            // Player Detail View
+            if (currentView === 'player' && selectedPlayerNumber) {
+                const player = players[selectedPlayerNumber] || allPlayersData[selectedPlayerNumber];
+                const playerStats = seasonStats[gameType]?.[selectedPlayerNumber] || {};
+                
+                if (!player) {
+                    setCurrentView('main');
+                    return null;
+                }
+
+                // Get player's games
+                const playerGames = Object.entries(allGames)
+                    .filter(([_, game]) => {
+                        const hasStats = game.stats && game.stats[selectedPlayerNumber];
+                        if (gameType === 'regular') return hasStats && !game.isPlayoff;
+                        if (gameType === 'playoff') return hasStats && game.isPlayoff;
+                        return hasStats;
+                    })
+                    .sort((a, b) => new Date(b[1].date) - new Date(a[1].date));
+
+                // Calculate leaderboard positions for this player
+                const getLeaderboardPosition = (statKey) => {
+                    if (!seasonStats[gameType]) return null;
+                    const allPlayers = Object.entries(seasonStats[gameType])
+                        .filter(([_, stats]) => stats.gp > 0)
+                        .map(([num, stats]) => ({ number: num, value: Number(stats[statKey]) || 0 }))
+                        .sort((a, b) => b.value - a.value);
+                    
+                    const position = allPlayers.findIndex(p => p.number === selectedPlayerNumber) + 1;
+                    return position > 0 ? position : null;
+                };
+
+                // Stats to show in player profile
+                const playerStatCategories = [
+                    { key: 'ppg', totalKey: 'pts', label: 'Points', perGame: true },
+                    { key: 'rpg', totalKey: 'reb', label: 'Rebounds', perGame: true },
+                    { key: 'apg', totalKey: 'asst', label: 'Assists', perGame: true },
+                    { key: 'spg', totalKey: 'stl', label: 'Steals', perGame: true },
+                    { key: 'bpg', totalKey: 'blk', label: 'Blocks', perGame: true },
+                    { key: 'tpg', totalKey: 'to', label: 'Turnovers', perGame: true },
+                    { key: 'fpg', totalKey: 'foul', label: 'Fouls', perGame: true },
+                    { key: 'orebpg', totalKey: 'oreb', label: 'Off. Reb', perGame: true },
+                    { key: 'drebpg', totalKey: 'dreb', label: 'Def. Reb', perGame: true },
+                    { key: 'fg_pct', label: 'FG%', perGame: false },
+                    { key: '3pt_pct', label: '3P%', perGame: false },
+                    { key: 'ft_pct', label: 'FT%', perGame: false },
+                    { key: '2pt_pct', label: '2P%', perGame: false }
+                ];
+
+                return (
+                    <div className={`min-h-screen ${bgClass} transition-colors duration-300`}>
+                        <header className={`${accentClass} text-white sticky top-0 z-50 shadow-lg`}>
+                            <div className="max-w-7xl mx-auto px-4 py-4">
+                                <button 
+                                    onClick={() => setCurrentView('main')}
+                                    className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-3 transition-colors text-sm"
+                                >
+                                    <ArrowLeft size={16} />
+                                    <span>Back to Roster</span>
+                                </button>
+                                <div className="flex items-center gap-4">
+                                    <PlayerImage player={player} size="xl" />
+                                    <div>
+                                        <h1 className="text-2xl font-bold">{player.display_name || player.name}</h1>
+                                        <p className="text-white/80">#{player.number}</p>
+                                        {player.teams && (
+                                            <p className="text-white/60 text-sm">{player.teams.join(' • ')}</p>
+                                        )}
+                                    </div>
+                                    <div className="ml-auto text-right">
+                                        <div className="text-3xl font-bold">{playerStats.gp || 0}</div>
+                                        <div className="text-white/80 text-sm">Games Played</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </header>
+
+                        <div className="max-w-7xl mx-auto px-4 py-6 space-y-6">
+                            {/* Season Stats Section */}
+                            <div className={`${cardClass} rounded-lg border ${borderClass} p-6`}>
+                                <div className="flex items-center justify-between mb-4">
+                                    <h2 className={`text-xl font-bold ${headingClass}`}>Season Statistics</h2>
+                                    <div className={`flex rounded-lg border ${borderClass} overflow-hidden`}>
+                                        <button
+                                            onClick={() => setShowPlayerTotals(false)}
+                                            className={`px-3 py-1.5 text-sm font-medium transition-colors ${
+                                                !showPlayerTotals 
+                                                    ? `${accentClass} text-white` 
+                                                    : `${cardClass} hover:opacity-80`
+                                            }`}
+                                        >
+                                            Per Game
+                                        </button>
+                                        <button
+                                            onClick={() => setShowPlayerTotals(true)}
+                                            className={`px-3 py-1.5 text-sm font-medium transition-colors ${
+                                                showPlayerTotals 
+                                                    ? `${accentClass} text-white` 
+                                                    : `${cardClass} hover:opacity-80`
+                                            }`}
+                                        >
+                                            Totals
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                                    {playerStatCategories.map(({ key, totalKey, label, perGame }) => {
+                                        const displayKey = (showPlayerTotals && perGame && totalKey) ? totalKey : key;
+                                        const value = playerStats[displayKey];
+                                        const position = getLeaderboardPosition(displayKey);
+                                        
+                                        return (
+                                            <div key={key} className={`p-3 rounded-lg ${darkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
+                                                <div className={`text-2xl font-bold text-${accentColor}`}>
+                                                    {value !== undefined && value !== null 
+                                                        ? (typeof value === 'number' 
+                                                            ? (showPlayerTotals && perGame ? Math.round(value) : value.toFixed(1))
+                                                            : value)
+                                                        : '-'}
+                                                </div>
+                                                <div className={`text-sm ${textClass}`}>{label}</div>
+                                                {position && (
+                                                    <div className={`text-xs mt-1 ${position <= 3 ? 'text-yellow-500 font-bold' : textClass}`}>
+                                                        #{position} on team
+                                                    </div>
+                                                )}
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+
+                                {/* Shooting Splits */}
+                                {playerStats.fg && (
+                                    <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                                        <h3 className={`text-sm font-semibold mb-3 ${headingClass}`}>Shooting Splits</h3>
+                                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm">
+                                            <div>
+                                                <span className={textClass}>FG: </span>
+                                                <span className={`font-bold ${headingClass}`}>
+                                                    {playerStats.fg[0]}-{playerStats.fg[1]} ({playerStats.fg_pct?.toFixed(1) || 0}%)
+                                                </span>
+                                            </div>
+                                            <div>
+                                                <span className={textClass}>3PT: </span>
+                                                <span className={`font-bold ${headingClass}`}>
+                                                    {playerStats['3pt']?.[0] || 0}-{playerStats['3pt']?.[1] || 0} ({playerStats['3pt_pct']?.toFixed(1) || 0}%)
+                                                </span>
+                                            </div>
+                                            <div>
+                                                <span className={textClass}>2PT: </span>
+                                                <span className={`font-bold ${headingClass}`}>
+                                                    {playerStats['2pt']?.[0] || 0}-{playerStats['2pt']?.[1] || 0} ({playerStats['2pt_pct']?.toFixed(1) || 0}%)
+                                                </span>
+                                            </div>
+                                            <div>
+                                                <span className={textClass}>FT: </span>
+                                                <span className={`font-bold ${headingClass}`}>
+                                                    {playerStats.ft?.[0] || 0}-{playerStats.ft?.[1] || 0} ({playerStats.ft_pct?.toFixed(1) || 0}%)
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Leaderboard Rankings */}
+                            <div className={`${cardClass} rounded-lg border ${borderClass} p-6`}>
+                                <h2 className={`text-xl font-bold mb-4 ${headingClass}`}>Leaderboard Rankings</h2>
+                                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+                                    {[
+                                        { key: 'ppg', label: 'PPG' },
+                                        { key: 'rpg', label: 'RPG' },
+                                        { key: 'apg', label: 'APG' },
+                                        { key: 'spg', label: 'SPG' },
+                                        { key: 'bpg', label: 'BPG' },
+                                        { key: 'fg_pct', label: 'FG%' },
+                                        { key: '3pt_pct', label: '3P%' },
+                                        { key: 'ft_pct', label: 'FT%' },
+                                        { key: 'tpg', label: 'TPG' },
+                                        { key: 'fpg', label: 'FPG' },
+                                        { key: 'orebpg', label: 'ORPG' },
+                                        { key: 'drebpg', label: 'DRPG' }
+                                    ].map(({ key, label }) => {
+                                        const position = getLeaderboardPosition(key);
+                                        const value = playerStats[key];
+                                        
+                                        return (
+                                            <div 
+                                                key={key} 
+                                                className={`p-3 rounded-lg text-center ${
+                                                    position === 1 ? 'bg-yellow-100 dark:bg-yellow-900/30 border-2 border-yellow-400' :
+                                                    position === 2 ? 'bg-gray-100 dark:bg-gray-600 border-2 border-gray-400' :
+                                                    position === 3 ? 'bg-orange-100 dark:bg-orange-900/30 border-2 border-orange-400' :
+                                                    darkMode ? 'bg-gray-700' : 'bg-gray-100'
+                                                }`}
+                                            >
+                                                <div className={`text-2xl font-bold ${
+                                                    position === 1 ? 'text-yellow-600' :
+                                                    position === 2 ? 'text-gray-500' :
+                                                    position === 3 ? 'text-orange-500' :
+                                                    `text-${accentColor}`
+                                                }`}>
+                                                    {position ? `#${position}` : '-'}
+                                                </div>
+                                                <div className={`text-xs font-medium ${textClass}`}>{label}</div>
+                                                <div className={`text-xs ${textClass}`}>
+                                                    {value !== undefined ? (typeof value === 'number' ? value.toFixed(1) : value) : '-'}
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+
+                            {/* Game Log */}
+                            <div className={`${cardClass} rounded-lg border ${borderClass} overflow-hidden`}>
+                                <div className="p-4 border-b ${borderClass}">
+                                    <h2 className={`text-xl font-bold ${headingClass}`}>Game Log</h2>
+                                </div>
+                                
+                                {playerGames.length === 0 ? (
+                                    <div className={`p-8 text-center ${textClass}`}>
+                                        <Calendar size={48} className="mx-auto mb-4 opacity-50" />
+                                        <p>No games found for this player.</p>
+                                    </div>
+                                ) : (
+                                    <div className="overflow-x-auto">
+                                        <table className="w-full text-sm">
+                                            <thead className={darkMode ? 'bg-gray-700' : 'bg-gray-100'}>
+                                                <tr>
+                                                    <th className={`px-4 py-3 text-left font-semibold ${headingClass}`}>Date</th>
+                                                    <th className={`px-3 py-3 text-left font-semibold ${headingClass}`}>Opponent</th>
+                                                    <th className={`px-3 py-3 text-center font-semibold ${headingClass}`}>Result</th>
+                                                    <th className={`px-3 py-3 text-center font-semibold ${headingClass}`}>PTS</th>
+                                                    <th className={`px-3 py-3 text-center font-semibold ${headingClass}`}>REB</th>
+                                                    <th className={`px-3 py-3 text-center font-semibold ${headingClass}`}>AST</th>
+                                                    <th className={`px-3 py-3 text-center font-semibold ${headingClass}`}>STL</th>
+                                                    <th className={`px-3 py-3 text-center font-semibold ${headingClass}`}>BLK</th>
+                                                    <th className={`px-3 py-3 text-center font-semibold ${headingClass}`}>TO</th>
+                                                    <th className={`px-3 py-3 text-center font-semibold ${headingClass}`}>FG</th>
+                                                    <th className={`px-3 py-3 text-center font-semibold ${headingClass}`}>3PT</th>
+                                                    <th className={`px-3 py-3 text-center font-semibold ${headingClass}`}>FT</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {playerGames.map(([gameId, game]) => {
+                                                    const stats = game.stats[selectedPlayerNumber];
+                                                    return (
+                                                        <tr 
+                                                            key={gameId} 
+                                                            className={`border-t ${borderClass} hover:${darkMode ? 'bg-gray-700' : 'bg-gray-50'} cursor-pointer`}
+                                                            onClick={() => {
+                                                                setSelectedGameId(gameId);
+                                                                setCurrentView('boxscore');
+                                                            }}
+                                                        >
+                                                            <td className={`px-4 py-3 ${headingClass}`}>
+                                                                {formatDate(game.date)}
+                                                                {game.isPlayoff && (
+                                                                    <span className="ml-2 px-1.5 py-0.5 bg-yellow-500 text-white text-xs rounded">P</span>
+                                                                )}
+                                                            </td>
+                                                            <td className={`px-3 py-3 ${textClass}`}>vs {game.opponent}</td>
+                                                            <td className="px-3 py-3 text-center">
+                                                                <span className={`font-bold ${game.result === 'W' ? 'text-green-600' : 'text-red-600'}`}>
+                                                                    {game.result} {game.score.us}-{game.score.them}
+                                                                </span>
+                                                            </td>
+                                                            <td className={`px-3 py-3 text-center font-bold text-${accentColor}`}>{stats.pts || 0}</td>
+                                                            <td className="px-3 py-3 text-center">{stats.reb || 0}</td>
+                                                            <td className="px-3 py-3 text-center">{stats.asst || 0}</td>
+                                                            <td className="px-3 py-3 text-center">{stats.stl || 0}</td>
+                                                            <td className="px-3 py-3 text-center">{stats.blk || 0}</td>
+                                                            <td className="px-3 py-3 text-center">{stats.to || 0}</td>
+                                                            <td className="px-3 py-3 text-center">{stats.fg ? `${stats.fg[0]}-${stats.fg[1]}` : '-'}</td>
+                                                            <td className="px-3 py-3 text-center">{stats['3pt'] ? `${stats['3pt'][0]}-${stats['3pt'][1]}` : '-'}</td>
+                                                            <td className="px-3 py-3 text-center">{stats.ft ? `${stats.ft[0]}-${stats.ft[1]}` : '-'}</td>
+                                                        </tr>
+                                                    );
+                                                })}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
+                        <footer className={`${cardClass} border-t ${borderClass} mt-12 py-6`}>
+                            <div className={`max-w-7xl mx-auto px-4 text-center ${textClass}`}>
+                                <p>{teamConfig.name} • Season Stats • Powered by EasyStats</p>
+                            </div>
+                        </footer>
+                    </div>
+                );
+            }
+
             return (
                 <div className={`min-h-screen ${bgClass} transition-colors duration-300`}>
                     <header className={`${accentClass} text-white sticky top-0 z-50 shadow-lg`}>
@@ -707,7 +1005,14 @@
                                         </div>
                                     ) : (
                                         sortedPlayers.map((player, idx) => (
-                                            <div key={player.number} className={`${cardClass} rounded-lg border ${borderClass} p-4 hover:shadow-lg transition-shadow`}>
+                                            <div 
+                                                key={player.number} 
+                                                className={`${cardClass} rounded-lg border ${borderClass} p-4 hover:shadow-lg transition-shadow cursor-pointer`}
+                                                onClick={() => {
+                                                    setSelectedPlayerNumber(player.number);
+                                                    setCurrentView('player');
+                                                }}
+                                            >
                                                 <div className="flex items-center gap-4">
                                                     <div className={`text-3xl font-bold ${idx < 3 ? 'text-blue-600' : textClass} w-12 text-center`}>
                                                         {idx + 1}
@@ -744,7 +1049,14 @@
                                     {Object.values(players).map(player => {
                                         const stats = seasonStats[gameType]?.[player.number] || {};
                                         return (
-                                            <div key={player.number} className={`${cardClass} rounded-lg border ${borderClass} p-4`}>
+                                            <div 
+                                                key={player.number} 
+                                                className={`${cardClass} rounded-lg border ${borderClass} p-4 cursor-pointer hover:shadow-lg transition-shadow`}
+                                                onClick={() => {
+                                                    setSelectedPlayerNumber(player.number);
+                                                    setCurrentView('player');
+                                                }}
+                                            >
                                                 <div className="flex items-center gap-4">
                                                     <PlayerImage player={player} size="lg" />
                                                     <div className="flex-1 min-w-0">
@@ -771,6 +1083,9 @@
                                                                 </div>
                                                             </div>
                                                         )}
+                                                    </div>
+                                                    <div className={`${textClass}`}>
+                                                        <ChevronDown size={20} className="-rotate-90" />
                                                     </div>
                                                 </div>
                                             </div>
@@ -814,7 +1129,16 @@
                                             : Object.values(allPlayersData).find(p => p.name === record.player || p.display_name === record.player);
                                         
                                         return (
-                                            <div key={key} className={`${cardClass} rounded-lg border ${borderClass} p-4`}>
+                                            <div 
+                                                key={key} 
+                                                className={`${cardClass} rounded-lg border ${borderClass} p-4 cursor-pointer hover:shadow-lg transition-shadow`}
+                                                onClick={() => {
+                                                    if (record.player_number) {
+                                                        setSelectedPlayerNumber(record.player_number);
+                                                        setCurrentView('player');
+                                                    }
+                                                }}
+                                            >
                                                 <div className="flex items-center gap-4">
                                                     <PlayerImage player={recordPlayer} size="md" />
                                                     <div className="flex-1 min-w-0">
