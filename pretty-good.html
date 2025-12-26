@@ -55,12 +55,45 @@
         const ChevronUp = ({size = 24}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="18 15 12 9 6 15"/></svg>;
         const TrendingUp = ({size = 24}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>;
         const AlertCircle = ({size = 24, className = ""}) => <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>;
+        const ArrowLeft = ({size = 24}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>;
+
+        // Player Image Component with fallback
+        const PlayerImage = ({ player, size = 'md', className = '' }) => {
+            const [imgError, setImgError] = useState(false);
+            const sizeClasses = {
+                sm: 'w-10 h-10 text-sm',
+                md: 'w-16 h-16 text-xl',
+                lg: 'w-20 h-20 text-2xl',
+                xl: 'w-24 h-24 text-3xl'
+            };
+            
+            const imgSrc = player?.images?.portrait;
+            
+            if (!imgError && imgSrc) {
+                return (
+                    <div className={`${sizeClasses[size]} rounded-full overflow-hidden flex-shrink-0 ${className}`}>
+                        <img 
+                            src={imgSrc}
+                            alt={player?.name || 'Player'}
+                            className="w-full h-full object-cover"
+                            onError={() => setImgError(true)}
+                        />
+                    </div>
+                );
+            }
+            
+            return (
+                <div className={`${sizeClasses[size]} rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold flex-shrink-0 ${className}`}>
+                    #{player?.number || '?'}
+                </div>
+            );
+        };
 
         function BasketballStatsApp() {
             const [darkMode, setDarkMode] = useState(false);
             const [activeTab, setActiveTab] = useState('leaderboards');
             const [selectedSeason, setSelectedSeason] = useState('2025');
-            const [gameType, setGameType] = useState('regular');
+            const [gameType, setGameType] = useState('all');
             const [statCategory, setStatCategory] = useState('ppg');
             const [expandedPlayer, setExpandedPlayer] = useState(null);
             
@@ -73,6 +106,7 @@
             const [records, setRecords] = useState({});
             const [games, setGames] = useState([]);
             const [allGames, setAllGames] = useState({});
+            const [seasonsMeta, setSeasonsMeta] = useState({});
             const [loading, setLoading] = useState(true);
             const [error, setError] = useState(null);
 
@@ -99,7 +133,8 @@
                         fetch('data/players.json').catch(() => null),
                         fetch(`data/seasons/${selectedSeason}.json`).catch(() => null),
                         fetch('data/records.json').catch(() => null),
-                        fetch('data/games_index.json').catch(() => null)
+                        fetch('data/games_index.json').catch(() => null),
+                        fetch('data/seasons_meta.json').catch(() => null)
                     ]);
 
                     if (responses[0]) {
@@ -133,12 +168,21 @@
                         setRecords({});
                     }
 
+                    if (responses[4]) {
+                        const metaData = await responses[4].json();
+                        setSeasonsMeta(metaData);
+                    } else {
+                        setSeasonsMeta({});
+                    }
+
                     if (responses[3]) {
                         const gamesIndexData = await responses[3].json();
                         const loadedGames = {};
                         
                         for (const [gameId, gameInfo] of Object.entries(gamesIndexData)) {
-                            if (gameInfo.date && gameInfo.date.startsWith(selectedSeason)) {
+                            // Match by season key or date prefix
+                            const gameSeason = gameInfo.season || gameInfo.date?.substring(0, 4);
+                            if (gameSeason === selectedSeason) {
                                 try {
                                     const gameResponse = await fetch(`data/games/${gameInfo.filename}`);
                                     loadedGames[gameId] = await gameResponse.json();
@@ -159,6 +203,7 @@
                 }
             };
 
+            // All stat categories - expanded list
             const statCategories = [
                 { key: 'ppg', label: 'PPG', desc: 'Points Per Game' },
                 { key: 'rpg', label: 'RPG', desc: 'Rebounds Per Game' },
@@ -167,7 +212,19 @@
                 { key: 'bpg', label: 'BPG', desc: 'Blocks Per Game' },
                 { key: 'fg_pct', label: 'FG%', desc: 'Field Goal %' },
                 { key: '3pt_pct', label: '3P%', desc: 'Three Point %' },
-                { key: 'ft_pct', label: 'FT%', desc: 'Free Throw %' }
+                { key: 'ft_pct', label: 'FT%', desc: 'Free Throw %' },
+                { key: 'gp', label: 'GP', desc: 'Games Played' },
+                { key: 'tpg', label: 'TPG', desc: 'Turnovers Per Game' },
+                { key: 'fpg', label: 'FPG', desc: 'Fouls Per Game' },
+                { key: '2pt_pct', label: '2P%', desc: 'Two Point %' },
+                { key: 'fga_pg', label: 'FGA', desc: 'FG Attempts Per Game' },
+                { key: '3pa_pg', label: '3PA', desc: '3PT Attempts Per Game' },
+                { key: 'fta_pg', label: 'FTA', desc: 'FT Attempts Per Game' },
+                { key: 'orebpg', label: 'OREB', desc: 'Off. Rebounds Per Game' },
+                { key: 'drebpg', label: 'DREB', desc: 'Def. Rebounds Per Game' },
+                { key: 'fgm_pg', label: 'FGM', desc: 'FG Made Per Game' },
+                { key: '3pm_pg', label: '3PM', desc: '3PT Made Per Game' },
+                { key: 'ftm_pg', label: 'FTM', desc: 'FT Made Per Game' }
             ];
 
             const sortedPlayers = useMemo(() => {
@@ -182,9 +239,24 @@
                     .sort((a, b) => (b[statCategory] || 0) - (a[statCategory] || 0));
             }, [seasonStats, gameType, statCategory, players]);
 
+            // Get season display name
+            const getSeasonDisplayName = (key) => {
+                return seasonsMeta[key]?.display_name || `${key} Season`;
+            };
+
+            // Available seasons from meta or default
+            const availableSeasons = useMemo(() => {
+                const seasons = Object.keys(seasonsMeta);
+                if (seasons.length === 0) {
+                    return ['2025', '2024']; // Default fallback
+                }
+                return seasons.sort().reverse();
+            }, [seasonsMeta]);
+
             const bgClass = darkMode ? 'bg-gray-900' : 'bg-gray-50';
             const cardClass = darkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-900';
             const textClass = darkMode ? 'text-gray-300' : 'text-gray-600';
+            const headingClass = darkMode ? 'text-white' : 'text-gray-900';
             const borderClass = darkMode ? 'border-gray-700' : 'border-gray-200';
             const accentClass = `bg-gradient-to-r ${teamConfig.colors.primary}`;
             const accentColor = teamConfig.colors.accent;
@@ -231,10 +303,10 @@
                         <div className="max-w-7xl mx-auto px-4 py-12">
                             <div className={`${cardClass} rounded-lg p-8 text-center`}>
                                 <AlertCircle size={48} className="mx-auto mb-4 opacity-50" />
-                                <h2 className="text-2xl font-bold mb-4">Welcome to Pretty Good Basketball Stats!</h2>
+                                <h2 className={`text-2xl font-bold mb-4 ${headingClass}`}>Welcome to Pretty Good Basketball Stats!</h2>
                                 <p className={`${textClass} mb-4`}>Your stats site is ready, but no data has been uploaded yet.</p>
                                 <div className={`${textClass} text-left max-w-2xl mx-auto space-y-3`}>
-                                    <p className="font-bold text-lg">Next Steps:</p>
+                                    <p className={`font-bold text-lg ${headingClass}`}>Next Steps:</p>
                                     <ol className="list-decimal list-inside space-y-2">
                                         <li>Run the parser script on your EasyStats HTML files</li>
                                         <li>Upload the generated <code className="bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded">data/</code> folder to your GitHub repo</li>
@@ -243,11 +315,144 @@
                                     </ol>
                                     <p className="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
                                         <strong>Quick command:</strong><br/>
-                                        <code className="text-sm">python parse_easystats.py "your-game-file.html"</code>
+                                        <code className="text-sm">python easystats-parse.py "your-game-file.html" --season "2025 Spring"</code>
                                     </p>
                                 </div>
                             </div>
                         </div>
+                    </div>
+                );
+            }
+
+            // Box Score View
+            if (currentView === 'boxscore' && selectedGameId) {
+                const game = allGames[selectedGameId];
+                if (!game) {
+                    setCurrentView('main');
+                    return null;
+                }
+
+                return (
+                    <div className={`min-h-screen ${bgClass} transition-colors duration-300`}>
+                        <header className={`${accentClass} text-white sticky top-0 z-50 shadow-lg`}>
+                            <div className="max-w-7xl mx-auto px-4 py-4">
+                                <button 
+                                    onClick={() => setCurrentView('main')}
+                                    className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-3 transition-colors text-sm"
+                                >
+                                    <ArrowLeft size={16} />
+                                    <span>Back to Games</span>
+                                </button>
+                                <div className="flex items-center justify-between">
+                                    <div>
+                                        <h1 className="text-2xl font-bold">Box Score</h1>
+                                        <p className="text-white/80 text-sm">vs {game.opponent} • {game.date}</p>
+                                    </div>
+                                    <div className={`text-3xl font-bold ${game.result === 'W' ? 'text-green-300' : 'text-red-300'}`}>
+                                        {game.score.us} - {game.score.them}
+                                    </div>
+                                </div>
+                            </div>
+                        </header>
+
+                        <div className="max-w-7xl mx-auto px-4 py-6">
+                            <div className={`${cardClass} rounded-lg border ${borderClass} overflow-hidden`}>
+                                <div className="overflow-x-auto">
+                                    <table className="w-full text-sm">
+                                        <thead className={darkMode ? 'bg-gray-700' : 'bg-gray-100'}>
+                                            <tr>
+                                                <th className={`px-4 py-3 text-left font-semibold ${headingClass}`}>Player</th>
+                                                <th className={`px-3 py-3 text-center font-semibold ${headingClass}`}>PTS</th>
+                                                <th className={`px-3 py-3 text-center font-semibold ${headingClass}`}>REB</th>
+                                                <th className={`px-3 py-3 text-center font-semibold ${headingClass}`}>AST</th>
+                                                <th className={`px-3 py-3 text-center font-semibold ${headingClass}`}>STL</th>
+                                                <th className={`px-3 py-3 text-center font-semibold ${headingClass}`}>BLK</th>
+                                                <th className={`px-3 py-3 text-center font-semibold ${headingClass}`}>TO</th>
+                                                <th className={`px-3 py-3 text-center font-semibold ${headingClass}`}>FG</th>
+                                                <th className={`px-3 py-3 text-center font-semibold ${headingClass}`}>3PT</th>
+                                                <th className={`px-3 py-3 text-center font-semibold ${headingClass}`}>FT</th>
+                                                <th className={`px-3 py-3 text-center font-semibold ${headingClass}`}>OREB</th>
+                                                <th className={`px-3 py-3 text-center font-semibold ${headingClass}`}>DREB</th>
+                                                <th className={`px-3 py-3 text-center font-semibold ${headingClass}`}>PF</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {Object.entries(game.stats || {})
+                                                .sort((a, b) => (b[1].pts || 0) - (a[1].pts || 0))
+                                                .map(([playerNum, stats]) => {
+                                                    const player = players[playerNum] || { name: `#${playerNum}`, number: playerNum };
+                                                    return (
+                                                        <tr key={playerNum} className={`border-t ${borderClass} hover:${darkMode ? 'bg-gray-700' : 'bg-gray-50'}`}>
+                                                            <td className="px-4 py-3">
+                                                                <div className="flex items-center gap-3">
+                                                                    <PlayerImage player={player} size="sm" />
+                                                                    <div>
+                                                                        <div className={`font-medium ${headingClass}`}>{player.display_name || player.name}</div>
+                                                                        <div className={`text-xs ${textClass}`}>#{player.number}</div>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td className={`px-3 py-3 text-center font-bold text-${accentColor}`}>{stats.pts || 0}</td>
+                                                            <td className="px-3 py-3 text-center">{stats.reb || 0}</td>
+                                                            <td className="px-3 py-3 text-center">{stats.asst || 0}</td>
+                                                            <td className="px-3 py-3 text-center">{stats.stl || 0}</td>
+                                                            <td className="px-3 py-3 text-center">{stats.blk || 0}</td>
+                                                            <td className="px-3 py-3 text-center">{stats.to || 0}</td>
+                                                            <td className="px-3 py-3 text-center">{stats.fg ? `${stats.fg[0]}-${stats.fg[1]}` : '-'}</td>
+                                                            <td className="px-3 py-3 text-center">{stats['3pt'] ? `${stats['3pt'][0]}-${stats['3pt'][1]}` : '-'}</td>
+                                                            <td className="px-3 py-3 text-center">{stats.ft ? `${stats.ft[0]}-${stats.ft[1]}` : '-'}</td>
+                                                            <td className="px-3 py-3 text-center">{stats.oreb || 0}</td>
+                                                            <td className="px-3 py-3 text-center">{stats.dreb || 0}</td>
+                                                            <td className="px-3 py-3 text-center">{stats.foul || 0}</td>
+                                                        </tr>
+                                                    );
+                                                })}
+                                        </tbody>
+                                        <tfoot className={darkMode ? 'bg-gray-700' : 'bg-gray-100'}>
+                                            <tr className={`border-t-2 ${borderClass} font-bold`}>
+                                                <td className={`px-4 py-3 ${headingClass}`}>TEAM TOTALS</td>
+                                                <td className={`px-3 py-3 text-center text-${accentColor}`}>
+                                                    {Object.values(game.stats || {}).reduce((sum, s) => sum + (s.pts || 0), 0)}
+                                                </td>
+                                                <td className="px-3 py-3 text-center">
+                                                    {Object.values(game.stats || {}).reduce((sum, s) => sum + (s.reb || 0), 0)}
+                                                </td>
+                                                <td className="px-3 py-3 text-center">
+                                                    {Object.values(game.stats || {}).reduce((sum, s) => sum + (s.asst || 0), 0)}
+                                                </td>
+                                                <td className="px-3 py-3 text-center">
+                                                    {Object.values(game.stats || {}).reduce((sum, s) => sum + (s.stl || 0), 0)}
+                                                </td>
+                                                <td className="px-3 py-3 text-center">
+                                                    {Object.values(game.stats || {}).reduce((sum, s) => sum + (s.blk || 0), 0)}
+                                                </td>
+                                                <td className="px-3 py-3 text-center">
+                                                    {Object.values(game.stats || {}).reduce((sum, s) => sum + (s.to || 0), 0)}
+                                                </td>
+                                                <td className="px-3 py-3 text-center">-</td>
+                                                <td className="px-3 py-3 text-center">-</td>
+                                                <td className="px-3 py-3 text-center">-</td>
+                                                <td className="px-3 py-3 text-center">
+                                                    {Object.values(game.stats || {}).reduce((sum, s) => sum + (s.oreb || 0), 0)}
+                                                </td>
+                                                <td className="px-3 py-3 text-center">
+                                                    {Object.values(game.stats || {}).reduce((sum, s) => sum + (s.dreb || 0), 0)}
+                                                </td>
+                                                <td className="px-3 py-3 text-center">
+                                                    {Object.values(game.stats || {}).reduce((sum, s) => sum + (s.foul || 0), 0)}
+                                                </td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <footer className={`${cardClass} border-t ${borderClass} mt-12 py-6`}>
+                            <div className={`max-w-7xl mx-auto px-4 text-center ${textClass}`}>
+                                <p>{teamConfig.name} • Season Stats • Powered by EasyStats</p>
+                            </div>
+                        </footer>
                     </div>
                 );
             }
@@ -297,8 +502,11 @@
                                         onChange={(e) => setSelectedSeason(e.target.value)}
                                         className={`px-3 py-2 rounded-lg border ${borderClass} ${cardClass} text-sm font-medium`}
                                     >
-                                        <option value="2025">2025 Season</option>
-                                        <option value="2024">2024 Season</option>
+                                        {availableSeasons.map(season => (
+                                            <option key={season} value={season}>
+                                                {getSeasonDisplayName(season)}
+                                            </option>
+                                        ))}
                                     </select>
                                     
                                     <select
@@ -306,9 +514,9 @@
                                         onChange={(e) => setGameType(e.target.value)}
                                         className={`px-3 py-2 rounded-lg border ${borderClass} ${cardClass} text-sm font-medium`}
                                     >
+                                        <option value="all">All Games</option>
                                         <option value="regular">Regular Season</option>
                                         <option value="playoff">Playoffs</option>
-                                        <option value="all">All Games</option>
                                     </select>
                                 </div>
                             </div>
@@ -340,19 +548,19 @@
 
                         {activeTab === 'leaderboards' && (
                             <div>
-                                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+                                <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-2 mb-6">
                                     {statCategories.map(cat => (
                                         <button
                                             key={cat.key}
                                             onClick={() => setStatCategory(cat.key)}
-                                            className={`p-4 rounded-lg border-2 transition-all ${
+                                            className={`p-3 rounded-lg border-2 transition-all ${
                                                 statCategory === cat.key
                                                     ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
                                                     : `border-transparent ${cardClass}`
                                             }`}
                                         >
-                                            <div className={`text-2xl font-bold text-${accentColor}`}>{cat.label}</div>
-                                            <div className={`text-xs ${textClass}`}>{cat.desc}</div>
+                                            <div className={`text-lg font-bold text-${accentColor}`}>{cat.label}</div>
+                                            <div className={`text-xs ${textClass} truncate`}>{cat.desc}</div>
                                         </button>
                                     ))}
                                 </div>
@@ -364,11 +572,9 @@
                                                 <div className={`text-3xl font-bold ${idx < 3 ? 'text-blue-600' : textClass} w-12 text-center`}>
                                                     {idx + 1}
                                                 </div>
-                                                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold text-xl flex-shrink-0">
-                                                    #{player.number}
-                                                </div>
+                                                <PlayerImage player={player} size="md" />
                                                 <div className="flex-1 min-w-0">
-                                                    <div className="font-bold text-lg truncate">{player.display_name || player.name}</div>
+                                                    <div className={`font-bold text-lg truncate ${headingClass}`}>{player.display_name || player.name}</div>
                                                     <div className={`text-sm ${textClass}`}>
                                                         {player.gp} GP{player.teams ? ` • ${player.teams.join(', ')}` : ''}
                                                     </div>
@@ -390,18 +596,16 @@
 
                         {activeTab === 'players' && (
                             <div className="space-y-4">
-                                <h2 className="text-2xl font-bold mb-4">Team Roster</h2>
+                                <h2 className={`text-2xl font-bold mb-4 ${headingClass}`}>Team Roster</h2>
                                 <div className="grid md:grid-cols-2 gap-4">
                                     {Object.values(players).map(player => {
                                         const stats = seasonStats[gameType]?.[player.number] || {};
                                         return (
                                             <div key={player.number} className={`${cardClass} rounded-lg border ${borderClass} p-4`}>
                                                 <div className="flex items-center gap-4">
-                                                    <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold text-2xl flex-shrink-0">
-                                                        #{player.number}
-                                                    </div>
+                                                    <PlayerImage player={player} size="lg" />
                                                     <div className="flex-1 min-w-0">
-                                                        <div className="font-bold text-xl truncate">{player.display_name || player.name}</div>
+                                                        <div className={`font-bold text-xl truncate ${headingClass}`}>{player.display_name || player.name}</div>
                                                         <div className={textClass}>#{player.number}</div>
                                                         {player.teams && player.teams.length > 0 && (
                                                             <div className={`text-sm ${textClass} mt-1`}>
@@ -435,7 +639,7 @@
 
                         {activeTab === 'records' && (
                             <div className="space-y-4">
-                                <h2 className="text-2xl font-bold mb-4">Team Records</h2>
+                                <h2 className={`text-2xl font-bold mb-4 ${headingClass}`}>Team Records</h2>
                                 
                                 {!records[gameType] || Object.keys(records[gameType]).length === 0 ? (
                                     <div className={`${cardClass} rounded-lg border ${borderClass} p-8 text-center ${textClass}`}>
@@ -445,26 +649,33 @@
                                     </div>
                                 ) : (
                                     [
-                                        { key: 'most_pts', label: 'Most Points', icon: '🔥' },
-                                        { key: 'most_reb', label: 'Most Total Rebounds', icon: '🏀' },
-                                        { key: 'most_oreb', label: 'Most Offensive Rebounds', icon: '⬆️' },
-                                        { key: 'most_dreb', label: 'Most Defensive Rebounds', icon: '⬇️' },
-                                        { key: 'most_asst', label: 'Most Assists', icon: '🎯' },
-                                        { key: 'most_stl', label: 'Most Steals', icon: '👐' },
-                                        { key: 'most_blk', label: 'Most Blocks', icon: '🛡️' },
-                                        { key: 'most_3pt', label: 'Most 3-Pointers Made', icon: '🎯' },
-                                        { key: 'most_fg', label: 'Most Field Goals Made', icon: '⛹️' },
-                                        { key: 'most_ft', label: 'Most Free Throws Made', icon: '🎪' }
-                                    ].map(({ key, label, icon }) => {
+                                        { key: 'most_pts', label: 'Most Points' },
+                                        { key: 'most_reb', label: 'Most Total Rebounds' },
+                                        { key: 'most_oreb', label: 'Most Offensive Rebounds' },
+                                        { key: 'most_dreb', label: 'Most Defensive Rebounds' },
+                                        { key: 'most_asst', label: 'Most Assists' },
+                                        { key: 'most_stl', label: 'Most Steals' },
+                                        { key: 'most_blk', label: 'Most Blocks' },
+                                        { key: 'most_3pt', label: 'Most 3-Pointers Made' },
+                                        { key: 'most_fg', label: 'Most Field Goals Made' },
+                                        { key: 'most_ft', label: 'Most Free Throws Made' },
+                                        { key: 'most_to', label: 'Most Turnovers' },
+                                        { key: 'most_foul', label: 'Most Fouls' }
+                                    ].map(({ key, label }) => {
                                         const record = records[gameType]?.[key];
                                         if (!record || !record.player) return null;
+                                        
+                                        // Get player data for the image
+                                        const recordPlayer = record.player_number 
+                                            ? players[record.player_number] 
+                                            : Object.values(players).find(p => p.name === record.player || p.display_name === record.player);
                                         
                                         return (
                                             <div key={key} className={`${cardClass} rounded-lg border ${borderClass} p-4`}>
                                                 <div className="flex items-center gap-4">
-                                                    <span className="text-4xl">{icon}</span>
+                                                    <PlayerImage player={recordPlayer} size="md" />
                                                     <div className="flex-1 min-w-0">
-                                                        <div className="font-bold text-lg">{label}</div>
+                                                        <div className={`font-bold text-lg ${headingClass}`}>{label}</div>
                                                         <div className={textClass}>
                                                             {record.player} • vs {record.opponent}
                                                         </div>
@@ -481,7 +692,7 @@
 
                         {activeTab === 'games' && (
                             <div className="space-y-4">
-                                <h2 className="text-2xl font-bold mb-4">Game Log</h2>
+                                <h2 className={`text-2xl font-bold mb-4 ${headingClass}`}>Game Log</h2>
                                 
                                 {Object.keys(allGames).length === 0 ? (
                                     <div className={`${cardClass} rounded-lg border ${borderClass} p-6 text-center ${textClass}`}>
@@ -504,11 +715,15 @@
                                                 return (
                                                     <div
                                                         key={gameId}
-                                                        className={`${cardClass} p-4 rounded-lg border ${borderClass} hover:shadow-lg transition-shadow`}
+                                                        className={`${cardClass} p-4 rounded-lg border ${borderClass} hover:shadow-lg transition-shadow cursor-pointer`}
+                                                        onClick={() => {
+                                                            setSelectedGameId(gameId);
+                                                            setCurrentView('boxscore');
+                                                        }}
                                                     >
                                                         <div className="flex justify-between items-start mb-3">
                                                             <div>
-                                                                <div className="font-bold text-lg flex items-center gap-2">
+                                                                <div className={`font-bold text-lg flex items-center gap-2 ${headingClass}`}>
                                                                     {game.result === 'W' ? (
                                                                         <span className="text-green-500">✅</span>
                                                                     ) : (
@@ -525,6 +740,7 @@
                                                                 <div className={`text-2xl font-bold ${game.result === 'W' ? 'text-green-600' : 'text-red-600'}`}>
                                                                     {game.score.us} - {game.score.them}
                                                                 </div>
+                                                                <div className={`text-xs ${textClass}`}>Click for box score →</div>
                                                             </div>
                                                         </div>
                                                         

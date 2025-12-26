@@ -19,6 +19,7 @@ class EasyStatsParser:
         self.records_file = self.base_dir / 'records.json'
         self.seasons_dir = self.base_dir / 'seasons'
         self.games_index_file = self.base_dir / 'games_index.json'
+        self.seasons_meta_file = self.base_dir / 'seasons_meta.json'
         
         # Create directories if they don't exist
         self.base_dir.mkdir(exist_ok=True)
@@ -33,6 +34,7 @@ class EasyStatsParser:
             'all': {}
         })
         self.games_index = self.load_json(self.games_index_file, {})
+        self.seasons_meta = self.load_json(self.seasons_meta_file, {})
     
     def load_json(self, filepath, default):
         """Load JSON file or return default if doesn't exist"""
@@ -151,7 +153,7 @@ class EasyStatsParser:
         
         return derived
     
-    def parse_html(self, html_file, is_playoff=False, force_season=None):
+    def parse_html(self, html_file, is_playoff=False, force_season=None, opp_score=None):
         """Parse EasyStats HTML file and extract game data"""
         with open(html_file, 'r', encoding='utf-8') as f:
             soup = BeautifulSoup(f, 'html.parser')
@@ -169,10 +171,37 @@ class EasyStatsParser:
         date_elem = soup.find('span', class_='detail')
         date = self.parse_date(date_elem.text) if date_elem else datetime.now().strftime('%Y-%m-%d')
         
-        # Override season if specified
+        # Extract just the year from the date for the season key
+        # The season name is stored separately in seasons_meta
+        season_key = date[:4]  # Always use YYYY format for keys
+        season_display = season_key  # Default display name
+        
+        # If a season name is specified, save it to meta
         if force_season:
-            year = date[:4]  # Get current year from date
-            date = date.replace(year, force_season)
+            # Clean up the season name - extract just the display name
+            # e.g., "2025 spring" or "2025spring" -> display as "2025 Spring"
+            force_season = force_season.strip()
+            
+            # If the season contains a year and name like "2025 spring", parse them
+            season_match = re.match(r'(\d{4})\s*(.+)?', force_season)
+            if season_match:
+                season_key = season_match.group(1)  # Use just the year as the key
+                season_suffix = season_match.group(2)
+                if season_suffix:
+                    # Capitalize the season suffix (e.g., "spring" -> "Spring")
+                    season_display = f"{season_key} {season_suffix.strip().title()}"
+                else:
+                    season_display = season_key
+            else:
+                # If no year in the string, use current year
+                season_display = force_season.title()
+            
+            # Store the season display name in meta
+            self.seasons_meta[season_key] = {
+                'key': season_key,
+                'display_name': season_display
+            }
+            self.save_json(self.seasons_meta_file, self.seasons_meta)
         
         # Determine if our team is home or away (Pretty good is our team)
         our_team = "Pretty good"  # Standardized team name
@@ -195,6 +224,10 @@ class EasyStatsParser:
         opponent = game_info['away_team'] if is_home else game_info['home_team']
         our_score = game_info['home_score'] if is_home else game_info['away_score']
         their_score = game_info['away_score'] if is_home else game_info['home_score']
+        
+        # Override opponent score if provided via command line
+        if opp_score is not None:
+            their_score = opp_score
         
         # Parse stats table
         stats_table = soup.find('table', id='stats')
@@ -251,6 +284,7 @@ class EasyStatsParser:
         # Create game object
         game = {
             'date': date,
+            'season': season_key,
             'opponent': opponent,
             'homeAway': 'home' if is_home else 'away',
             'score': {
@@ -258,13 +292,13 @@ class EasyStatsParser:
                 'them': their_score
             },
             'result': 'W' if our_score > their_score else 'L',
-            'isPlayoff': is_playoff,  # Use the parameter instead of default False
+            'isPlayoff': is_playoff,
             'stats': player_stats
         }
         
-        return game, date, opponent
+        return game, date, opponent, season_key
     
-    def save_game(self, game, date, opponent):
+    def save_game(self, game, date, opponent, season_key):
         """Save game to appropriate JSON file"""
         # Create filename: YYYY-MM-DD-opponent.json
         opponent_slug = re.sub(r'[^a-z0-9]+', '-', opponent.lower()).strip('-')
@@ -279,6 +313,7 @@ class EasyStatsParser:
         self.games_index[game_id] = {
             'filename': filename,
             'date': date,
+            'season': season_key,
             'opponent': opponent,
             'score': game['score'],
             'result': game['result'],
@@ -294,13 +329,14 @@ class EasyStatsParser:
         
         # Initialize record structures
         record_categories = ['regular', 'playoff', 'all']
-        stat_names = ['pts', 'reb', 'asst', 'stl', 'blk', 'to', 'fg', '3pt', 'ft']
+        stat_names = ['pts', 'reb', 'asst', 'stl', 'blk', 'to', 'fg', '3pt', 'ft', 'oreb', 'dreb', 'foul']
         
         for category in record_categories:
             self.records[category] = {}
             for stat in stat_names:
                 self.records[category][f'most_{stat}'] = {
                     'player': None,
+                    'player_number': None,
                     'value': 0,
                     'date': None,
                     'opponent': None
@@ -331,6 +367,7 @@ class EasyStatsParser:
                     if value > self.records[game_type][record_key]['value']:
                         self.records[game_type][record_key] = {
                             'player': player_name,
+                            'player_number': player_num,
                             'value': value,
                             'date': game['date'],
                             'opponent': game['opponent']
@@ -340,6 +377,7 @@ class EasyStatsParser:
                     if value > self.records['all'][record_key]['value']:
                         self.records['all'][record_key] = {
                             'player': player_name,
+                            'player_number': player_num,
                             'value': value,
                             'date': game['date'],
                             'opponent': game['opponent']
@@ -357,11 +395,12 @@ class EasyStatsParser:
         # Process all games
         for game_file in self.games_dir.glob('*.json'):
             game = self.load_json(game_file, {})
-            year = game['date'][:4]  # Extract year
+            # Use the season key from game, falling back to year from date
+            season_key = game.get('season', game['date'][:4])
             game_type = 'playoff' if game.get('isPlayoff') else 'regular'
             
-            if year not in seasons:
-                seasons[year] = {
+            if season_key not in seasons:
+                seasons[season_key] = {
                     'regular': {},
                     'playoff': {},
                     'all': {}
@@ -371,8 +410,8 @@ class EasyStatsParser:
             for player_num, stats in game.get('stats', {}).items():
                 # Initialize player if not exists
                 for category in ['regular', 'playoff', 'all']:
-                    if player_num not in seasons[year][category]:
-                        seasons[year][category][player_num] = {
+                    if player_num not in seasons[season_key][category]:
+                        seasons[season_key][category][player_num] = {
                             'gp': 0,  # games played
                             'pts': 0, 'reb': 0, 'asst': 0, 'stl': 0, 'blk': 0, 'to': 0, 'foul': 0,
                             'fg': [0, 0], '2pt': [0, 0], '3pt': [0, 0], 'ft': [0, 0],
@@ -381,7 +420,7 @@ class EasyStatsParser:
                 
                 # Add to appropriate category
                 for category in [game_type, 'all']:
-                    player_season = seasons[year][category][player_num]
+                    player_season = seasons[season_key][category][player_num]
                     player_season['gp'] += 1
                     
                     # Sum counting stats
@@ -398,7 +437,7 @@ class EasyStatsParser:
                             player_season[stat][1] += value[1]
         
         # Calculate averages and percentages for each season
-        for year, season_data in seasons.items():
+        for season_key, season_data in seasons.items():
             for category in ['regular', 'playoff', 'all']:
                 for player_num, stats in season_data[category].items():
                     gp = stats['gp']
@@ -411,6 +450,20 @@ class EasyStatsParser:
                         stats['bpg'] = round(stats['blk'] / gp, 1)
                         stats['tpg'] = round(stats['to'] / gp, 1)
                         stats['fpg'] = round(stats['foul'] / gp, 1)
+                        stats['orebpg'] = round(stats['oreb'] / gp, 1)
+                        stats['drebpg'] = round(stats['dreb'] / gp, 1)
+                        
+                        # Calculate per game attempts
+                        stats['fga_pg'] = round(stats['fg'][1] / gp, 1) if stats['fg'][1] > 0 else 0
+                        stats['3pa_pg'] = round(stats['3pt'][1] / gp, 1) if stats['3pt'][1] > 0 else 0
+                        stats['fta_pg'] = round(stats['ft'][1] / gp, 1) if stats['ft'][1] > 0 else 0
+                        stats['2pa_pg'] = round(stats['2pt'][1] / gp, 1) if stats['2pt'][1] > 0 else 0
+                        
+                        # Calculate per game makes
+                        stats['fgm_pg'] = round(stats['fg'][0] / gp, 1) if stats['fg'][0] > 0 else 0
+                        stats['3pm_pg'] = round(stats['3pt'][0] / gp, 1) if stats['3pt'][0] > 0 else 0
+                        stats['ftm_pg'] = round(stats['ft'][0] / gp, 1) if stats['ft'][0] > 0 else 0
+                        stats['2pm_pg'] = round(stats['2pt'][0] / gp, 1) if stats['2pt'][0] > 0 else 0
                         
                         # Calculate percentages
                         stats['fg_pct'] = round((stats['fg'][0] / stats['fg'][1] * 100), 1) if stats['fg'][1] > 0 else 0
@@ -419,24 +472,26 @@ class EasyStatsParser:
                         stats['ft_pct'] = round((stats['ft'][0] / stats['ft'][1] * 100), 1) if stats['ft'][1] > 0 else 0
             
             # Save season file
-            season_file = self.seasons_dir / f"{year}.json"
+            season_file = self.seasons_dir / f"{season_key}.json"
             self.save_json(season_file, season_data)
-            print(f"✓ Updated season: {year}")
+            print(f"✓ Updated season: {season_key}")
     
-    def process_file(self, html_file, is_playoff=False, force_season=None):
+    def process_file(self, html_file, is_playoff=False, force_season=None, opp_score=None):
         """Process a single HTML file"""
         print(f"\nProcessing: {html_file}")
         if is_playoff:
             print("📍 Marking as PLAYOFF game")
         if force_season:
-            print(f"📅 Forcing season: {force_season}")
+            print(f"📅 Season: {force_season}")
+        if opp_score is not None:
+            print(f"🏀 Opponent score override: {opp_score}")
         
         try:
             # Parse HTML
-            game, date, opponent = self.parse_html(html_file, is_playoff, force_season)
+            game, date, opponent, season_key = self.parse_html(html_file, is_playoff, force_season, opp_score)
             
             # Save game
-            self.save_game(game, date, opponent)
+            self.save_game(game, date, opponent, season_key)
             
             # Save updated players
             self.save_json(self.players_file, self.players)
@@ -463,16 +518,19 @@ def main():
         epilog="""
 Examples:
   # Parse regular season game (default)
-  python parse_easystats.py game.html
+  python easystats-parse.py game.html
   
   # Parse playoff game
-  python parse_easystats.py game.html --playoff
+  python easystats-parse.py game.html --playoff
   
   # Parse game for specific season
-  python parse_easystats.py game.html --season 2024
+  python easystats-parse.py game.html --season "2025 Spring"
   
-  # Parse playoff game for 2024 season
-  python parse_easystats.py game.html --playoff --season 2024
+  # Parse playoff game for 2024 season with opponent score
+  python easystats-parse.py game.html --playoff --season 2024 --opp-score 45
+  
+  # Parse game with opponent score (when not tracked in HTML)
+  python easystats-parse.py game.html --opp-score 30
         """
     )
     
@@ -480,7 +538,9 @@ Examples:
     parser_args.add_argument('--playoff', action='store_true', 
                            help='Mark this game as a playoff game')
     parser_args.add_argument('--season', type=str, default=None,
-                           help='Specify season year (default: auto-detect from game date)')
+                           help='Specify season (e.g., "2025 Spring", "2024 Fall")')
+    parser_args.add_argument('--opp-score', type=int, default=None,
+                           help='Override opponent score (when not tracked in HTML)')
     
     args = parser_args.parse_args()
     
@@ -489,7 +549,7 @@ Examples:
         sys.exit(1)
     
     parser = EasyStatsParser()
-    parser.process_file(args.html_file, is_playoff=args.playoff, force_season=args.season)
+    parser.process_file(args.html_file, is_playoff=args.playoff, force_season=args.season, opp_score=args.opp_score)
     
     print("\n" + "="*50)
     print("All data updated successfully!")
