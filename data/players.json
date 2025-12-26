@@ -19,7 +19,7 @@
     "number": "43",
     "position": "F",
     "teams": [
-      "Pretty good"    
+      "Pretty good"
     ],
     "images": {
       "portrait": "Assets/players/levi-denzin.png"
@@ -39,7 +39,7 @@
       "portrait": "Assets/players/findlay-wendtman.png"
     }
   },
-  "15": {
+  "10": {
     "id": "jackson-neaves",
     "display_name": "Jackson Neaves",
     "name": "Jackson Neaves",
@@ -53,7 +53,7 @@
       "portrait": "Assets/players/placeholder4.png"
     }
   },
-  "7": {
+  "27": {
     "id": "ethan-todd",
     "display_name": "Ethan Todd",
     "name": "Ethan Todd",
@@ -79,7 +79,7 @@
       "portrait": "Assets/players/josh-todd.png"
     }
   },
-  "11": {
+  "21": {
     "id": "callan-beamish",
     "display_name": "Callan Beamish",
     "name": "Callan Beamish",
@@ -105,17 +105,17 @@
       "portrait": "Assets/players/placeholder5.png"
     }
   },
-    "6": {
-      "id": "rhys-ogle",
-      "display_name": "Rhys Ogle",
-      "name": "Rhys Ogle",
-      "number": "6",
-      "position": "F",
-      "teams": [
-        "Pretty good"
-      ],
-      "images": {
-        "portrait": "Assets/players/placeholder7.png"
-      }
+  "6": {
+    "id": "rhys-ogle",
+    "display_name": "Rhys Ogle",
+    "name": "Rhys Ogle",
+    "number": "6",
+    "position": "F",
+    "teams": [
+      "Pretty good"
+    ],
+    "images": {
+      "portrait": "Assets/players/placeholder7.png"
     }
   }
+}
