@@ -1,81 +1,81 @@
 {
   "regular": {
     "most_pts": {
-      "player": null,
-      "player_number": null,
-      "value": 0,
-      "date": null,
-      "opponent": null
+      "player": "Rhys Ogle",
+      "player_number": "6",
+      "value": 10,
+      "date": "2025-09-02",
+      "opponent": "Rusting Ragers"
     },
     "most_reb": {
-      "player": null,
-      "player_number": null,
-      "value": 0,
-      "date": null,
-      "opponent": null
+      "player": "Josh Todd",
+      "player_number": "11",
+      "value": 13,
+      "date": "2025-09-02",
+      "opponent": "Rusting Ragers"
     },
     "most_asst": {
-      "player": null,
-      "player_number": null,
-      "value": 0,
-      "date": null,
-      "opponent": null
+      "player": "Jarren Owen",
+      "player_number": "5",
+      "value": 7,
+      "date": "2025-09-02",
+      "opponent": "Rusting Ragers"
     },
     "most_stl": {
-      "player": null,
-      "player_number": null,
-      "value": 0,
-      "date": null,
-      "opponent": null
+      "player": "Kyle Denzin",
+      "player_number": "37",
+      "value": 4,
+      "date": "2025-09-02",
+      "opponent": "Rusting Ragers"
     },
     "most_blk": {
-      "player": null,
-      "player_number": null,
-      "value": 0,
-      "date": null,
-      "opponent": null
+      "player": "Findlay Wendtman",
+      "player_number": "28",
+      "value": 2,
+      "date": "2025-09-02",
+      "opponent": "Rusting Ragers"
     },
     "most_to": {
-      "player": null,
-      "player_number": null,
-      "value": 0,
-      "date": null,
-      "opponent": null
+      "player": "Josh Todd",
+      "player_number": "11",
+      "value": 4,
+      "date": "2025-09-02",
+      "opponent": "Rusting Ragers"
     },
     "most_fg": {
-      "player": null,
-      "player_number": null,
-      "value": 0,
-      "date": null,
-      "opponent": null
+      "player": "Rhys Ogle",
+      "player_number": "6",
+      "value": 4,
+      "date": "2025-09-02",
+      "opponent": "Rusting Ragers"
     },
     "most_3pt": {
-      "player": null,
-      "player_number": null,
-      "value": 0,
-      "date": null,
-      "opponent": null
+      "player": "Jarren Owen",
+      "player_number": "5",
+      "value": 3,
+      "date": "2025-09-02",
+      "opponent": "Rusting Ragers"
     },
     "most_ft": {
-      "player": null,
-      "player_number": null,
-      "value": 0,
-      "date": null,
-      "opponent": null
+      "player": "Jackson Neaves",
+      "player_number": "10",
+      "value": 3,
+      "date": "2025-09-02",
+      "opponent": "Rusting Ragers"
     },
     "most_oreb": {
-      "player": null,
-      "player_number": null,
-      "value": 0,
-      "date": null,
-      "opponent": null
+      "player": "Josh Todd",
+      "player_number": "11",
+      "value": 4,
+      "date": "2025-09-02",
+      "opponent": "Rusting Ragers"
     },
     "most_dreb": {
-      "player": null,
-      "player_number": null,
-      "value": 0,
-      "date": null,
-      "opponent": null
+      "player": "Josh Todd",
+      "player_number": "11",
+      "value": 9,
+      "date": "2025-09-02",
+      "opponent": "Rusting Ragers"
     },
     "most_foul": {
       "player": null,
@@ -180,25 +180,25 @@
       "opponent": "Macho men"
     },
     "most_reb": {
-      "player": "Rhys Ogle",
-      "player_number": "6",
-      "value": 9,
-      "date": "2025-12-16",
-      "opponent": "Macho men"
+      "player": "Josh Todd",
+      "player_number": "11",
+      "value": 13,
+      "date": "2025-09-02",
+      "opponent": "Rusting Ragers"
     },
     "most_asst": {
-      "player": "Callan Beamish",
-      "player_number": "21",
-      "value": 3,
-      "date": "2025-12-16",
-      "opponent": "Macho men"
+      "player": "Jarren Owen",
+      "player_number": "5",
+      "value": 7,
+      "date": "2025-09-02",
+      "opponent": "Rusting Ragers"
     },
     "most_stl": {
-      "player": "Rhys Ogle",
-      "player_number": "6",
-      "value": 3,
-      "date": "2025-12-16",
-      "opponent": "Macho men"
+      "player": "Kyle Denzin",
+      "player_number": "37",
+      "value": 4,
+      "date": "2025-09-02",
+      "opponent": "Rusting Ragers"
     },
     "most_blk": {
       "player": "Rhys Ogle",
@@ -208,46 +208,46 @@
       "opponent": "Macho men"
     },
     "most_to": {
-      "player": "Jarren Owen",
-      "player_number": "5",
-      "value": 3,
-      "date": "2025-12-16",
-      "opponent": "Macho men"
+      "player": "Josh Todd",
+      "player_number": "11",
+      "value": 4,
+      "date": "2025-09-02",
+      "opponent": "Rusting Ragers"
     },
     "most_fg": {
       "player": "Rhys Ogle",
       "player_number": "6",
       "value": 4,
-      "date": "2025-12-16",
-      "opponent": "Macho men"
+      "date": "2025-09-02",
+      "opponent": "Rusting Ragers"
     },
     "most_3pt": {
-      "player": "Josh Todd",
-      "player_number": "11",
-      "value": 2,
-      "date": "2025-12-16",
-      "opponent": "Macho men"
+      "player": "Jarren Owen",
+      "player_number": "5",
+      "value": 3,
+      "date": "2025-09-02",
+      "opponent": "Rusting Ragers"
     },
     "most_ft": {
-      "player": "Josh Todd",
-      "player_number": "11",
+      "player": "Jackson Neaves",
+      "player_number": "10",
       "value": 3,
-      "date": "2025-12-16",
-      "opponent": "Macho men"
+      "date": "2025-09-02",
+      "opponent": "Rusting Ragers"
     },
     "most_oreb": {
-      "player": "Callan Beamish",
-      "player_number": "21",
-      "value": 3,
-      "date": "2025-12-16",
-      "opponent": "Macho men"
+      "player": "Josh Todd",
+      "player_number": "11",
+      "value": 4,
+      "date": "2025-09-02",
+      "opponent": "Rusting Ragers"
     },
     "most_dreb": {
-      "player": "Rhys Ogle",
-      "player_number": "6",
-      "value": 7,
-      "date": "2025-12-16",
-      "opponent": "Macho men"
+      "player": "Josh Todd",
+      "player_number": "11",
+      "value": 9,
+      "date": "2025-09-02",
+      "opponent": "Rusting Ragers"
     },
     "most_foul": {
       "player": "Josh Todd",
