@@ -176,8 +176,22 @@ class EasyStatsParser:
         
         # Determine if our team is home or away (Pretty good is our team)
         our_team = "Pretty good"  # Standardized team name
-        is_home = game_info['home_team'].lower().replace(' ', '-') == our_team.lower()
-        
+        our_team_variants = ["pretty good", "pretty-good"]
+        away_is_us = any(variant in game_info['away_team'].lower() for variant in our_team_variants)
+        home_is_us = any(variant in game_info['home_team'].lower() for variant in our_team_variants)
+
+        # Determine which one we are
+        if away_is_us:
+            is_home = False
+            opponent = game_info['home_team']
+        elif home_is_us:
+            is_home = True
+            opponent = game_info['away_team']
+        else:
+            # Neither team name matches - use default
+            is_home = False
+            opponent = game_info['home_team']   
+                 
         opponent = game_info['away_team'] if is_home else game_info['home_team']
         our_score = game_info['home_score'] if is_home else game_info['away_score']
         their_score = game_info['away_score'] if is_home else game_info['home_score']

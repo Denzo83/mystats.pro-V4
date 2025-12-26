@@ -104,10 +104,13 @@
 
                     if (responses[0]) {
                         const playersData = await responses[0].json();
-                        // Filter players by current team
+                        // Filter players by current team (case-insensitive, ignores hyphens/spaces)
                         const teamPlayers = {};
+                        const normalizeTeam = (name) => name.toLowerCase().replace(/[\s-]/g, '');
+                        const currentTeamNorm = normalizeTeam(currentTeam);
+                        
                         Object.entries(playersData).forEach(([num, player]) => {
-                            if (player.teams && player.teams.includes(currentTeam)) {
+                            if (player.teams && player.teams.some(t => normalizeTeam(t) === currentTeamNorm)) {
                                 teamPlayers[num] = player;
                             }
                         });
@@ -430,9 +433,124 @@
                             </div>
                         )}
 
-                        {(activeTab === 'records' || activeTab === 'games') && (
-                            <div className={`${cardClass} rounded-lg p-8 text-center`}>
-                                <p className={textClass}>This section will appear once you've processed games!</p>
+                        {activeTab === 'records' && (
+                            <div className="space-y-4">
+                                <h2 className="text-2xl font-bold mb-4">Team Records</h2>
+                                
+                                {!records[gameType] || Object.keys(records[gameType]).length === 0 ? (
+                                    <div className={`${cardClass} rounded-lg border ${borderClass} p-8 text-center ${textClass}`}>
+                                        <Trophy size={48} className="mx-auto mb-4 opacity-50" />
+                                        <p>No records available yet.</p>
+                                        <p className="text-sm mt-2">Records will appear after processing games.</p>
+                                    </div>
+                                ) : (
+                                    [
+                                        { key: 'most_pts', label: 'Most Points', icon: '🔥' },
+                                        { key: 'most_reb', label: 'Most Total Rebounds', icon: '🏀' },
+                                        { key: 'most_oreb', label: 'Most Offensive Rebounds', icon: '⬆️' },
+                                        { key: 'most_dreb', label: 'Most Defensive Rebounds', icon: '⬇️' },
+                                        { key: 'most_asst', label: 'Most Assists', icon: '🎯' },
+                                        { key: 'most_stl', label: 'Most Steals', icon: '👐' },
+                                        { key: 'most_blk', label: 'Most Blocks', icon: '🛡️' },
+                                        { key: 'most_3pt', label: 'Most 3-Pointers Made', icon: '🎯' },
+                                        { key: 'most_fg', label: 'Most Field Goals Made', icon: '⛹️' },
+                                        { key: 'most_ft', label: 'Most Free Throws Made', icon: '🎪' }
+                                    ].map(({ key, label, icon }) => {
+                                        const record = records[gameType]?.[key];
+                                        if (!record || !record.player) return null;
+                                        
+                                        return (
+                                            <div key={key} className={`${cardClass} rounded-lg border ${borderClass} p-4`}>
+                                                <div className="flex items-center gap-4">
+                                                    <span className="text-4xl">{icon}</span>
+                                                    <div className="flex-1 min-w-0">
+                                                        <div className="font-bold text-lg">{label}</div>
+                                                        <div className={textClass}>
+                                                            {record.player} • vs {record.opponent}
+                                                        </div>
+                                                        <div className={`text-sm ${textClass}`}>{record.date}</div>
+                                                    </div>
+                                                    <div className={`text-4xl font-bold text-${accentColor}`}>{record.value}</div>
+                                                </div>
+                                            </div>
+                                        );
+                                    })
+                                )}
+                            </div>
+                        )}
+
+                        {activeTab === 'games' && (
+                            <div className="space-y-4">
+                                <h2 className="text-2xl font-bold mb-4">Game Log</h2>
+                                
+                                {Object.keys(allGames).length === 0 ? (
+                                    <div className={`${cardClass} rounded-lg border ${borderClass} p-6 text-center ${textClass}`}>
+                                        <Calendar size={48} className="mx-auto mb-4 opacity-50" />
+                                        <p>No games found yet.</p>
+                                        <p className="text-sm mt-2">Games will appear after processing with the parser script</p>
+                                    </div>
+                                ) : (
+                                    <div className="space-y-3">
+                                        {Object.entries(allGames)
+                                            .filter(([_, game]) => {
+                                                if (gameType === 'regular') return !game.isPlayoff;
+                                                if (gameType === 'playoff') return game.isPlayoff;
+                                                return true;
+                                            })
+                                            .sort((a, b) => new Date(b[1].date) - new Date(a[1].date))
+                                            .map(([gameId, game]) => {
+                                                const totalPts = Object.values(game.stats || {}).reduce((sum, s) => sum + (s.pts || 0), 0);
+                                                
+                                                return (
+                                                    <div
+                                                        key={gameId}
+                                                        className={`${cardClass} p-4 rounded-lg border ${borderClass} hover:shadow-lg transition-shadow`}
+                                                    >
+                                                        <div className="flex justify-between items-start mb-3">
+                                                            <div>
+                                                                <div className="font-bold text-lg flex items-center gap-2">
+                                                                    {game.result === 'W' ? (
+                                                                        <span className="text-green-500">✅</span>
+                                                                    ) : (
+                                                                        <span className="text-red-500">❌</span>
+                                                                    )}
+                                                                    vs {game.opponent}
+                                                                </div>
+                                                                <div className={`text-sm ${textClass}`}>
+                                                                    {game.date} • {game.homeAway === 'home' ? 'Home' : 'Away'}
+                                                                    {game.isPlayoff && <span className="ml-2 px-2 py-0.5 bg-yellow-500 text-white text-xs rounded">PLAYOFF</span>}
+                                                                </div>
+                                                            </div>
+                                                            <div className="text-right">
+                                                                <div className={`text-2xl font-bold ${game.result === 'W' ? 'text-green-600' : 'text-red-600'}`}>
+                                                                    {game.score.us} - {game.score.them}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <div className="grid grid-cols-3 gap-4 text-sm">
+                                                            <div className={`text-center p-2 rounded ${darkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
+                                                                <div className={`font-bold text-${accentColor}`}>{totalPts}</div>
+                                                                <div className={textClass}>Team PTS</div>
+                                                            </div>
+                                                            <div className={`text-center p-2 rounded ${darkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
+                                                                <div className={`font-bold text-${accentColor}`}>
+                                                                    {Object.values(game.stats || {}).reduce((sum, s) => sum + (s.reb || 0), 0)}
+                                                                </div>
+                                                                <div className={textClass}>Team REB</div>
+                                                            </div>
+                                                            <div className={`text-center p-2 rounded ${darkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
+                                                                <div className={`font-bold text-${accentColor}`}>
+                                                                    {Object.values(game.stats || {}).reduce((sum, s) => sum + (s.asst || 0), 0)}
+                                                                </div>
+                                                                <div className={textClass}>Team AST</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })}
+                                    </div>
+                                )}
                             </div>
                         )}
                     </div>
