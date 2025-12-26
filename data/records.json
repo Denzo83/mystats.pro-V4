@@ -1,0 +1,170 @@
+{
+  "regular": {
+    "most_pts": {
+      "player": null,
+      "value": 0,
+      "date": null,
+      "opponent": null
+    },
+    "most_reb": {
+      "player": null,
+      "value": 0,
+      "date": null,
+      "opponent": null
+    },
+    "most_asst": {
+      "player": null,
+      "value": 0,
+      "date": null,
+      "opponent": null
+    },
+    "most_stl": {
+      "player": null,
+      "value": 0,
+      "date": null,
+      "opponent": null
+    },
+    "most_blk": {
+      "player": null,
+      "value": 0,
+      "date": null,
+      "opponent": null
+    },
+    "most_to": {
+      "player": null,
+      "value": 0,
+      "date": null,
+      "opponent": null
+    },
+    "most_fg": {
+      "player": null,
+      "value": 0,
+      "date": null,
+      "opponent": null
+    },
+    "most_3pt": {
+      "player": null,
+      "value": 0,
+      "date": null,
+      "opponent": null
+    },
+    "most_ft": {
+      "player": null,
+      "value": 0,
+      "date": null,
+      "opponent": null
+    }
+  },
+  "playoff": {
+    "most_pts": {
+      "player": "Rhys Ogle",
+      "value": 11,
+      "date": "2025 Spring-12-16",
+      "opponent": "Pretty good"
+    },
+    "most_reb": {
+      "player": "Rhys Ogle",
+      "value": 9,
+      "date": "2025 Spring-12-16",
+      "opponent": "Pretty good"
+    },
+    "most_asst": {
+      "player": "Callan Beamish",
+      "value": 3,
+      "date": "2025 Spring-12-16",
+      "opponent": "Pretty good"
+    },
+    "most_stl": {
+      "player": "Rhys Ogle",
+      "value": 3,
+      "date": "2025 Spring-12-16",
+      "opponent": "Pretty good"
+    },
+    "most_blk": {
+      "player": "Rhys Ogle",
+      "value": 3,
+      "date": "2025 Spring-12-16",
+      "opponent": "Pretty good"
+    },
+    "most_to": {
+      "player": "Jarren Owen",
+      "value": 3,
+      "date": "2025 Spring-12-16",
+      "opponent": "Pretty good"
+    },
+    "most_fg": {
+      "player": "Rhys Ogle",
+      "value": 4,
+      "date": "2025 Spring-12-16",
+      "opponent": "Pretty good"
+    },
+    "most_3pt": {
+      "player": "Josh Todd",
+      "value": 2,
+      "date": "2025 Spring-12-16",
+      "opponent": "Pretty good"
+    },
+    "most_ft": {
+      "player": "Josh Todd",
+      "value": 3,
+      "date": "2025 Spring-12-16",
+      "opponent": "Pretty good"
+    }
+  },
+  "all": {
+    "most_pts": {
+      "player": "Rhys Ogle",
+      "value": 11,
+      "date": "2025 Spring-12-16",
+      "opponent": "Pretty good"
+    },
+    "most_reb": {
+      "player": "Rhys Ogle",
+      "value": 9,
+      "date": "2025 Spring-12-16",
+      "opponent": "Pretty good"
+    },
+    "most_asst": {
+      "player": "Callan Beamish",
+      "value": 3,
+      "date": "2025 Spring-12-16",
+      "opponent": "Pretty good"
+    },
+    "most_stl": {
+      "player": "Rhys Ogle",
+      "value": 3,
+      "date": "2025 Spring-12-16",
+      "opponent": "Pretty good"
+    },
+    "most_blk": {
+      "player": "Rhys Ogle",
+      "value": 3,
+      "date": "2025 Spring-12-16",
+      "opponent": "Pretty good"
+    },
+    "most_to": {
+      "player": "Jarren Owen",
+      "value": 3,
+      "date": "2025 Spring-12-16",
+      "opponent": "Pretty good"
+    },
+    "most_fg": {
+      "player": "Rhys Ogle",
+      "value": 4,
+      "date": "2025 Spring-12-16",
+      "opponent": "Pretty good"
+    },
+    "most_3pt": {
+      "player": "Josh Todd",
+      "value": 2,
+      "date": "2025 Spring-12-16",
+      "opponent": "Pretty good"
+    },
+    "most_ft": {
+      "player": "Josh Todd",
+      "value": 3,
+      "date": "2025 Spring-12-16",
+      "opponent": "Pretty good"
+    }
+  }
+}

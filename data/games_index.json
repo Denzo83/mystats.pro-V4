@@ -1,0 +1,13 @@
+{
+  "2025 Spring-12-16-pretty-good": {
+    "filename": "2025 Spring-12-16-pretty-good.json",
+    "date": "2025 Spring-12-16",
+    "opponent": "Pretty good",
+    "score": {
+      "us": 0,
+      "them": 32
+    },
+    "result": "L",
+    "isPlayoff": true
+  }
+}
