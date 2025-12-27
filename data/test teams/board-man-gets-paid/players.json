@@ -1,0 +1,15 @@
+{
+  "0": {
+    "id": "r-westbrook",
+    "display_name": "R. Westbrook",
+    "name": "R. Westbrook",
+    "number": "0",
+    "position": "",
+    "teams": [
+      "Board Man Gets Paid"
+    ],
+    "images": {
+      "portrait": "Assets/players/r-westbrook.png"
+    }
+  }
+}

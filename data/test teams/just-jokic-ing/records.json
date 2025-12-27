@@ -1,0 +1,260 @@
+{
+  "regular": {
+    "most_pts": {
+      "player": "N. Jokic",
+      "player_number": "15",
+      "value": 41,
+      "date": "2025-12-27",
+      "opponent": "Fill in"
+    },
+    "most_reb": {
+      "player": "N. Jokic",
+      "player_number": "15",
+      "value": 14,
+      "date": "2025-12-27",
+      "opponent": "Fill in"
+    },
+    "most_asst": {
+      "player": "N. Jokic",
+      "player_number": "15",
+      "value": 10,
+      "date": "2025-12-27",
+      "opponent": "Fill in"
+    },
+    "most_stl": {
+      "player": "N. Jokic",
+      "player_number": "15",
+      "value": 2,
+      "date": "2025-12-27",
+      "opponent": "Fill in"
+    },
+    "most_blk": {
+      "player": "N. Jokic",
+      "player_number": "15",
+      "value": 2,
+      "date": "2025-12-27",
+      "opponent": "Fill in"
+    },
+    "most_to": {
+      "player": "N. Jokic",
+      "player_number": "15",
+      "value": 4,
+      "date": "2025-12-27",
+      "opponent": "Fill in"
+    },
+    "most_fg": {
+      "player": "N. Jokic",
+      "player_number": "15",
+      "value": 13,
+      "date": "2025-12-27",
+      "opponent": "Fill in"
+    },
+    "most_3pt": {
+      "player": "N. Jokic",
+      "player_number": "15",
+      "value": 3,
+      "date": "2025-12-27",
+      "opponent": "Fill in"
+    },
+    "most_ft": {
+      "player": "N. Jokic",
+      "player_number": "15",
+      "value": 12,
+      "date": "2025-12-27",
+      "opponent": "Fill in"
+    },
+    "most_oreb": {
+      "player": "N. Jokic",
+      "player_number": "15",
+      "value": 3,
+      "date": "2025-12-27",
+      "opponent": "Fill in"
+    },
+    "most_dreb": {
+      "player": "N. Jokic",
+      "player_number": "15",
+      "value": 11,
+      "date": "2025-12-27",
+      "opponent": "Fill in"
+    },
+    "most_foul": {
+      "player": "N. Jokic",
+      "player_number": "15",
+      "value": 5,
+      "date": "2025-12-27",
+      "opponent": "Fill in"
+    }
+  },
+  "playoff": {
+    "most_pts": {
+      "player": null,
+      "player_number": null,
+      "value": 0,
+      "date": null,
+      "opponent": null
+    },
+    "most_reb": {
+      "player": null,
+      "player_number": null,
+      "value": 0,
+      "date": null,
+      "opponent": null
+    },
+    "most_asst": {
+      "player": null,
+      "player_number": null,
+      "value": 0,
+      "date": null,
+      "opponent": null
+    },
+    "most_stl": {
+      "player": null,
+      "player_number": null,
+      "value": 0,
+      "date": null,
+      "opponent": null
+    },
+    "most_blk": {
+      "player": null,
+      "player_number": null,
+      "value": 0,
+      "date": null,
+      "opponent": null
+    },
+    "most_to": {
+      "player": null,
+      "player_number": null,
+      "value": 0,
+      "date": null,
+      "opponent": null
+    },
+    "most_fg": {
+      "player": null,
+      "player_number": null,
+      "value": 0,
+      "date": null,
+      "opponent": null
+    },
+    "most_3pt": {
+      "player": null,
+      "player_number": null,
+      "value": 0,
+      "date": null,
+      "opponent": null
+    },
+    "most_ft": {
+      "player": null,
+      "player_number": null,
+      "value": 0,
+      "date": null,
+      "opponent": null
+    },
+    "most_oreb": {
+      "player": null,
+      "player_number": null,
+      "value": 0,
+      "date": null,
+      "opponent": null
+    },
+    "most_dreb": {
+      "player": null,
+      "player_number": null,
+      "value": 0,
+      "date": null,
+      "opponent": null
+    },
+    "most_foul": {
+      "player": null,
+      "player_number": null,
+      "value": 0,
+      "date": null,
+      "opponent": null
+    }
+  },
+  "all": {
+    "most_pts": {
+      "player": "N. Jokic",
+      "player_number": "15",
+      "value": 41,
+      "date": "2025-12-27",
+      "opponent": "Fill in"
+    },
+    "most_reb": {
+      "player": "N. Jokic",
+      "player_number": "15",
+      "value": 14,
+      "date": "2025-12-27",
+      "opponent": "Fill in"
+    },
+    "most_asst": {
+      "player": "N. Jokic",
+      "player_number": "15",
+      "value": 10,
+      "date": "2025-12-27",
+      "opponent": "Fill in"
+    },
+    "most_stl": {
+      "player": "N. Jokic",
+      "player_number": "15",
+      "value": 2,
+      "date": "2025-12-27",
+      "opponent": "Fill in"
+    },
+    "most_blk": {
+      "player": "N. Jokic",
+      "player_number": "15",
+      "value": 2,
+      "date": "2025-12-27",
+      "opponent": "Fill in"
+    },
+    "most_to": {
+      "player": "N. Jokic",
+      "player_number": "15",
+      "value": 4,
+      "date": "2025-12-27",
+      "opponent": "Fill in"
+    },
+    "most_fg": {
+      "player": "N. Jokic",
+      "player_number": "15",
+      "value": 13,
+      "date": "2025-12-27",
+      "opponent": "Fill in"
+    },
+    "most_3pt": {
+      "player": "N. Jokic",
+      "player_number": "15",
+      "value": 3,
+      "date": "2025-12-27",
+      "opponent": "Fill in"
+    },
+    "most_ft": {
+      "player": "N. Jokic",
+      "player_number": "15",
+      "value": 12,
+      "date": "2025-12-27",
+      "opponent": "Fill in"
+    },
+    "most_oreb": {
+      "player": "N. Jokic",
+      "player_number": "15",
+      "value": 3,
+      "date": "2025-12-27",
+      "opponent": "Fill in"
+    },
+    "most_dreb": {
+      "player": "N. Jokic",
+      "player_number": "15",
+      "value": 11,
+      "date": "2025-12-27",
+      "opponent": "Fill in"
+    },
+    "most_foul": {
+      "player": "N. Jokic",
+      "player_number": "15",
+      "value": 5,
+      "date": "2025-12-27",
+      "opponent": "Fill in"
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "2025-12-27-fill-in": {
+    "filename": "2025-12-27-fill-in.json",
+    "date": "2025-12-27",
+    "season": "2025",
+    "opponent": "Fill in",
+    "score": {
+      "us": 0,
+      "them": 22
+    },
+    "result": "L",
+    "isPlayoff": false
+  }
+}

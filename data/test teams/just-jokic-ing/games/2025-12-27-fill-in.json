@@ -1,0 +1,45 @@
+{
+  "date": "2025-12-27",
+  "season": "2025",
+  "opponent": "Fill in",
+  "homeAway": "away",
+  "score": {
+    "us": 0,
+    "them": 22
+  },
+  "result": "L",
+  "isPlayoff": false,
+  "stats": {
+    "15": {
+      "fg": [
+        13,
+        23
+      ],
+      "3pt": [
+        3,
+        5
+      ],
+      "ft": [
+        12,
+        14
+      ],
+      "oreb": 3,
+      "dreb": 11,
+      "foul": 5,
+      "stl": 2,
+      "to": 4,
+      "blk": 2,
+      "asst": 10,
+      "pts": 41,
+      "2pt": [
+        10,
+        18
+      ],
+      "2pt_pct": 55.6,
+      "fg_pct": 56.5,
+      "3pt_pct": 60.0,
+      "ft_pct": 85.7,
+      "reb": 14
+    }
+  }
+}
