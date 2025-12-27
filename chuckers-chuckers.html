@@ -49,7 +49,7 @@
             'just-jokic-ing': {
                 name: 'Just Jokic-ing',
                 displayName: 'Just Jokic-ing Basketball',
-                logo: 'Assets/teams/just-jokic-ing-logo.PNG',
+                logo: 'Assets/teams/just-jokic-ing-logo.png',
                 dataPath: 'data/test teams/just-jokic-ing',
                 colors: {
                     primary: 'from-yellow-500 to-orange-400',
@@ -59,7 +59,7 @@
             'board-man-gets-paid': {
                 name: 'Board Man Gets Paid',
                 displayName: 'Board Man Gets Paid Basketball',
-                logo: 'Assets/teams/board-man-gets-paid-logo.PNG',
+                logo: 'Assets/teams/board-man-gets-paid-logo.png',
                 dataPath: 'data/test teams/board-man-gets-paid',
                 colors: {
                     primary: 'from-green-600 to-teal-400',
@@ -661,6 +661,26 @@
                                 </div>
                             </div>
                         </header>
+
+                        {/* Season Selector Bar */}
+                        <div className={`${cardClass} sticky top-[88px] z-40 border-b ${borderClass} shadow-md`}>
+                            <div className="max-w-7xl mx-auto px-4 py-3">
+                                <div className="flex items-center gap-3">
+                                    <span className={`text-sm font-medium ${textClass}`}>Season:</span>
+                                    <select
+                                        value={selectedSeason}
+                                        onChange={(e) => setSelectedSeason(e.target.value)}
+                                        className={`px-3 py-2 rounded-lg border ${borderClass} ${cardClass} text-sm font-medium`}
+                                    >
+                                        {availableSeasons.map(season => (
+                                            <option key={season} value={season}>
+                                                {getSeasonDisplayName(season)}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
 
                         <div className="max-w-7xl mx-auto px-4 py-6 space-y-6">
                             {/* Season Stats Section */}

@@ -136,7 +136,7 @@ class EasyStatsParser:
     def is_our_team(self, team_name):
         return any(variant in team_name.lower() for variant in TEAM_VARIANTS)
     
-    def parse_html(self, html_file, is_playoff=False, force_season=None, opp_score=None):
+    def parse_html(self, html_file, is_playoff=False, force_season=None, opp_score=None, team_score=None):
         with open(html_file, 'r', encoding='utf-8') as f:
             soup = BeautifulSoup(f, 'html.parser')
         
@@ -191,6 +191,8 @@ class EasyStatsParser:
         
         if opp_score is not None:
             their_score = opp_score
+        if team_score is not None:
+            our_score = team_score
         
         stats_table = soup.find('table', id='stats')
         if not stats_table:
@@ -379,7 +381,7 @@ class EasyStatsParser:
             self._save_json(self.seasons_dir / f"{season_key}.json", season_data)
             print(f"✓ Updated season: {season_key}")
     
-    def process_file(self, html_file, is_playoff=False, force_season=None, opp_score=None):
+    def process_file(self, html_file, is_playoff=False, force_season=None, opp_score=None, team_score=None):
         print(f"\n{'='*50}")
         print(f"Processing for: {TEAM_NAME}")
         print(f"{'='*50}")
@@ -389,9 +391,11 @@ class EasyStatsParser:
         if force_season:
             print(f"📅 Season: {force_season}")
         if opp_score is not None:
-            print(f"🏀 Opponent score: {opp_score}")
+            print(f"🏀 Opponent score override: {opp_score}")
+        if team_score is not None:
+            print(f"🏀 Team score override: {team_score}")
         
-        game, date, opponent, season_key = self.parse_html(html_file, is_playoff, force_season, opp_score)
+        game, date, opponent, season_key = self.parse_html(html_file, is_playoff, force_season, opp_score, team_score)
         self.save_game(game, date, opponent, season_key)
         self._save_json(self.players_file, self.players)
         print("✓ Updated players")
@@ -408,6 +412,7 @@ def main():
     parser.add_argument('--playoff', action='store_true', help='Mark as playoff game')
     parser.add_argument('--season', type=str, default=None, help='Season (e.g., "2025 Spring")')
     parser.add_argument('--opp-score', type=int, default=None, help='Override opponent score')
+    parser.add_argument('--team-score', type=int, default=None, help='Override team score (use if not all players tracked)')
     
     args = parser.parse_args()
     
@@ -415,7 +420,7 @@ def main():
         print(f"Error: File not found: {args.html_file}")
         return 1
     
-    EasyStatsParser().process_file(args.html_file, args.playoff, args.season, args.opp_score)
+    EasyStatsParser().process_file(args.html_file, args.playoff, args.season, args.opp_score, args.team_score)
     return 0
 
 
