@@ -1,0 +1,76 @@
+{
+  "date": "2025-11-06",
+  "season": "2025",
+  "opponent": "Kone wankenobi",
+  "homeAway": "home",
+  "score": {
+    "us": 5,
+    "them": 39
+  },
+  "result": "L",
+  "isPlayoff": false,
+  "stats": {
+    "10": {
+      "fg": [
+        1,
+        5
+      ],
+      "3pt": [
+        0,
+        1
+      ],
+      "ft": [
+        1,
+        2
+      ],
+      "oreb": 1,
+      "dreb": 11,
+      "foul": 2,
+      "stl": 0,
+      "to": 2,
+      "blk": 0,
+      "asst": 1,
+      "pts": 3,
+      "2pt": [
+        1,
+        4
+      ],
+      "2pt_pct": 25.0,
+      "fg_pct": 20.0,
+      "3pt_pct": 0.0,
+      "ft_pct": 50.0,
+      "reb": 12
+    },
+    "28": {
+      "fg": [
+        1,
+        4
+      ],
+      "3pt": [
+        0,
+        2
+      ],
+      "ft": [
+        0,
+        0
+      ],
+      "oreb": 0,
+      "dreb": 1,
+      "foul": 1,
+      "stl": 2,
+      "to": 3,
+      "blk": 0,
+      "asst": 4,
+      "pts": 2,
+      "2pt": [
+        1,
+        2
+      ],
+      "2pt_pct": 50.0,
+      "fg_pct": 25.0,
+      "3pt_pct": 0.0,
+      "ft_pct": 0.0,
+      "reb": 1
+    }
+  }
+}

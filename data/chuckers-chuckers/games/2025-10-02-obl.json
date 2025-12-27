@@ -1,0 +1,76 @@
+{
+  "date": "2025-10-02",
+  "season": "2025",
+  "opponent": "Obl",
+  "homeAway": "home",
+  "score": {
+    "us": 15,
+    "them": 55
+  },
+  "result": "L",
+  "isPlayoff": false,
+  "stats": {
+    "28": {
+      "fg": [
+        6,
+        10
+      ],
+      "3pt": [
+        3,
+        5
+      ],
+      "ft": [
+        0,
+        0
+      ],
+      "oreb": 1,
+      "dreb": 1,
+      "foul": 1,
+      "stl": 0,
+      "to": 1,
+      "blk": 1,
+      "asst": 1,
+      "pts": 15,
+      "2pt": [
+        3,
+        5
+      ],
+      "2pt_pct": 60.0,
+      "fg_pct": 60.0,
+      "3pt_pct": 60.0,
+      "ft_pct": 0.0,
+      "reb": 2
+    },
+    "10": {
+      "fg": [
+        0,
+        0
+      ],
+      "3pt": [
+        0,
+        0
+      ],
+      "ft": [
+        0,
+        0
+      ],
+      "oreb": 0,
+      "dreb": 0,
+      "foul": 0,
+      "stl": 0,
+      "to": 0,
+      "blk": 0,
+      "asst": 0,
+      "pts": 0,
+      "2pt": [
+        0,
+        0
+      ],
+      "2pt_pct": 0.0,
+      "fg_pct": 0.0,
+      "3pt_pct": 0.0,
+      "ft_pct": 0.0,
+      "reb": 0
+    }
+  }
+}

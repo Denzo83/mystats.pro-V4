@@ -1,0 +1,158 @@
+{
+  "2025-09-04-ramrod": {
+    "filename": "2025-09-04-ramrod.json",
+    "date": "2025-09-04",
+    "season": "2025",
+    "opponent": "Ramrod",
+    "score": {
+      "us": 9,
+      "them": 38
+    },
+    "result": "L",
+    "isPlayoff": false
+  },
+  "2025-09-11-holy-rollers": {
+    "filename": "2025-09-11-holy-rollers.json",
+    "date": "2025-09-11",
+    "season": "2025",
+    "opponent": "Holy rollers",
+    "score": {
+      "us": 0,
+      "them": 23
+    },
+    "result": "L",
+    "isPlayoff": false
+  },
+  "2025-09-18-brickshow": {
+    "filename": "2025-09-18-brickshow.json",
+    "date": "2025-09-18",
+    "season": "2025",
+    "opponent": "Brickshow",
+    "score": {
+      "us": 19,
+      "them": 45
+    },
+    "result": "L",
+    "isPlayoff": false
+  },
+  "2025-09-25-sob": {
+    "filename": "2025-09-25-sob.json",
+    "date": "2025-09-25",
+    "season": "2025",
+    "opponent": "SOB",
+    "score": {
+      "us": 5,
+      "them": 24
+    },
+    "result": "L",
+    "isPlayoff": false
+  },
+  "2025-10-02-obl": {
+    "filename": "2025-10-02-obl.json",
+    "date": "2025-10-02",
+    "season": "2025",
+    "opponent": "Obl",
+    "score": {
+      "us": 15,
+      "them": 55
+    },
+    "result": "L",
+    "isPlayoff": false
+  },
+  "2025-10-09-air-ballerz": {
+    "filename": "2025-10-09-air-ballerz.json",
+    "date": "2025-10-09",
+    "season": "2025",
+    "opponent": "Air ballerz",
+    "score": {
+      "us": 19,
+      "them": 35
+    },
+    "result": "L",
+    "isPlayoff": false
+  },
+  "2025-10-23-brickshow": {
+    "filename": "2025-10-23-brickshow.json",
+    "date": "2025-10-23",
+    "season": "2025",
+    "opponent": "Brickshow",
+    "score": {
+      "us": 7,
+      "them": 40
+    },
+    "result": "L",
+    "isPlayoff": false
+  },
+  "2025-10-30-sob": {
+    "filename": "2025-10-30-sob.json",
+    "date": "2025-10-30",
+    "season": "2025",
+    "opponent": "Sob",
+    "score": {
+      "us": 12,
+      "them": 35
+    },
+    "result": "L",
+    "isPlayoff": false
+  },
+  "2025-11-06-kone-wankenobi": {
+    "filename": "2025-11-06-kone-wankenobi.json",
+    "date": "2025-11-06",
+    "season": "2025",
+    "opponent": "Kone wankenobi",
+    "score": {
+      "us": 5,
+      "them": 39
+    },
+    "result": "L",
+    "isPlayoff": false
+  },
+  "2025-11-13-airballerz": {
+    "filename": "2025-11-13-airballerz.json",
+    "date": "2025-11-13",
+    "season": "2025",
+    "opponent": "Airballerz",
+    "score": {
+      "us": 9,
+      "them": 36
+    },
+    "result": "L",
+    "isPlayoff": false
+  },
+  "2025-11-27-brickshow": {
+    "filename": "2025-11-27-brickshow.json",
+    "date": "2025-11-27",
+    "season": "2025",
+    "opponent": "Brickshow",
+    "score": {
+      "us": 10,
+      "them": 52
+    },
+    "result": "L",
+    "isPlayoff": false
+  },
+  "2025-12-04-sob": {
+    "filename": "2025-12-04-sob.json",
+    "date": "2025-12-04",
+    "season": "2025",
+    "opponent": "Sob",
+    "score": {
+      "us": 16,
+      "them": 44
+    },
+    "result": "L",
+    "isPlayoff": false
+  },
+  "2025-12-11-kobe-wan-kenobi": {
+    "filename": "2025-12-11-kobe-wan-kenobi.json",
+    "date": "2025-12-11",
+    "season": "2025",
+    "opponent": "Kobe wan kenobi",
+    "score": {
+      "us": 4,
+      "them": 53
+    },
+    "result": "L",
+    "isPlayoff": true
+  }
+}

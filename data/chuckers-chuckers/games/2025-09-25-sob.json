@@ -1,0 +1,76 @@
+{
+  "date": "2025-09-25",
+  "season": "2025",
+  "opponent": "SOB",
+  "homeAway": "home",
+  "score": {
+    "us": 5,
+    "them": 24
+  },
+  "result": "L",
+  "isPlayoff": false,
+  "stats": {
+    "28": {
+      "fg": [
+        1,
+        6
+      ],
+      "3pt": [
+        1,
+        2
+      ],
+      "ft": [
+        0,
+        0
+      ],
+      "oreb": 0,
+      "dreb": 5,
+      "foul": 0,
+      "stl": 1,
+      "to": 4,
+      "blk": 0,
+      "asst": 2,
+      "pts": 3,
+      "2pt": [
+        0,
+        4
+      ],
+      "2pt_pct": 0.0,
+      "fg_pct": 16.7,
+      "3pt_pct": 50.0,
+      "ft_pct": 0.0,
+      "reb": 5
+    },
+    "10": {
+      "fg": [
+        0,
+        4
+      ],
+      "3pt": [
+        0,
+        2
+      ],
+      "ft": [
+        2,
+        2
+      ],
+      "oreb": 3,
+      "dreb": 8,
+      "foul": 1,
+      "stl": 0,
+      "to": 1,
+      "blk": 3,
+      "asst": 0,
+      "pts": 2,
+      "2pt": [
+        0,
+        2
+      ],
+      "2pt_pct": 0.0,
+      "fg_pct": 0.0,
+      "3pt_pct": 0.0,
+      "ft_pct": 100.0,
+      "reb": 11
+    }
+  }
+}

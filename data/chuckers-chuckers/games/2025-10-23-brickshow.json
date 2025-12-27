@@ -1,0 +1,76 @@
+{
+  "date": "2025-10-23",
+  "season": "2025",
+  "opponent": "Brickshow",
+  "homeAway": "home",
+  "score": {
+    "us": 7,
+    "them": 40
+  },
+  "result": "L",
+  "isPlayoff": false,
+  "stats": {
+    "28": {
+      "fg": [
+        3,
+        6
+      ],
+      "3pt": [
+        1,
+        2
+      ],
+      "ft": [
+        0,
+        0
+      ],
+      "oreb": 0,
+      "dreb": 2,
+      "foul": 0,
+      "stl": 2,
+      "to": 1,
+      "blk": 3,
+      "asst": 4,
+      "pts": 7,
+      "2pt": [
+        2,
+        4
+      ],
+      "2pt_pct": 50.0,
+      "fg_pct": 50.0,
+      "3pt_pct": 50.0,
+      "ft_pct": 0.0,
+      "reb": 2
+    },
+    "10": {
+      "fg": [
+        0,
+        0
+      ],
+      "3pt": [
+        0,
+        0
+      ],
+      "ft": [
+        0,
+        0
+      ],
+      "oreb": 0,
+      "dreb": 0,
+      "foul": 0,
+      "stl": 0,
+      "to": 0,
+      "blk": 0,
+      "asst": 0,
+      "pts": 0,
+      "2pt": [
+        0,
+        0
+      ],
+      "2pt_pct": 0.0,
+      "fg_pct": 0.0,
+      "3pt_pct": 0.0,
+      "ft_pct": 0.0,
+      "reb": 0
+    }
+  }
+}

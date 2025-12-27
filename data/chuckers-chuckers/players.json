@@ -24,5 +24,18 @@
     "images": {
       "portrait": "Assets/players/placeholder4-chuckers.png"
     }
+  },
+  "28": {
+    "id": "f-wendtman",
+    "display_name": "F. Wendtman",
+    "name": "F. Wendtman",
+    "number": "28",
+    "position": "",
+    "teams": [
+      "Chuckers Chuckers"
+    ],
+    "images": {
+      "portrait": "Assets/players/f-wendtman.png"
+    }
   }
 }
