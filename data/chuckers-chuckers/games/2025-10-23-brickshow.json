@@ -4,10 +4,10 @@
   "opponent": "Brickshow",
   "homeAway": "home",
   "score": {
-    "us": 7,
+    "us": 44,
     "them": 40
   },
-  "result": "L",
+  "result": "W",
   "isPlayoff": false,
   "stats": {
     "28": {
