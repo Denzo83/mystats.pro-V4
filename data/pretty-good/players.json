@@ -32,7 +32,6 @@
     "number": "28",
     "position": "G",
     "teams": [
-      "chuckers chuckers",
       "Pretty good"
     ],
     "images": {
@@ -46,8 +45,7 @@
     "number": "10",
     "position": "C",
     "teams": [
-      "Pretty good",
-      "chuckers chuckers"
+      "Pretty good"
     ],
     "images": {
       "portrait": "Assets/players/placeholder4.png"

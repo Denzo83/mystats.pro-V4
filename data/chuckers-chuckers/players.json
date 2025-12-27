@@ -1,0 +1,28 @@
+{
+  "22": {
+    "id": "findlay-wendtman",
+    "display_name": "Findlay Wendtman",
+    "name": "Findlay Wendtman",
+    "number": "22",
+    "position": "G",
+    "teams": [
+      "chuckers chuckers"
+    ],
+    "images": {
+      "portrait": "Assets/players/findlay-wendtman-chuckers.png"
+    }
+  },
+  "10": {
+    "id": "jackson-neaves",
+    "display_name": "Jackson Neaves",
+    "name": "Jackson Neaves",
+    "number": "10",
+    "position": "C",
+    "teams": [
+      "chuckers chuckers"
+    ],
+    "images": {
+      "portrait": "Assets/players/placeholder4-chuckers.png"
+    }
+  }
+}

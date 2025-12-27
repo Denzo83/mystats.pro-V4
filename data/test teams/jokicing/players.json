@@ -1,0 +1,15 @@
+{
+  "15": {
+    "id": "nikola-jokic",
+    "display_name": "Nikola Jokic",
+    "name": "Nikola Jokic",
+    "number": "15",
+    "position": "C",
+    "teams": [
+      "Just Jokic-ing"
+    ],
+    "images": {
+      "portrait": "Assets/players/jok.png"
+    }
+  }
+}
