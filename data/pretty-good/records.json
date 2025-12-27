@@ -1,88 +1,88 @@
 {
   "regular": {
     "most_pts": {
-      "player": "Rhys Ogle",
-      "player_number": "6",
-      "value": 10,
-      "date": "2025-09-02",
-      "opponent": "Rusting Ragers"
-    },
-    "most_reb": {
       "player": "Josh Todd",
       "player_number": "11",
-      "value": 13,
-      "date": "2025-09-02",
-      "opponent": "Rusting Ragers"
+      "value": 27,
+      "date": "2025-11-04",
+      "opponent": "Rusting ragers"
+    },
+    "most_reb": {
+      "player": "Callan Beamish",
+      "player_number": "21",
+      "value": 20,
+      "date": "2025-11-25",
+      "opponent": "Expendables"
     },
     "most_asst": {
       "player": "Jarren Owen",
       "player_number": "5",
-      "value": 7,
-      "date": "2025-09-02",
-      "opponent": "Rusting Ragers"
+      "value": 10,
+      "date": "2025-09-23",
+      "opponent": "Rice"
     },
     "most_stl": {
-      "player": "Kyle Denzin",
-      "player_number": "37",
-      "value": 4,
-      "date": "2025-09-02",
-      "opponent": "Rusting Ragers"
+      "player": "Callan Beamish",
+      "player_number": "21",
+      "value": 8,
+      "date": "2025-09-23",
+      "opponent": "Rice"
     },
     "most_blk": {
-      "player": "Findlay Wendtman",
-      "player_number": "28",
-      "value": 2,
-      "date": "2025-09-02",
-      "opponent": "Rusting Ragers"
-    },
-    "most_to": {
-      "player": "Josh Todd",
-      "player_number": "11",
-      "value": 4,
-      "date": "2025-09-02",
-      "opponent": "Rusting Ragers"
-    },
-    "most_fg": {
       "player": "Rhys Ogle",
       "player_number": "6",
       "value": 4,
-      "date": "2025-09-02",
+      "date": "2025-11-11",
+      "opponent": "Machomen"
+    },
+    "most_to": {
+      "player": "Findlay Wendtman",
+      "player_number": "28",
+      "value": 6,
+      "date": "2025-09-09",
       "opponent": "Rusting Ragers"
     },
+    "most_fg": {
+      "player": "Josh Todd",
+      "player_number": "11",
+      "value": 10,
+      "date": "2025-12-02",
+      "opponent": "Monstars"
+    },
     "most_3pt": {
-      "player": "Jarren Owen",
-      "player_number": "5",
-      "value": 3,
-      "date": "2025-09-02",
-      "opponent": "Rusting Ragers"
+      "player": "Josh Todd",
+      "player_number": "11",
+      "value": 7,
+      "date": "2025-11-04",
+      "opponent": "Rusting ragers"
     },
     "most_ft": {
       "player": "Jackson Neaves",
       "player_number": "10",
-      "value": 3,
-      "date": "2025-09-02",
+      "value": 5,
+      "date": "2025-09-09",
       "opponent": "Rusting Ragers"
     },
     "most_oreb": {
-      "player": "Josh Todd",
-      "player_number": "11",
-      "value": 4,
-      "date": "2025-09-02",
-      "opponent": "Rusting Ragers"
+      "player": "Rhys Ogle",
+      "player_number": "6",
+      "value": 7,
+      "date": "2025-11-25",
+      "opponent": "Expendables"
     },
     "most_dreb": {
-      "player": "Josh Todd",
-      "player_number": "11",
-      "value": 9,
-      "date": "2025-09-02",
-      "opponent": "Rusting Ragers"
+      "player": "Callan Beamish",
+      "player_number": "21",
+      "value": 15,
+      "date": "2025-11-25",
+      "opponent": "Expendables"
     },
     "most_foul": {
-      "player": null,
-      "player_number": null,
-      "value": 0,
-      "date": null,
-      "opponent": null
+      "player": "Rhys Ogle",
+      "player_number": "6",
+      "value": 4,
+      "date": "2025-10-14",
+      "opponent": "Zero altitude"
     }
   },
   "playoff": {
@@ -173,88 +173,88 @@
   },
   "all": {
     "most_pts": {
-      "player": "Findlay Wendtman",
-      "player_number": "28",
-      "value": 16,
-      "date": "2025-12-09",
-      "opponent": "Zero altitude"
-    },
-    "most_reb": {
       "player": "Josh Todd",
       "player_number": "11",
-      "value": 13,
-      "date": "2025-09-02",
-      "opponent": "Rusting Ragers"
+      "value": 27,
+      "date": "2025-11-04",
+      "opponent": "Rusting ragers"
+    },
+    "most_reb": {
+      "player": "Callan Beamish",
+      "player_number": "21",
+      "value": 20,
+      "date": "2025-11-25",
+      "opponent": "Expendables"
     },
     "most_asst": {
-      "player": "Findlay Wendtman",
-      "player_number": "28",
-      "value": 8,
-      "date": "2025-12-09",
-      "opponent": "Zero altitude"
+      "player": "Jarren Owen",
+      "player_number": "5",
+      "value": 10,
+      "date": "2025-09-23",
+      "opponent": "Rice"
     },
     "most_stl": {
-      "player": "Kyle Denzin",
-      "player_number": "37",
-      "value": 4,
-      "date": "2025-09-02",
-      "opponent": "Rusting Ragers"
+      "player": "Callan Beamish",
+      "player_number": "21",
+      "value": 8,
+      "date": "2025-09-23",
+      "opponent": "Rice"
     },
     "most_blk": {
       "player": "Rhys Ogle",
       "player_number": "6",
-      "value": 3,
-      "date": "2025-12-16",
-      "opponent": "Macho men"
+      "value": 4,
+      "date": "2025-11-11",
+      "opponent": "Machomen"
     },
     "most_to": {
-      "player": "Josh Todd",
-      "player_number": "11",
-      "value": 4,
-      "date": "2025-09-02",
+      "player": "Findlay Wendtman",
+      "player_number": "28",
+      "value": 6,
+      "date": "2025-09-09",
       "opponent": "Rusting Ragers"
     },
     "most_fg": {
-      "player": "Findlay Wendtman",
-      "player_number": "28",
-      "value": 7,
-      "date": "2025-12-09",
-      "opponent": "Zero altitude"
+      "player": "Josh Todd",
+      "player_number": "11",
+      "value": 10,
+      "date": "2025-12-02",
+      "opponent": "Monstars"
     },
     "most_3pt": {
-      "player": "Jarren Owen",
-      "player_number": "5",
-      "value": 3,
-      "date": "2025-09-02",
-      "opponent": "Rusting Ragers"
+      "player": "Josh Todd",
+      "player_number": "11",
+      "value": 7,
+      "date": "2025-11-04",
+      "opponent": "Rusting ragers"
     },
     "most_ft": {
       "player": "Jackson Neaves",
       "player_number": "10",
-      "value": 3,
-      "date": "2025-09-02",
+      "value": 5,
+      "date": "2025-09-09",
       "opponent": "Rusting Ragers"
     },
     "most_oreb": {
-      "player": "Josh Todd",
-      "player_number": "11",
-      "value": 4,
-      "date": "2025-09-02",
-      "opponent": "Rusting Ragers"
+      "player": "Rhys Ogle",
+      "player_number": "6",
+      "value": 7,
+      "date": "2025-11-25",
+      "opponent": "Expendables"
     },
     "most_dreb": {
-      "player": "Josh Todd",
-      "player_number": "11",
-      "value": 9,
-      "date": "2025-09-02",
-      "opponent": "Rusting Ragers"
+      "player": "Callan Beamish",
+      "player_number": "21",
+      "value": 15,
+      "date": "2025-11-25",
+      "opponent": "Expendables"
     },
     "most_foul": {
-      "player": "Josh Todd",
-      "player_number": "11",
+      "player": "Rhys Ogle",
+      "player_number": "6",
       "value": 4,
-      "date": "2025-12-16",
-      "opponent": "Macho men"
+      "date": "2025-10-14",
+      "opponent": "Zero altitude"
     }
   }
 }
