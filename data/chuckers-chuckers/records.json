@@ -87,18 +87,18 @@
   },
   "playoff": {
     "most_pts": {
-      "player": "Jackson Neaves",
-      "player_number": "10",
-      "value": 2,
-      "date": "2025-12-11",
-      "opponent": "Kobe wan kenobi"
+      "player": "F. Wendtman",
+      "player_number": "28",
+      "value": 6,
+      "date": "2025-12-18",
+      "opponent": "Holy rollers"
     },
     "most_reb": {
       "player": "Jackson Neaves",
       "player_number": "10",
-      "value": 3,
-      "date": "2025-12-11",
-      "opponent": "Kobe wan kenobi"
+      "value": 7,
+      "date": "2025-12-18",
+      "opponent": "Holy rollers"
     },
     "most_asst": {
       "player": "F. Wendtman",
@@ -131,16 +131,16 @@
     "most_fg": {
       "player": "F. Wendtman",
       "player_number": "28",
-      "value": 1,
-      "date": "2025-12-11",
-      "opponent": "Kobe wan kenobi"
+      "value": 3,
+      "date": "2025-12-18",
+      "opponent": "Holy rollers"
     },
     "most_3pt": {
-      "player": null,
-      "player_number": null,
-      "value": 0,
-      "date": null,
-      "opponent": null
+      "player": "Jackson Neaves",
+      "player_number": "10",
+      "value": 1,
+      "date": "2025-12-18",
+      "opponent": "Holy rollers"
     },
     "most_ft": {
       "player": "Jackson Neaves",
@@ -159,9 +159,9 @@
     "most_dreb": {
       "player": "Jackson Neaves",
       "player_number": "10",
-      "value": 1,
-      "date": "2025-12-11",
-      "opponent": "Kobe wan kenobi"
+      "value": 5,
+      "date": "2025-12-18",
+      "opponent": "Holy rollers"
     },
     "most_foul": {
       "player": "F. Wendtman",

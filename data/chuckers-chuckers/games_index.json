@@ -154,5 +154,17 @@
     },
     "result": "L",
     "isPlayoff": true
+  },
+  "2025-12-18-holy-rollers": {
+    "filename": "2025-12-18-holy-rollers.json",
+    "date": "2025-12-18",
+    "season": "2025",
+    "opponent": "Holy rollers",
+    "score": {
+      "us": 11,
+      "them": 28
+    },
+    "result": "L",
+    "isPlayoff": true
   }
 }

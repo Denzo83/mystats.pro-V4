@@ -1,0 +1,76 @@
+{
+  "date": "2025-12-18",
+  "season": "2025",
+  "opponent": "Holy rollers",
+  "homeAway": "home",
+  "score": {
+    "us": 41,
+    "them": 28
+  },
+  "result": "W",
+  "isPlayoff": true,
+  "stats": {
+    "28": {
+      "fg": [
+        3,
+        4
+      ],
+      "3pt": [
+        0,
+        0
+      ],
+      "ft": [
+        0,
+        0
+      ],
+      "oreb": 0,
+      "dreb": 4,
+      "foul": 0,
+      "stl": 1,
+      "to": 1,
+      "blk": 0,
+      "asst": 2,
+      "pts": 6,
+      "2pt": [
+        3,
+        4
+      ],
+      "2pt_pct": 75.0,
+      "fg_pct": 75.0,
+      "3pt_pct": 0.0,
+      "ft_pct": 0.0,
+      "reb": 4
+    },
+    "10": {
+      "fg": [
+        2,
+        6
+      ],
+      "3pt": [
+        1,
+        3
+      ],
+      "ft": [
+        0,
+        2
+      ],
+      "oreb": 2,
+      "dreb": 5,
+      "foul": 1,
+      "stl": 0,
+      "to": 0,
+      "blk": 0,
+      "asst": 2,
+      "pts": 5,
+      "2pt": [
+        1,
+        3
+      ],
+      "2pt_pct": 33.3,
+      "fg_pct": 33.3,
+      "3pt_pct": 33.3,
+      "ft_pct": 0.0,
+      "reb": 7
+    }
+  }
+}
