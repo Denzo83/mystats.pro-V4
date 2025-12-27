@@ -22,5 +22,17 @@
     },
     "result": "W",
     "isPlayoff": false
+  },
+  "2025-12-09-zero-altitude": {
+    "filename": "2025-12-09-zero-altitude.json",
+    "date": "2025-12-09",
+    "season": "2025",
+    "opponent": "Zero altitude",
+    "score": {
+      "us": 65,
+      "them": 19
+    },
+    "result": "W",
+    "isPlayoff": true
   }
 }
