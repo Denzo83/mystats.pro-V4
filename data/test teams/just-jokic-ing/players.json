@@ -9,20 +9,7 @@
       "Just Jokic-ing"
     ],
     "images": {
-      "portrait": "Assets/players/n-jokic.png"
-    }
-  },
-  "0": {
-    "id": "r-westbrook",
-    "display_name": "R. Westbrook",
-    "name": "R. Westbrook",
-    "number": "0",
-    "position": "",
-    "teams": [
-      "Just Jokic-ing"
-    ],
-    "images": {
-      "portrait": "Assets/players/k-denzin.png"
+      "portrait": "Assets/players/jok.png"
     }
   }
 }
