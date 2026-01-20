@@ -152,6 +152,7 @@
             const [games, setGames] = useState([]);
             const [allGames, setAllGames] = useState({});
             const [seasonsMeta, setSeasonsMeta] = useState({});
+            const [playerAnalysis, setPlayerAnalysis] = useState({}); // AI analysis for players
             const [loading, setLoading] = useState(true);
             const [error, setError] = useState(null);
 
@@ -182,7 +183,8 @@
                         fetch(`${teamDataPath}/seasons/${selectedSeason}.json`).catch(() => null),  // Team season stats
                         fetch(`${teamDataPath}/records.json`).catch(() => null),           // Team records
                         fetch(`${teamDataPath}/games_index.json`).catch(() => null),       // Team games index
-                        fetch(`${teamDataPath}/seasons_meta.json`).catch(() => null)       // Team season meta
+                        fetch(`${teamDataPath}/seasons_meta.json`).catch(() => null),      // Team season meta
+                        fetch(`${teamDataPath}/analysis.json`).catch(() => null)           // Player analysis
                     ]);
 
                     if (responses[0] && responses[0].ok) {
@@ -215,6 +217,13 @@
                         setSeasonsMeta(metaData);
                     } else {
                         setSeasonsMeta({});
+                    }
+
+                    if (responses[5] && responses[5].ok) {
+                        const analysisData = await responses[5].json();
+                        setPlayerAnalysis(analysisData);
+                    } else {
+                        setPlayerAnalysis({});
                     }
 
                     if (responses[3] && responses[3].ok) {
@@ -1014,13 +1023,28 @@
                         <div className="max-w-7xl mx-auto px-4 py-6">
                             <div className={`${cardClass} rounded-lg border ${borderClass} p-6`}>
                                 <h2 className={`text-xl font-bold mb-4 ${headingClass}`}>AI Analysis</h2>
-                                <div className={`${darkMode ? 'bg-gray-700' : 'bg-gray-100'} rounded-lg p-8 text-center`}>
-                                    <div className="text-6xl mb-4">🤖</div>
-                                    <p className={`text-xl font-medium ${headingClass}`}>Coming Soon</p>
-                                    <p className={`mt-2 ${textClass}`}>
-                                        AI-powered player analysis will be available later this season.
-                                    </p>
-                                </div>
+                                {playerAnalysis[selectedPlayerNumber] ? (
+                                    <div className={`${darkMode ? 'bg-gray-700' : 'bg-gray-100'} rounded-lg p-6`}>
+                                        <div className="flex items-start gap-4 mb-4">
+                                            <div className="text-4xl">🤖</div>
+                                            <div>
+                                                <p className={`font-bold ${headingClass}`}>Season Analysis</p>
+                                                <p className={`text-sm ${textClass}`}>{player.display_name || player.name}</p>
+                                            </div>
+                                        </div>
+                                        <div className={`${textClass} leading-relaxed whitespace-pre-wrap`}>
+                                            {playerAnalysis[selectedPlayerNumber]}
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className={`${darkMode ? 'bg-gray-700' : 'bg-gray-100'} rounded-lg p-8 text-center`}>
+                                        <div className="text-6xl mb-4">🤖</div>
+                                        <p className={`text-xl font-medium ${headingClass}`}>Coming Soon</p>
+                                        <p className={`mt-2 ${textClass}`}>
+                                            AI-powered analysis for {player.display_name || player.name} will be available later this season.
+                                        </p>
+                                    </div>
+                                )}
                             </div>
                         </div>
                         )}

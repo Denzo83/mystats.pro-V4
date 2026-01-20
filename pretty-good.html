@@ -152,6 +152,7 @@
             const [games, setGames] = useState([]);
             const [allGames, setAllGames] = useState({});
             const [seasonsMeta, setSeasonsMeta] = useState({});
+            const [playerAnalysis, setPlayerAnalysis] = useState({}); // AI analysis for players
             const [loading, setLoading] = useState(true);
             const [error, setError] = useState(null);
 
@@ -182,7 +183,8 @@
                         fetch(`${teamDataPath}/seasons/${selectedSeason}.json`).catch(() => null),  // Team season stats
                         fetch(`${teamDataPath}/records.json`).catch(() => null),           // Team records
                         fetch(`${teamDataPath}/games_index.json`).catch(() => null),       // Team games index
-                        fetch(`${teamDataPath}/seasons_meta.json`).catch(() => null)       // Team season meta
+                        fetch(`${teamDataPath}/seasons_meta.json`).catch(() => null),      // Team season meta
+                        fetch(`${teamDataPath}/analysis.json`).catch(() => null)           // Player analysis
                     ]);
 
                     if (responses[0] && responses[0].ok) {
@@ -215,6 +217,13 @@
                         setSeasonsMeta(metaData);
                     } else {
                         setSeasonsMeta({});
+                    }
+
+                    if (responses[5] && responses[5].ok) {
+                        const analysisData = await responses[5].json();
+                        setPlayerAnalysis(analysisData);
+                    } else {
+                        setPlayerAnalysis({});
                     }
 
                     if (responses[3] && responses[3].ok) {
@@ -657,9 +666,17 @@
                                             <p className="text-white/60 text-sm">{player.teams.join(' • ')}</p>
                                         )}
                                     </div>
-                                    <div className="ml-auto text-right">
-                                        <div className="text-3xl font-bold">{playerStats.gp || 0}</div>
-                                        <div className="text-white/80 text-sm">Games Played</div>
+                                    <div className="ml-auto flex items-center gap-4">
+                                        <div className="text-right">
+                                            <div className="text-3xl font-bold">{playerStats.gp || 0}</div>
+                                            <div className="text-white/80 text-sm">Games Played</div>
+                                        </div>
+                                        <button
+                                            onClick={() => setDarkMode(!darkMode)}
+                                            className="p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors"
+                                        >
+                                            {darkMode ? <Sun size={24} /> : <Moon size={24} />}
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -896,9 +913,9 @@
                                             <div 
                                                 key={key} 
                                                 className={`p-3 rounded-lg text-center ${
-                                                    position === 1 ? 'bg-yellow-100 dark:bg-yellow-900/30 border-2 border-yellow-400' :
-                                                    position === 2 ? 'bg-gray-100 dark:bg-gray-600 border-2 border-gray-400' :
-                                                    position === 3 ? 'bg-orange-100 dark:bg-orange-900/30 border-2 border-orange-400' :
+                                                    position === 1 ? (darkMode ? 'bg-yellow-900/30 border-2 border-yellow-400' : 'bg-yellow-100 border-2 border-yellow-400') :
+                                                    position === 2 ? (darkMode ? 'bg-gray-600 border-2 border-gray-400' : 'bg-gray-200 border-2 border-gray-400') :
+                                                    position === 3 ? (darkMode ? 'bg-orange-900/30 border-2 border-orange-400' : 'bg-orange-100 border-2 border-orange-400') :
                                                     darkMode ? 'bg-gray-700' : 'bg-gray-100'
                                                 }`}
                                             >
@@ -1006,13 +1023,28 @@
                         <div className="max-w-7xl mx-auto px-4 py-6">
                             <div className={`${cardClass} rounded-lg border ${borderClass} p-6`}>
                                 <h2 className={`text-xl font-bold mb-4 ${headingClass}`}>AI Analysis</h2>
-                                <div className={`${darkMode ? 'bg-gray-700' : 'bg-gray-100'} rounded-lg p-8 text-center`}>
-                                    <div className="text-6xl mb-4">🤖</div>
-                                    <p className={`text-xl font-medium ${headingClass}`}>Coming Soon</p>
-                                    <p className={`mt-2 ${textClass}`}>
-                                        AI-powered player analysis will be available later this season.
-                                    </p>
-                                </div>
+                                {playerAnalysis[selectedPlayerNumber] ? (
+                                    <div className={`${darkMode ? 'bg-gray-700' : 'bg-gray-100'} rounded-lg p-6`}>
+                                        <div className="flex items-start gap-4 mb-4">
+                                            <div className="text-4xl">🤖</div>
+                                            <div>
+                                                <p className={`font-bold ${headingClass}`}>Season Analysis</p>
+                                                <p className={`text-sm ${textClass}`}>{player.display_name || player.name}</p>
+                                            </div>
+                                        </div>
+                                        <div className={`${textClass} leading-relaxed whitespace-pre-wrap`}>
+                                            {playerAnalysis[selectedPlayerNumber]}
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className={`${darkMode ? 'bg-gray-700' : 'bg-gray-100'} rounded-lg p-8 text-center`}>
+                                        <div className="text-6xl mb-4">🤖</div>
+                                        <p className={`text-xl font-medium ${headingClass}`}>Coming Soon</p>
+                                        <p className={`mt-2 ${textClass}`}>
+                                            AI-powered analysis for {player.display_name || player.name} will be available later this season.
+                                        </p>
+                                    </div>
+                                )}
                             </div>
                         </div>
                         )}
@@ -1399,9 +1431,9 @@
                                                                 <div 
                                                                     key={`${perf.playerNum}-${perf.date}-${idx}`}
                                                                     className={`flex items-center gap-3 p-2 rounded-lg cursor-pointer hover:opacity-80 transition-opacity ${
-                                                                        perf.rank === 1 ? 'bg-yellow-100 dark:bg-yellow-900/30' :
-                                                                        perf.rank === 2 ? 'bg-gray-100 dark:bg-gray-600' :
-                                                                        'bg-orange-100 dark:bg-orange-900/30'
+                                                                        perf.rank === 1 ? (darkMode ? 'bg-yellow-900/30' : 'bg-yellow-100') :
+                                                                        perf.rank === 2 ? (darkMode ? 'bg-gray-600' : 'bg-gray-200') :
+                                                                        (darkMode ? 'bg-orange-900/30' : 'bg-orange-100')
                                                                     }`}
                                                                     onClick={() => {
                                                                         setSelectedPlayerNumber(perf.playerNum);
@@ -1536,9 +1568,9 @@
                                                                 <div 
                                                                     key={`${stat.playerNum}-${idx}`}
                                                                     className={`flex items-center gap-3 p-2 rounded-lg cursor-pointer hover:opacity-80 transition-opacity ${
-                                                                        stat.rank === 1 ? 'bg-yellow-100 dark:bg-yellow-900/30' :
-                                                                        stat.rank === 2 ? 'bg-gray-100 dark:bg-gray-600' :
-                                                                        'bg-orange-100 dark:bg-orange-900/30'
+                                                                        stat.rank === 1 ? (darkMode ? 'bg-yellow-900/30' : 'bg-yellow-100') :
+                                                                        stat.rank === 2 ? (darkMode ? 'bg-gray-600' : 'bg-gray-200') :
+                                                                        (darkMode ? 'bg-orange-900/30' : 'bg-orange-100')
                                                                     }`}
                                                                     onClick={() => {
                                                                         setSelectedPlayerNumber(stat.playerNum);
