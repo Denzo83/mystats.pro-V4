@@ -139,6 +139,7 @@
             const [expandedPlayer, setExpandedPlayer] = useState(null);
             const [recordsCategory, setRecordsCategory] = useState('all'); // Filter for records category
             const [recordsType, setRecordsType] = useState('game'); // 'game' or 'season' records
+            const [recordsScope, setRecordsScope] = useState('season'); // 'season' or 'alltime' records scope
             const [playerDetailTab, setPlayerDetailTab] = useState('stats'); // 'stats' or 'analysis' tab
             
             const [currentView, setCurrentView] = useState('main');
@@ -151,6 +152,8 @@
             const [records, setRecords] = useState({});
             const [games, setGames] = useState([]);
             const [allGames, setAllGames] = useState({});
+            const [allTimeGames, setAllTimeGames] = useState({}); // All games across all seasons
+            const [allTimeSeasonStats, setAllTimeSeasonStats] = useState({}); // All season stats keyed by season
             const [seasonsMeta, setSeasonsMeta] = useState({});
             const [playerAnalysis, setPlayerAnalysis] = useState({}); // AI analysis for players
             const [loading, setLoading] = useState(true);
@@ -245,6 +248,7 @@
                         try {
                             const gamesIndexData = await responses[3].json();
                             const loadedGames = {};
+                            const allLoadedGames = {}; // For all-time records
                             
                             console.log('Games index loaded:', gamesIndexData);
                             console.log('Selected season:', selectedSeason);
@@ -253,33 +257,56 @@
                             const gameSeason = gameInfo.season || '';
                             const dateYear = gameInfo.date?.substring(0, 4) || '';
                             
-                            if (gameSeason === selectedSeason || dateYear === selectedSeason) {
-                                try {
-                                    const gameResponse = await fetch(`${teamDataPath}/games/${gameInfo.filename}`);
-                                    if (gameResponse.ok) {
-                                        const gameData = await gameResponse.json();
+                            try {
+                                const gameResponse = await fetch(`${teamDataPath}/games/${gameInfo.filename}`);
+                                if (gameResponse.ok) {
+                                    const gameData = await gameResponse.json();
+                                    // Add to all-time games
+                                    allLoadedGames[gameId] = gameData;
+                                    
+                                    // Add to selected season games if matches
+                                    if (gameSeason === selectedSeason || dateYear === selectedSeason) {
                                         loadedGames[gameId] = gameData;
                                         console.log(`Loaded game: ${gameId}`);
                                     }
-                                } catch (e) {
-                                    console.log(`Could not load game: ${gameInfo.filename}`, e);
                                 }
+                            } catch (e) {
+                                console.log(`Could not load game: ${gameInfo.filename}`, e);
                             }
                         }
                         
-                        console.log('Total games loaded:', Object.keys(loadedGames).length);
+                        console.log('Total games loaded for season:', Object.keys(loadedGames).length);
+                        console.log('Total all-time games loaded:', Object.keys(allLoadedGames).length);
                         setAllGames(loadedGames);
                         setGames(Object.values(loadedGames));
+                        setAllTimeGames(allLoadedGames);
                         } catch (e) {
                             console.log('Could not parse games_index.json:', e);
                             setAllGames({});
                             setGames([]);
+                            setAllTimeGames({});
                         }
                     } else {
                         console.log('No games_index.json found');
                         setAllGames({});
                         setGames([]);
+                        setAllTimeGames({});
                     }
+
+                    // Load all season stats for all-time records
+                    const allSeasonStats = {};
+                    for (const seasonKey of availableSeasons) {
+                        try {
+                            const seasonResponse = await fetch(`${teamDataPath}/seasons/${seasonKey}.json`);
+                            if (seasonResponse.ok) {
+                                const seasonData = await seasonResponse.json();
+                                allSeasonStats[seasonKey] = seasonData;
+                            }
+                        } catch (e) {
+                            console.log(`Could not load season ${seasonKey}:`, e);
+                        }
+                    }
+                    setAllTimeSeasonStats(allSeasonStats);
 
                     setLoading(false);
                 } catch (err) {
@@ -1321,6 +1348,29 @@
                                 <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
                                     <h2 className={`text-2xl font-bold ${headingClass}`}>Team Records</h2>
                                     <div className="flex flex-wrap gap-2">
+                                        {/* Records Scope Toggle */}
+                                        <div className={`flex rounded-lg border ${borderClass} overflow-hidden`}>
+                                            <button
+                                                onClick={() => setRecordsScope('season')}
+                                                className={`px-3 py-1.5 text-sm font-medium transition-colors ${
+                                                    recordsScope === 'season'
+                                                        ? `${accentClass} text-white` 
+                                                        : `${cardClass} hover:opacity-80`
+                                                }`}
+                                            >
+                                                {getSeasonDisplayName(selectedSeason)}
+                                            </button>
+                                            <button
+                                                onClick={() => setRecordsScope('alltime')}
+                                                className={`px-3 py-1.5 text-sm font-medium transition-colors ${
+                                                    recordsScope === 'alltime'
+                                                        ? `${accentClass} text-white` 
+                                                        : `${cardClass} hover:opacity-80`
+                                                }`}
+                                            >
+                                                All Time
+                                            </button>
+                                        </div>
                                         {/* Records Type Toggle */}
                                         <div className={`flex rounded-lg border ${borderClass} overflow-hidden`}>
                                             <button
@@ -1369,55 +1419,60 @@
                                 
                                 {recordsType === 'game' ? (
                                     /* Single Game Records */
-                                    (!records[gameType] || Object.keys(records[gameType]).length === 0) ? (
-                                        <div className={`${cardClass} rounded-lg border ${borderClass} p-8 text-center ${textClass}`}>
-                                            <Trophy size={48} className="mx-auto mb-4 opacity-50" />
-                                            <p>No records available yet.</p>
-                                            <p className="text-sm mt-2">Records will appear after processing games.</p>
-                                        </div>
-                                    ) : (
-                                        (() => {
-                                            const recordCategories = [
-                                                { key: 'most_pts', label: 'Most Points', statKey: 'pts' },
-                                                { key: 'most_reb', label: 'Most Total Rebounds', statKey: 'reb' },
-                                                { key: 'most_oreb', label: 'Most Offensive Rebounds', statKey: 'oreb' },
-                                                { key: 'most_dreb', label: 'Most Defensive Rebounds', statKey: 'dreb' },
-                                                { key: 'most_asst', label: 'Most Assists', statKey: 'asst' },
-                                                { key: 'most_stl', label: 'Most Steals', statKey: 'stl' },
-                                                { key: 'most_blk', label: 'Most Blocks', statKey: 'blk' },
-                                                { key: 'most_3pt', label: 'Most 3-Pointers Made', statKey: '3pt' },
-                                                { key: 'most_fg', label: 'Most Field Goals Made', statKey: 'fg' },
-                                                { key: 'most_ft', label: 'Most Free Throws Made', statKey: 'ft' },
-                                                { key: 'most_to', label: 'Most Turnovers', statKey: 'to' },
-                                                { key: 'most_foul', label: 'Most Fouls', statKey: 'foul' }
-                                            ];
-                                            
-                                            const filteredCategories = recordsCategory === 'all' 
-                                                ? recordCategories 
-                                                : recordCategories.filter(c => c.statKey === recordsCategory);
-                                            
-                                            // Build top 3 for each category from all games
-                                            const getTop3ForCategory = (statKey) => {
-                                                const performances = [];
-                                                Object.entries(allGames).forEach(([gameId, game]) => {
-                                                    if (gameType === 'regular' && game.isPlayoff) return;
-                                                    if (gameType === 'playoff' && !game.isPlayoff) return;
-                                                    
-                                                    Object.entries(game.stats || {}).forEach(([playerNum, stats]) => {
-                                                        let value = stats[statKey];
-                                                        if (Array.isArray(value)) value = value[0];
-                                                        if (value && value > 0) {
-                                                            const player = players[playerNum] || allPlayersData[playerNum];
-                                                            performances.push({
-                                                                playerNum,
-                                                                playerName: player?.display_name || player?.name || `#${playerNum}`,
-                                                                player,
-                                                                value,
-                                                                date: game.date,
-                                                                opponent: game.opponent
-                                                            });
-                                                        }
-                                                    });
+                                    (() => {
+                                        const gamesToUse = recordsScope === 'alltime' ? allTimeGames : allGames;
+                                        if (!gamesToUse || Object.keys(gamesToUse).length === 0) {
+                                            return (
+                                                <div className={`${cardClass} rounded-lg border ${borderClass} p-8 text-center ${textClass}`}>
+                                                    <Trophy size={48} className="mx-auto mb-4 opacity-50" />
+                                                    <p>No records available yet.</p>
+                                                    <p className="text-sm mt-2">Records will appear after processing games.</p>
+                                                </div>
+                                            );
+                                        }
+                                        
+                                        const recordCategories = [
+                                            { key: 'most_pts', label: 'Most Points', statKey: 'pts' },
+                                            { key: 'most_reb', label: 'Most Total Rebounds', statKey: 'reb' },
+                                            { key: 'most_oreb', label: 'Most Offensive Rebounds', statKey: 'oreb' },
+                                            { key: 'most_dreb', label: 'Most Defensive Rebounds', statKey: 'dreb' },
+                                            { key: 'most_asst', label: 'Most Assists', statKey: 'asst' },
+                                            { key: 'most_stl', label: 'Most Steals', statKey: 'stl' },
+                                            { key: 'most_blk', label: 'Most Blocks', statKey: 'blk' },
+                                            { key: 'most_3pt', label: 'Most 3-Pointers Made', statKey: '3pt' },
+                                            { key: 'most_fg', label: 'Most Field Goals Made', statKey: 'fg' },
+                                            { key: 'most_ft', label: 'Most Free Throws Made', statKey: 'ft' },
+                                            { key: 'most_to', label: 'Most Turnovers', statKey: 'to' },
+                                            { key: 'most_foul', label: 'Most Fouls', statKey: 'foul' }
+                                        ];
+                                        
+                                        const filteredCategories = recordsCategory === 'all' 
+                                            ? recordCategories 
+                                            : recordCategories.filter(c => c.statKey === recordsCategory);
+                                        
+                                        // Build top 3 for each category from games
+                                        const getTop3ForCategory = (statKey) => {
+                                            const performances = [];
+                                            Object.entries(gamesToUse).forEach(([gameId, game]) => {
+                                                if (gameType === 'regular' && game.isPlayoff) return;
+                                                if (gameType === 'playoff' && !game.isPlayoff) return;
+                                                
+                                                Object.entries(game.stats || {}).forEach(([playerNum, stats]) => {
+                                                    let value = stats[statKey];
+                                                    if (Array.isArray(value)) value = value[0];
+                                                    if (value && value > 0) {
+                                                        const player = players[playerNum] || allPlayersData[playerNum];
+                                                        performances.push({
+                                                            playerNum,
+                                                            playerName: player?.display_name || player?.name || `#${playerNum}`,
+                                                            player,
+                                                            value,
+                                                            date: game.date,
+                                                            opponent: game.opponent,
+                                                            season: game.season
+                                                        });
+                                                    }
+                                                });
                                                 });
                                                 
                                                 // Sort by value desc, then by date asc (earliest first)
@@ -1471,7 +1526,10 @@
                                                                     <PlayerImage player={perf.player} size="sm" />
                                                                     <div className="flex-1 min-w-0">
                                                                         <div className={`font-medium truncate ${headingClass}`}>{perf.playerName}</div>
-                                                                        <div className={`text-xs ${textClass}`}>vs {perf.opponent} • {formatDate(perf.date)}</div>
+                                                                        <div className={`text-xs ${textClass}`}>
+                                                                            vs {perf.opponent} • {formatDate(perf.date)}
+                                                                            {recordsScope === 'alltime' && perf.season && ` • ${getSeasonDisplayName(perf.season)}`}
+                                                                        </div>
                                                                     </div>
                                                                     <div className={`text-2xl font-bold text-${accentColor}`}>{perf.value}</div>
                                                                 </div>
@@ -1484,47 +1542,98 @@
                                     )
                                 ) : (
                                     /* Season Records */
-                                    (!seasonStats[gameType] || Object.keys(seasonStats[gameType]).length === 0) ? (
-                                        <div className={`${cardClass} rounded-lg border ${borderClass} p-8 text-center ${textClass}`}>
-                                            <Trophy size={48} className="mx-auto mb-4 opacity-50" />
-                                            <p>No season records available yet.</p>
-                                            <p className="text-sm mt-2">Season records will appear after processing games.</p>
-                                        </div>
-                                    ) : (
-                                        (() => {
-                                            const seasonRecordCategories = [
-                                                { key: 'ppg', label: 'Points Per Game (Season Avg)', statKey: 'pts', isAvg: true },
-                                                { key: 'pts', label: 'Total Points (Season)', statKey: 'pts', isAvg: false },
-                                                { key: 'rpg', label: 'Rebounds Per Game (Season Avg)', statKey: 'reb', isAvg: true },
-                                                { key: 'reb', label: 'Total Rebounds (Season)', statKey: 'reb', isAvg: false },
-                                                { key: 'apg', label: 'Assists Per Game (Season Avg)', statKey: 'asst', isAvg: true },
-                                                { key: 'asst', label: 'Total Assists (Season)', statKey: 'asst', isAvg: false },
-                                                { key: 'spg', label: 'Steals Per Game (Season Avg)', statKey: 'stl', isAvg: true },
-                                                { key: 'stl', label: 'Total Steals (Season)', statKey: 'stl', isAvg: false },
-                                                { key: 'bpg', label: 'Blocks Per Game (Season Avg)', statKey: 'blk', isAvg: true },
-                                                { key: 'blk', label: 'Total Blocks (Season)', statKey: 'blk', isAvg: false },
-                                                { key: '3pm_pg', label: '3PM Per Game (Season Avg)', statKey: '3pt', isAvg: true },
-                                                { key: '3pt_made', label: 'Total 3-Pointers Made (Season)', statKey: '3pt', isAvg: false },
-                                                { key: 'fg_pct', label: 'Field Goal % (Season)', statKey: 'fg', isAvg: true, isPct: true },
-                                                { key: '3pt_pct', label: '3-Point % (Season)', statKey: '3pt', isAvg: true, isPct: true },
-                                                { key: 'ft_pct', label: 'Free Throw % (Season)', statKey: 'ft', isAvg: true, isPct: true },
-                                                { key: 'orebpg', label: 'Off. Reb Per Game (Season Avg)', statKey: 'oreb', isAvg: true },
-                                                { key: 'oreb', label: 'Total Off. Rebounds (Season)', statKey: 'oreb', isAvg: false },
-                                                { key: 'drebpg', label: 'Def. Reb Per Game (Season Avg)', statKey: 'dreb', isAvg: true },
-                                                { key: 'dreb', label: 'Total Def. Rebounds (Season)', statKey: 'dreb', isAvg: false },
-                                                { key: 'tpg', label: 'Turnovers Per Game (Season Avg)', statKey: 'to', isAvg: true },
-                                                { key: 'to', label: 'Total Turnovers (Season)', statKey: 'to', isAvg: false },
-                                                { key: 'fpg', label: 'Fouls Per Game (Season Avg)', statKey: 'foul', isAvg: true },
-                                                { key: 'foul', label: 'Total Fouls (Season)', statKey: 'foul', isAvg: false }
-                                            ];
+                                    (() => {
+                                        const statsToUse = recordsScope === 'alltime' ? allTimeSeasonStats : { [selectedSeason]: seasonStats };
+                                        const hasStats = recordsScope === 'alltime' 
+                                            ? Object.keys(allTimeSeasonStats).length > 0
+                                            : seasonStats[gameType] && Object.keys(seasonStats[gameType]).length > 0;
+                                        
+                                        if (!hasStats) {
+                                            return (
+                                                <div className={`${cardClass} rounded-lg border ${borderClass} p-8 text-center ${textClass}`}>
+                                                    <Trophy size={48} className="mx-auto mb-4 opacity-50" />
+                                                    <p>No season records available yet.</p>
+                                                    <p className="text-sm mt-2">Season records will appear after processing games.</p>
+                                                </div>
+                                            );
+                                        }
+                                        
+                                        const seasonRecordCategories = [
+                                            { key: 'ppg', label: 'Points Per Game (Season Avg)', statKey: 'pts', isAvg: true },
+                                            { key: 'pts', label: 'Total Points (Season)', statKey: 'pts', isAvg: false },
+                                            { key: 'rpg', label: 'Rebounds Per Game (Season Avg)', statKey: 'reb', isAvg: true },
+                                            { key: 'reb', label: 'Total Rebounds (Season)', statKey: 'reb', isAvg: false },
+                                            { key: 'apg', label: 'Assists Per Game (Season Avg)', statKey: 'asst', isAvg: true },
+                                            { key: 'asst', label: 'Total Assists (Season)', statKey: 'asst', isAvg: false },
+                                            { key: 'spg', label: 'Steals Per Game (Season Avg)', statKey: 'stl', isAvg: true },
+                                            { key: 'stl', label: 'Total Steals (Season)', statKey: 'stl', isAvg: false },
+                                            { key: 'bpg', label: 'Blocks Per Game (Season Avg)', statKey: 'blk', isAvg: true },
+                                            { key: 'blk', label: 'Total Blocks (Season)', statKey: 'blk', isAvg: false },
+                                            { key: '3pm_pg', label: '3PM Per Game (Season Avg)', statKey: '3pt', isAvg: true },
+                                            { key: '3pt_made', label: 'Total 3-Pointers Made (Season)', statKey: '3pt', isAvg: false },
+                                            { key: 'fg_pct', label: 'Field Goal % (Season)', statKey: 'fg', isAvg: true, isPct: true },
+                                            { key: '3pt_pct', label: '3-Point % (Season)', statKey: '3pt', isAvg: true, isPct: true },
+                                            { key: 'ft_pct', label: 'Free Throw % (Season)', statKey: 'ft', isAvg: true, isPct: true },
+                                            { key: 'orebpg', label: 'Off. Reb Per Game (Season Avg)', statKey: 'oreb', isAvg: true },
+                                            { key: 'oreb', label: 'Total Off. Rebounds (Season)', statKey: 'oreb', isAvg: false },
+                                            { key: 'drebpg', label: 'Def. Reb Per Game (Season Avg)', statKey: 'dreb', isAvg: true },
+                                            { key: 'dreb', label: 'Total Def. Rebounds (Season)', statKey: 'dreb', isAvg: false },
+                                            { key: 'tpg', label: 'Turnovers Per Game (Season Avg)', statKey: 'to', isAvg: true },
+                                            { key: 'to', label: 'Total Turnovers (Season)', statKey: 'to', isAvg: false },
+                                            { key: 'fpg', label: 'Fouls Per Game (Season Avg)', statKey: 'foul', isAvg: true },
+                                            { key: 'foul', label: 'Total Fouls (Season)', statKey: 'foul', isAvg: false }
+                                        ];
+                                        
+                                        const filteredCategories = recordsCategory === 'all' 
+                                            ? seasonRecordCategories 
+                                            : seasonRecordCategories.filter(c => c.statKey === recordsCategory);
+                                        
+                                        const getTop3SeasonRecord = (statKey, isAvg, isPct) => {
+                                            const playerSeasonStats = [];
                                             
-                                            const filteredCategories = recordsCategory === 'all' 
-                                                ? seasonRecordCategories 
-                                                : seasonRecordCategories.filter(c => c.statKey === recordsCategory);
-                                            
-                                            const getTop3SeasonRecord = (statKey, isAvg, isPct) => {
-                                                const playerSeasonStats = [];
-                                                
+                                            if (recordsScope === 'alltime') {
+                                                // Loop through all seasons
+                                                Object.entries(allTimeSeasonStats).forEach(([seasonKey, seasonData]) => {
+                                                    Object.entries(seasonData[gameType] || {}).forEach(([playerNum, stats]) => {
+                                                        if (!stats.gp || stats.gp === 0) return;
+                                                        
+                                                        let value;
+                                                        if (isPct) {
+                                                            value = stats[`${statKey}_pct`] || 0;
+                                                        } else if (isAvg) {
+                                                            const avgKey = statKey === 'asst' ? 'apg' : 
+                                                                          statKey === 'stl' ? 'spg' :
+                                                                          statKey === 'blk' ? 'bpg' :
+                                                                          statKey === 'to' ? 'tpg' :
+                                                                          statKey === 'foul' ? 'fpg' :
+                                                                          statKey === 'oreb' ? 'orebpg' :
+                                                                          statKey === 'dreb' ? 'drebpg' :
+                                                                          statKey === '3pt' ? '3pm_pg' :
+                                                                          `${statKey.charAt(0)}pg`;
+                                                            value = stats[avgKey] || 0;
+                                                        } else {
+                                                            if (statKey === '3pt') {
+                                                                value = stats['3pt']?.[0] || 0;
+                                                            } else {
+                                                                value = stats[statKey] || 0;
+                                                            }
+                                                        }
+                                                        
+                                                        if (value > 0) {
+                                                            const player = players[playerNum] || allPlayersData[playerNum];
+                                                            playerSeasonStats.push({
+                                                                playerNum,
+                                                                playerName: player?.display_name || player?.name || `#${playerNum}`,
+                                                                player,
+                                                                value,
+                                                                gp: stats.gp,
+                                                                season: seasonKey
+                                                            });
+                                                        }
+                                                    });
+                                                });
+                                            } else {
+                                                // Current season only
                                                 Object.entries(seasonStats[gameType] || {}).forEach(([playerNum, stats]) => {
                                                     if (!stats.gp || stats.gp === 0) return;
                                                     
@@ -1557,9 +1666,12 @@
                                                             playerName: player?.display_name || player?.name || `#${playerNum}`,
                                                             player,
                                                             value,
-                                                            gp: stats.gp
+                                                            gp: stats.gp,
+                                                            season: selectedSeason
                                                         });
                                                     }
+                                                });
+                                            }
                                                 });
                                                 
                                                 playerSeasonStats.sort((a, b) => b.value - a.value);
@@ -1608,7 +1720,7 @@
                                                                     <PlayerImage player={stat.player} size="sm" />
                                                                     <div className="flex-1 min-w-0">
                                                                         <div className={`font-medium truncate ${headingClass}`}>{stat.playerName}</div>
-                                                                        <div className={`text-xs ${textClass}`}>{getSeasonDisplayName(selectedSeason)} • {stat.gp} games</div>
+                                                                        <div className={`text-xs ${textClass}`}>{getSeasonDisplayName(stat.season || selectedSeason)} • {stat.gp} games</div>
                                                                     </div>
                                                                     <div className={`text-2xl font-bold text-${accentColor}`}>
                                                                         {isPct ? `${stat.value.toFixed(1)}%` : 
