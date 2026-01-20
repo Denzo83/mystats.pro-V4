@@ -2,28 +2,28 @@
   "regular": {
     "most_pts": {
       "player": "F. Wendtman",
-      "player_number": "28",
+      "player_number": "22",
       "value": 16,
       "date": "2025-12-04",
       "opponent": "Sob"
     },
     "most_reb": {
       "player": "F. Wendtman",
-      "player_number": "28",
+      "player_number": "22",
       "value": 14,
       "date": "2025-12-04",
       "opponent": "Sob"
     },
     "most_asst": {
       "player": "F. Wendtman",
-      "player_number": "28",
+      "player_number": "22",
       "value": 6,
       "date": "2025-12-04",
       "opponent": "Sob"
     },
     "most_stl": {
       "player": "F. Wendtman",
-      "player_number": "28",
+      "player_number": "22",
       "value": 9,
       "date": "2025-09-04",
       "opponent": "Ramrod"
@@ -44,14 +44,14 @@
     },
     "most_fg": {
       "player": "F. Wendtman",
-      "player_number": "28",
+      "player_number": "22",
       "value": 8,
       "date": "2025-12-04",
       "opponent": "Sob"
     },
     "most_3pt": {
       "player": "F. Wendtman",
-      "player_number": "28",
+      "player_number": "22",
       "value": 3,
       "date": "2025-10-02",
       "opponent": "Obl"
@@ -65,7 +65,7 @@
     },
     "most_oreb": {
       "player": "F. Wendtman",
-      "player_number": "28",
+      "player_number": "22",
       "value": 7,
       "date": "2025-12-04",
       "opponent": "Sob"
@@ -79,7 +79,7 @@
     },
     "most_foul": {
       "player": "F. Wendtman",
-      "player_number": "28",
+      "player_number": "22",
       "value": 2,
       "date": "2025-10-30",
       "opponent": "Sob"
@@ -88,7 +88,7 @@
   "playoff": {
     "most_pts": {
       "player": "F. Wendtman",
-      "player_number": "28",
+      "player_number": "22",
       "value": 6,
       "date": "2025-12-18",
       "opponent": "Holy rollers"
@@ -102,35 +102,35 @@
     },
     "most_asst": {
       "player": "F. Wendtman",
-      "player_number": "28",
+      "player_number": "22",
       "value": 7,
       "date": "2025-12-11",
       "opponent": "Kobe wan kenobi"
     },
     "most_stl": {
       "player": "F. Wendtman",
-      "player_number": "28",
+      "player_number": "22",
       "value": 1,
       "date": "2025-12-11",
       "opponent": "Kobe wan kenobi"
     },
     "most_blk": {
       "player": "F. Wendtman",
-      "player_number": "28",
+      "player_number": "22",
       "value": 1,
       "date": "2025-12-11",
       "opponent": "Kobe wan kenobi"
     },
     "most_to": {
       "player": "F. Wendtman",
-      "player_number": "28",
+      "player_number": "22",
       "value": 1,
       "date": "2025-12-11",
       "opponent": "Kobe wan kenobi"
     },
     "most_fg": {
       "player": "F. Wendtman",
-      "player_number": "28",
+      "player_number": "22",
       "value": 3,
       "date": "2025-12-18",
       "opponent": "Holy rollers"
@@ -165,7 +165,7 @@
     },
     "most_foul": {
       "player": "F. Wendtman",
-      "player_number": "28",
+      "player_number": "22",
       "value": 1,
       "date": "2025-12-11",
       "opponent": "Kobe wan kenobi"
@@ -174,28 +174,28 @@
   "all": {
     "most_pts": {
       "player": "F. Wendtman",
-      "player_number": "28",
+      "player_number": "22",
       "value": 16,
       "date": "2025-12-04",
       "opponent": "Sob"
     },
     "most_reb": {
       "player": "F. Wendtman",
-      "player_number": "28",
+      "player_number": "22",
       "value": 14,
       "date": "2025-12-04",
       "opponent": "Sob"
     },
     "most_asst": {
       "player": "F. Wendtman",
-      "player_number": "28",
+      "player_number": "22",
       "value": 7,
       "date": "2025-12-11",
       "opponent": "Kobe wan kenobi"
     },
     "most_stl": {
       "player": "F. Wendtman",
-      "player_number": "28",
+      "player_number": "22",
       "value": 9,
       "date": "2025-09-04",
       "opponent": "Ramrod"
@@ -216,14 +216,14 @@
     },
     "most_fg": {
       "player": "F. Wendtman",
-      "player_number": "28",
+      "player_number": "22",
       "value": 8,
       "date": "2025-12-04",
       "opponent": "Sob"
     },
     "most_3pt": {
       "player": "F. Wendtman",
-      "player_number": "28",
+      "player_number": "22",
       "value": 3,
       "date": "2025-10-02",
       "opponent": "Obl"
@@ -237,7 +237,7 @@
     },
     "most_oreb": {
       "player": "F. Wendtman",
-      "player_number": "28",
+      "player_number": "22",
       "value": 7,
       "date": "2025-12-04",
       "opponent": "Sob"
@@ -251,7 +251,7 @@
     },
     "most_foul": {
       "player": "F. Wendtman",
-      "player_number": "28",
+      "player_number": "22",
       "value": 2,
       "date": "2025-10-30",
       "opponent": "Sob"
