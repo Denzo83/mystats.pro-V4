@@ -657,9 +657,17 @@
                                             <p className="text-white/60 text-sm">{player.teams.join(' • ')}</p>
                                         )}
                                     </div>
-                                    <div className="ml-auto text-right">
-                                        <div className="text-3xl font-bold">{playerStats.gp || 0}</div>
-                                        <div className="text-white/80 text-sm">Games Played</div>
+                                    <div className="ml-auto flex items-center gap-4">
+                                        <div className="text-right">
+                                            <div className="text-3xl font-bold">{playerStats.gp || 0}</div>
+                                            <div className="text-white/80 text-sm">Games Played</div>
+                                        </div>
+                                        <button
+                                            onClick={() => setDarkMode(!darkMode)}
+                                            className="p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors"
+                                        >
+                                            {darkMode ? <Sun size={24} /> : <Moon size={24} />}
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -896,9 +904,9 @@
                                             <div 
                                                 key={key} 
                                                 className={`p-3 rounded-lg text-center ${
-                                                    position === 1 ? 'bg-yellow-100 dark:bg-yellow-900/30 border-2 border-yellow-400' :
-                                                    position === 2 ? 'bg-gray-100 dark:bg-gray-600 border-2 border-gray-400' :
-                                                    position === 3 ? 'bg-orange-100 dark:bg-orange-900/30 border-2 border-orange-400' :
+                                                    position === 1 ? (darkMode ? 'bg-yellow-900/30 border-2 border-yellow-400' : 'bg-yellow-100 border-2 border-yellow-400') :
+                                                    position === 2 ? (darkMode ? 'bg-gray-600 border-2 border-gray-400' : 'bg-gray-200 border-2 border-gray-400') :
+                                                    position === 3 ? (darkMode ? 'bg-orange-900/30 border-2 border-orange-400' : 'bg-orange-100 border-2 border-orange-400') :
                                                     darkMode ? 'bg-gray-700' : 'bg-gray-100'
                                                 }`}
                                             >
@@ -1399,9 +1407,9 @@
                                                                 <div 
                                                                     key={`${perf.playerNum}-${perf.date}-${idx}`}
                                                                     className={`flex items-center gap-3 p-2 rounded-lg cursor-pointer hover:opacity-80 transition-opacity ${
-                                                                        perf.rank === 1 ? 'bg-yellow-100 dark:bg-yellow-900/30' :
-                                                                        perf.rank === 2 ? 'bg-gray-100 dark:bg-gray-600' :
-                                                                        'bg-orange-100 dark:bg-orange-900/30'
+                                                                        perf.rank === 1 ? (darkMode ? 'bg-yellow-900/30' : 'bg-yellow-100') :
+                                                                        perf.rank === 2 ? (darkMode ? 'bg-gray-600' : 'bg-gray-200') :
+                                                                        (darkMode ? 'bg-orange-900/30' : 'bg-orange-100')
                                                                     }`}
                                                                     onClick={() => {
                                                                         setSelectedPlayerNumber(perf.playerNum);
@@ -1536,9 +1544,9 @@
                                                                 <div 
                                                                     key={`${stat.playerNum}-${idx}`}
                                                                     className={`flex items-center gap-3 p-2 rounded-lg cursor-pointer hover:opacity-80 transition-opacity ${
-                                                                        stat.rank === 1 ? 'bg-yellow-100 dark:bg-yellow-900/30' :
-                                                                        stat.rank === 2 ? 'bg-gray-100 dark:bg-gray-600' :
-                                                                        'bg-orange-100 dark:bg-orange-900/30'
+                                                                        stat.rank === 1 ? (darkMode ? 'bg-yellow-900/30' : 'bg-yellow-100') :
+                                                                        stat.rank === 2 ? (darkMode ? 'bg-gray-600' : 'bg-gray-200') :
+                                                                        (darkMode ? 'bg-orange-900/30' : 'bg-orange-100')
                                                                     }`}
                                                                     onClick={() => {
                                                                         setSelectedPlayerNumber(stat.playerNum);
