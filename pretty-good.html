@@ -1608,7 +1608,7 @@
                                                                     <PlayerImage player={stat.player} size="sm" />
                                                                     <div className="flex-1 min-w-0">
                                                                         <div className={`font-medium truncate ${headingClass}`}>{stat.playerName}</div>
-                                                                        <div className={`text-xs ${textClass}`}>{stat.gp} games played</div>
+                                                                        <div className={`text-xs ${textClass}`}>{getSeasonDisplayName(selectedSeason)} • {stat.gp} games</div>
                                                                     </div>
                                                                     <div className={`text-2xl font-bold text-${accentColor}`}>
                                                                         {isPct ? `${stat.value.toFixed(1)}%` : 

@@ -152,6 +152,7 @@
             const [games, setGames] = useState([]);
             const [allGames, setAllGames] = useState({});
             const [seasonsMeta, setSeasonsMeta] = useState({});
+            const [playerAnalysis, setPlayerAnalysis] = useState({}); // AI analysis for players
             const [loading, setLoading] = useState(true);
             const [error, setError] = useState(null);
 
@@ -182,7 +183,8 @@
                         fetch(`${teamDataPath}/seasons/${selectedSeason}.json`).catch(() => null),  // Team season stats
                         fetch(`${teamDataPath}/records.json`).catch(() => null),           // Team records
                         fetch(`${teamDataPath}/games_index.json`).catch(() => null),       // Team games index
-                        fetch(`${teamDataPath}/seasons_meta.json`).catch(() => null)       // Team season meta
+                        fetch(`${teamDataPath}/seasons_meta.json`).catch(() => null),      // Team season meta
+                        fetch(`${teamDataPath}/analysis.json`).catch(() => null)           // Player analysis
                     ]);
 
                     if (responses[0] && responses[0].ok) {
@@ -204,25 +206,48 @@
                     }
 
                     if (responses[2] && responses[2].ok) {
-                        const recordsData = await responses[2].json();
-                        setRecords(recordsData);
+                        try {
+                            const recordsData = await responses[2].json();
+                            setRecords(recordsData);
+                        } catch (e) {
+                            console.log('Could not parse records.json:', e);
+                            setRecords({});
+                        }
                     } else {
                         setRecords({});
                     }
 
                     if (responses[4] && responses[4].ok) {
-                        const metaData = await responses[4].json();
-                        setSeasonsMeta(metaData);
+                        try {
+                            const metaData = await responses[4].json();
+                            setSeasonsMeta(metaData);
+                        } catch (e) {
+                            console.log('Could not parse seasons_meta.json:', e);
+                            setSeasonsMeta({});
+                        }
                     } else {
                         setSeasonsMeta({});
                     }
 
+                    if (responses[5] && responses[5].ok) {
+                        try {
+                            const analysisData = await responses[5].json();
+                            setPlayerAnalysis(analysisData);
+                        } catch (e) {
+                            console.log('Could not parse analysis.json:', e);
+                            setPlayerAnalysis({});
+                        }
+                    } else {
+                        setPlayerAnalysis({});
+                    }
+
                     if (responses[3] && responses[3].ok) {
-                        const gamesIndexData = await responses[3].json();
-                        const loadedGames = {};
-                        
-                        console.log('Games index loaded:', gamesIndexData);
-                        console.log('Selected season:', selectedSeason);
+                        try {
+                            const gamesIndexData = await responses[3].json();
+                            const loadedGames = {};
+                            
+                            console.log('Games index loaded:', gamesIndexData);
+                            console.log('Selected season:', selectedSeason);
                         
                         for (const [gameId, gameInfo] of Object.entries(gamesIndexData)) {
                             const gameSeason = gameInfo.season || '';
@@ -245,6 +270,11 @@
                         console.log('Total games loaded:', Object.keys(loadedGames).length);
                         setAllGames(loadedGames);
                         setGames(Object.values(loadedGames));
+                        } catch (e) {
+                            console.log('Could not parse games_index.json:', e);
+                            setAllGames({});
+                            setGames([]);
+                        }
                     } else {
                         console.log('No games_index.json found');
                         setAllGames({});
@@ -1014,13 +1044,28 @@
                         <div className="max-w-7xl mx-auto px-4 py-6">
                             <div className={`${cardClass} rounded-lg border ${borderClass} p-6`}>
                                 <h2 className={`text-xl font-bold mb-4 ${headingClass}`}>AI Analysis</h2>
-                                <div className={`${darkMode ? 'bg-gray-700' : 'bg-gray-100'} rounded-lg p-8 text-center`}>
-                                    <div className="text-6xl mb-4">🤖</div>
-                                    <p className={`text-xl font-medium ${headingClass}`}>Coming Soon</p>
-                                    <p className={`mt-2 ${textClass}`}>
-                                        AI-powered player analysis will be available later this season.
-                                    </p>
-                                </div>
+                                {playerAnalysis[selectedPlayerNumber] ? (
+                                    <div className={`${darkMode ? 'bg-gray-700' : 'bg-gray-100'} rounded-lg p-6`}>
+                                        <div className="flex items-start gap-4 mb-4">
+                                            <div className="text-4xl">🤖</div>
+                                            <div>
+                                                <p className={`font-bold ${headingClass}`}>Season Analysis</p>
+                                                <p className={`text-sm ${textClass}`}>{player.display_name || player.name}</p>
+                                            </div>
+                                        </div>
+                                        <div className={`${textClass} leading-relaxed whitespace-pre-wrap`}>
+                                            {playerAnalysis[selectedPlayerNumber]}
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className={`${darkMode ? 'bg-gray-700' : 'bg-gray-100'} rounded-lg p-8 text-center`}>
+                                        <div className="text-6xl mb-4">🤖</div>
+                                        <p className={`text-xl font-medium ${headingClass}`}>Coming Soon</p>
+                                        <p className={`mt-2 ${textClass}`}>
+                                            AI-powered analysis for {player.display_name || player.name} will be available later this season.
+                                        </p>
+                                    </div>
+                                )}
                             </div>
                         </div>
                         )}
@@ -1563,7 +1608,7 @@
                                                                     <PlayerImage player={stat.player} size="sm" />
                                                                     <div className="flex-1 min-w-0">
                                                                         <div className={`font-medium truncate ${headingClass}`}>{stat.playerName}</div>
-                                                                        <div className={`text-xs ${textClass}`}>{stat.gp} games played</div>
+                                                                        <div className={`text-xs ${textClass}`}>{getSeasonDisplayName(selectedSeason)} • {stat.gp} games</div>
                                                                     </div>
                                                                     <div className={`text-2xl font-bold text-${accentColor}`}>
                                                                         {isPct ? `${stat.value.toFixed(1)}%` : 
