@@ -1675,22 +1675,21 @@
                                                     }
                                                 });
                                             }
-                                                });
-                                                
-                                                playerSeasonStats.sort((a, b) => b.value - a.value);
-                                                
-                                                const top3 = [];
-                                                let rank = 1;
-                                                for (let i = 0; i < playerSeasonStats.length && top3.length < 3; i++) {
-                                                    const stat = playerSeasonStats[i];
-                                                    const isTied = i > 0 && playerSeasonStats[i-1].value === stat.value;
-                                                    if (!isTied && top3.length > 0) {
-                                                        rank = top3.length + 1;
-                                                    }
-                                                    top3.push({ ...stat, rank, isTied });
+                                            
+                                            playerSeasonStats.sort((a, b) => b.value - a.value);
+                                            
+                                            const top3 = [];
+                                            let rank = 1;
+                                            for (let i = 0; i < playerSeasonStats.length && top3.length < 3; i++) {
+                                                const stat = playerSeasonStats[i];
+                                                const isTied = i > 0 && playerSeasonStats[i-1].value === stat.value;
+                                                if (!isTied && top3.length > 0) {
+                                                    rank = top3.length + 1;
                                                 }
-                                                return top3;
-                                            };
+                                                top3.push({ ...stat, rank, isTied });
+                                            }
+                                            return top3;
+                                        };
                                             
                                             return (
                                                 <div className="grid gap-4 md:grid-cols-2">
