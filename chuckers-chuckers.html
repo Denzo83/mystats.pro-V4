@@ -904,7 +904,7 @@
                                             >
                                                 <div className={`text-2xl font-bold ${
                                                     position === 1 ? 'text-yellow-600' :
-                                                    position === 2 ? 'text-white' :
+                                                    position === 2 ? (darkMode ? 'text-white' : 'text-gray-700') :
                                                     position === 3 ? 'text-orange-500' :
                                                     `text-${accentColor}`
                                                 }`}>
@@ -1410,7 +1410,7 @@
                                                                 >
                                                                     <div className={`text-xl font-bold w-8 text-center ${
                                                                         perf.rank === 1 ? 'text-yellow-600' :
-                                                                        perf.rank === 2 ? 'text-white' :
+                                                                        perf.rank === 2 ? (darkMode ? 'text-white' : 'text-gray-700') :
                                                                         'text-orange-500'
                                                                     }`}>
                                                                         {perf.isTied ? 'T' : ''}{perf.rank}
@@ -1547,7 +1547,7 @@
                                                                 >
                                                                     <div className={`text-xl font-bold w-8 text-center ${
                                                                         stat.rank === 1 ? 'text-yellow-600' :
-                                                                        stat.rank === 2 ? 'text-white' :
+                                                                        stat.rank === 2 ? (darkMode ? 'text-white' : 'text-gray-700') :
                                                                         'text-orange-500'
                                                                     }`}>
                                                                         {stat.isTied ? 'T' : ''}{stat.rank}
