@@ -115,5 +115,18 @@
     "images": {
       "portrait": "Assets/players/placeholder7.png"
     }
+  },
+  "1": {
+    "id": "t-pendlebury",
+    "display_name": "Tim Pendlebury",
+    "name": "Tim Pendlebury",
+    "number": "1",
+    "position": "G/F",
+    "teams": [
+      "Pretty Good"
+    ],
+    "images": {
+      "portrait": "Assets/players/t-pendlebury.png"
+    }
   }
 }
