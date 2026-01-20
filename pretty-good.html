@@ -1495,51 +1495,54 @@
                                                 return top3;
                                             };
                                             
-                                            return filteredCategories.map(({ key, label, statKey }) => {
-                                                const top3 = getTop3ForCategory(statKey);
-                                                if (top3.length === 0) return null;
-                                                
-                                                return (
-                                                    <div key={key} className={`${cardClass} rounded-lg border ${borderClass} p-4`}>
-                                                        <h3 className={`font-bold text-lg mb-3 ${headingClass}`}>{label}</h3>
-                                                        <div className="space-y-2">
-                                                            {top3.map((perf, idx) => (
-                                                                <div 
-                                                                    key={`${perf.playerNum}-${perf.date}-${idx}`}
-                                                                    className={`flex items-center gap-3 p-2 rounded-lg cursor-pointer hover:opacity-80 transition-opacity ${
-                                                                        perf.rank === 1 ? (darkMode ? 'bg-yellow-900/30' : 'bg-yellow-100') :
-                                                                        perf.rank === 2 ? (darkMode ? 'bg-gray-600' : 'bg-gray-200') :
-                                                                        (darkMode ? 'bg-orange-900/30' : 'bg-orange-100')
-                                                                    }`}
-                                                                    onClick={() => {
-                                                                        setSelectedPlayerNumber(perf.playerNum);
-                                                                        setCurrentView('player');
-                                                                    }}
-                                                                >
-                                                                    <div className={`text-xl font-bold w-8 text-center ${
-                                                                        perf.rank === 1 ? 'text-yellow-600' :
-                                                                        perf.rank === 2 ? (darkMode ? 'text-white' : 'text-gray-700') :
-                                                                        'text-orange-500'
-                                                                    }`}>
-                                                                        {perf.isTied ? 'T' : ''}{perf.rank}
-                                                                    </div>
-                                                                    <PlayerImage player={perf.player} size="sm" />
-                                                                    <div className="flex-1 min-w-0">
-                                                                        <div className={`font-medium truncate ${headingClass}`}>{perf.playerName}</div>
-                                                                        <div className={`text-xs ${textClass}`}>
-                                                                            vs {perf.opponent} • {formatDate(perf.date)}
-                                                                            {recordsScope === 'alltime' && perf.season && ` • ${getSeasonDisplayName(perf.season)}`}
+                                            return (
+                                                <div className="grid gap-4 md:grid-cols-2">
+                                                    {filteredCategories.map(({ key, label, statKey }) => {
+                                                        const top3 = getTop3ForCategory(statKey);
+                                                        if (top3.length === 0) return null;
+                                                        
+                                                        return (
+                                                            <div key={key} className={`${cardClass} rounded-lg border ${borderClass} p-4`}>
+                                                                <h3 className={`font-bold text-lg mb-3 ${headingClass}`}>{label}</h3>
+                                                                <div className="space-y-2">
+                                                                    {top3.map((perf, idx) => (
+                                                                        <div 
+                                                                            key={`${perf.playerNum}-${perf.date}-${idx}`}
+                                                                            className={`flex items-center gap-3 p-2 rounded-lg cursor-pointer hover:opacity-80 transition-opacity ${
+                                                                                perf.rank === 1 ? (darkMode ? 'bg-yellow-900/30' : 'bg-yellow-100') :
+                                                                                perf.rank === 2 ? (darkMode ? 'bg-gray-600' : 'bg-gray-200') :
+                                                                                (darkMode ? 'bg-orange-900/30' : 'bg-orange-100')
+                                                                            }`}
+                                                                            onClick={() => {
+                                                                                setSelectedPlayerNumber(perf.playerNum);
+                                                                                setCurrentView('player');
+                                                                            }}
+                                                                        >
+                                                                            <div className={`text-xl font-bold w-8 text-center ${
+                                                                                perf.rank === 1 ? 'text-yellow-600' :
+                                                                                perf.rank === 2 ? (darkMode ? 'text-white' : 'text-gray-700') :
+                                                                                'text-orange-500'
+                                                                            }`}>
+                                                                                {perf.isTied ? 'T' : ''}{perf.rank}
+                                                                            </div>
+                                                                            <PlayerImage player={perf.player} size="sm" />
+                                                                            <div className="flex-1 min-w-0">
+                                                                                <div className={`font-medium truncate ${headingClass}`}>{perf.playerName}</div>
+                                                                                <div className={`text-xs ${textClass}`}>
+                                                                                    vs {perf.opponent} • {formatDate(perf.date)}
+                                                                                    {recordsScope === 'alltime' && perf.season && ` • ${getSeasonDisplayName(perf.season)}`}
+                                                                                </div>
+                                                                            </div>
+                                                                            <div className={`text-2xl font-bold text-${accentColor}`}>{perf.value}</div>
                                                                         </div>
-                                                                    </div>
-                                                                    <div className={`text-2xl font-bold text-${accentColor}`}>{perf.value}</div>
+                                                                    ))}
                                                                 </div>
-                                                            ))}
-                                                        </div>
-                                                    </div>
-                                                );
-                                            });
+                                                            </div>
+                                                        );
+                                                    })}
+                                                </div>
+                                            );
                                         })()
-                                    )
                                 ) : (
                                     /* Season Records */
                                     (() => {
@@ -1689,52 +1692,55 @@
                                                 return top3;
                                             };
                                             
-                                            return filteredCategories.map(({ key, label, statKey, isAvg, isPct }) => {
-                                                const top3 = getTop3SeasonRecord(statKey, isAvg, isPct);
-                                                if (top3.length === 0) return null;
-                                                
-                                                return (
-                                                    <div key={key} className={`${cardClass} rounded-lg border ${borderClass} p-4`}>
-                                                        <h3 className={`font-bold text-lg mb-3 ${headingClass}`}>{label}</h3>
-                                                        <div className="space-y-2">
-                                                            {top3.map((stat, idx) => (
-                                                                <div 
-                                                                    key={`${stat.playerNum}-${idx}`}
-                                                                    className={`flex items-center gap-3 p-2 rounded-lg cursor-pointer hover:opacity-80 transition-opacity ${
-                                                                        stat.rank === 1 ? (darkMode ? 'bg-yellow-900/30' : 'bg-yellow-100') :
-                                                                        stat.rank === 2 ? (darkMode ? 'bg-gray-600' : 'bg-gray-200') :
-                                                                        (darkMode ? 'bg-orange-900/30' : 'bg-orange-100')
-                                                                    }`}
-                                                                    onClick={() => {
-                                                                        setSelectedPlayerNumber(stat.playerNum);
-                                                                        setCurrentView('player');
-                                                                    }}
-                                                                >
-                                                                    <div className={`text-xl font-bold w-8 text-center ${
-                                                                        stat.rank === 1 ? 'text-yellow-600' :
-                                                                        stat.rank === 2 ? (darkMode ? 'text-white' : 'text-gray-700') :
-                                                                        'text-orange-500'
-                                                                    }`}>
-                                                                        {stat.isTied ? 'T' : ''}{stat.rank}
-                                                                    </div>
-                                                                    <PlayerImage player={stat.player} size="sm" />
-                                                                    <div className="flex-1 min-w-0">
-                                                                        <div className={`font-medium truncate ${headingClass}`}>{stat.playerName}</div>
-                                                                        <div className={`text-xs ${textClass}`}>{getSeasonDisplayName(stat.season || selectedSeason)} • {stat.gp} games</div>
-                                                                    </div>
-                                                                    <div className={`text-2xl font-bold text-${accentColor}`}>
-                                                                        {isPct ? `${stat.value.toFixed(1)}%` : 
-                                                                         isAvg ? stat.value.toFixed(1) : 
-                                                                         stat.value}
-                                                                    </div>
+                                            return (
+                                                <div className="grid gap-4 md:grid-cols-2">
+                                                    {filteredCategories.map(({ key, label, statKey, isAvg, isPct }) => {
+                                                        const top3 = getTop3SeasonRecord(statKey, isAvg, isPct);
+                                                        if (top3.length === 0) return null;
+                                                        
+                                                        return (
+                                                            <div key={key} className={`${cardClass} rounded-lg border ${borderClass} p-4`}>
+                                                                <h3 className={`font-bold text-lg mb-3 ${headingClass}`}>{label}</h3>
+                                                                <div className="space-y-2">
+                                                                    {top3.map((stat, idx) => (
+                                                                        <div 
+                                                                            key={`${stat.playerNum}-${idx}`}
+                                                                            className={`flex items-center gap-3 p-2 rounded-lg cursor-pointer hover:opacity-80 transition-opacity ${
+                                                                                stat.rank === 1 ? (darkMode ? 'bg-yellow-900/30' : 'bg-yellow-100') :
+                                                                                stat.rank === 2 ? (darkMode ? 'bg-gray-600' : 'bg-gray-200') :
+                                                                                (darkMode ? 'bg-orange-900/30' : 'bg-orange-100')
+                                                                            }`}
+                                                                            onClick={() => {
+                                                                                setSelectedPlayerNumber(stat.playerNum);
+                                                                                setCurrentView('player');
+                                                                            }}
+                                                                        >
+                                                                            <div className={`text-xl font-bold w-8 text-center ${
+                                                                                stat.rank === 1 ? 'text-yellow-600' :
+                                                                                stat.rank === 2 ? (darkMode ? 'text-white' : 'text-gray-700') :
+                                                                                'text-orange-500'
+                                                                            }`}>
+                                                                                {stat.isTied ? 'T' : ''}{stat.rank}
+                                                                            </div>
+                                                                            <PlayerImage player={stat.player} size="sm" />
+                                                                            <div className="flex-1 min-w-0">
+                                                                                <div className={`font-medium truncate ${headingClass}`}>{stat.playerName}</div>
+                                                                                <div className={`text-xs ${textClass}`}>{getSeasonDisplayName(stat.season || selectedSeason)} • {stat.gp} games</div>
+                                                                            </div>
+                                                                            <div className={`text-2xl font-bold text-${accentColor}`}>
+                                                                                {isPct ? `${stat.value.toFixed(1)}%` : 
+                                                                                 isAvg ? stat.value.toFixed(1) : 
+                                                                                 stat.value}
+                                                                            </div>
+                                                                        </div>
+                                                                    ))}
                                                                 </div>
-                                                            ))}
-                                                        </div>
-                                                    </div>
-                                                );
-                                            });
+                                                            </div>
+                                                        );
+                                                    })}
+                                                </div>
+                                            );
                                         })()
-                                    )
                                 )}
                             </div>
                         )}
