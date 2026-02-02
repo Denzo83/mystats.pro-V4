@@ -178,5 +178,17 @@
     },
     "result": "W",
     "isPlayoff": false
+  },
+  "2026-02-02-taco-tuesday-s": {
+    "filename": "2026-02-02-taco-tuesday-s.json",
+    "date": "2026-02-02",
+    "season": "2026",
+    "opponent": "Taco Tuesday\u2019s",
+    "score": {
+      "us": 45,
+      "them": 40
+    },
+    "result": "W",
+    "isPlayoff": false
   }
 }
