@@ -166,5 +166,17 @@
     },
     "result": "L",
     "isPlayoff": true
+  },
+  "2026-02-08-obl": {
+    "filename": "2026-02-08-obl.json",
+    "date": "2026-02-08",
+    "season": "2026",
+    "opponent": "Obl",
+    "score": {
+      "us": 38,
+      "them": 32
+    },
+    "result": "W",
+    "isPlayoff": false
   }
 }

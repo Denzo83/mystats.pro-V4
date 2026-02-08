@@ -1,0 +1,45 @@
+{
+  "date": "2026-02-08",
+  "season": "2026",
+  "opponent": "Obl",
+  "homeAway": "home",
+  "score": {
+    "us": 38,
+    "them": 32
+  },
+  "result": "W",
+  "isPlayoff": false,
+  "stats": {
+    "22": {
+      "fg": [
+        2,
+        9
+      ],
+      "3pt": [
+        1,
+        1
+      ],
+      "ft": [
+        0,
+        0
+      ],
+      "oreb": 1,
+      "dreb": 3,
+      "foul": 1,
+      "stl": 1,
+      "to": 4,
+      "blk": 0,
+      "asst": 3,
+      "pts": 5,
+      "2pt": [
+        1,
+        8
+      ],
+      "2pt_pct": 12.5,
+      "fg_pct": 22.2,
+      "3pt_pct": 100.0,
+      "ft_pct": 0.0,
+      "reb": 4
+    }
+  }
+}
