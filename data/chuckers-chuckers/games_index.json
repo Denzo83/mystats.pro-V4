@@ -178,5 +178,17 @@
     },
     "result": "W",
     "isPlayoff": false
+  },
+  "2026-02-12-burnt-ants": {
+    "filename": "2026-02-12-burnt-ants.json",
+    "date": "2026-02-12",
+    "season": "2026",
+    "opponent": "Burnt ants",
+    "score": {
+      "us": 33,
+      "them": 50
+    },
+    "result": "L",
+    "isPlayoff": false
   }
 }
