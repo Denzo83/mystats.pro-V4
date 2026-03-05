@@ -1,0 +1,45 @@
+{
+  "date": "2026-03-05",
+  "season": "2026",
+  "opponent": "Circle dirks",
+  "homeAway": "home",
+  "score": {
+    "us": 28,
+    "them": 39
+  },
+  "result": "L",
+  "isPlayoff": false,
+  "stats": {
+    "22": {
+      "fg": [
+        2,
+        9
+      ],
+      "3pt": [
+        1,
+        7
+      ],
+      "ft": [
+        0,
+        1
+      ],
+      "oreb": 1,
+      "dreb": 2,
+      "foul": 2,
+      "stl": 4,
+      "to": 4,
+      "blk": 0,
+      "asst": 2,
+      "pts": 5,
+      "2pt": [
+        1,
+        2
+      ],
+      "2pt_pct": 50.0,
+      "fg_pct": 22.2,
+      "3pt_pct": 14.3,
+      "ft_pct": 0.0,
+      "reb": 3
+    }
+  }
+}

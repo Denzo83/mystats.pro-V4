@@ -190,5 +190,17 @@
     },
     "result": "L",
     "isPlayoff": false
+  },
+  "2026-03-05-circle-dirks": {
+    "filename": "2026-03-05-circle-dirks.json",
+    "date": "2026-03-05",
+    "season": "2026",
+    "opponent": "Circle dirks",
+    "score": {
+      "us": 28,
+      "them": 39
+    },
+    "result": "L",
+    "isPlayoff": false
   }
 }
