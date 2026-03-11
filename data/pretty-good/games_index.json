@@ -250,5 +250,17 @@
     },
     "result": "W",
     "isPlayoff": false
+  },
+  "2026-03-11-rice": {
+    "filename": "2026-03-11-rice.json",
+    "date": "2026-03-11",
+    "season": "2026",
+    "opponent": "Rice",
+    "score": {
+      "us": 77,
+      "them": 41
+    },
+    "result": "W",
+    "isPlayoff": false
   }
 }

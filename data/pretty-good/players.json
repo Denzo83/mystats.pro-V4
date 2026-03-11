@@ -128,5 +128,18 @@
     "images": {
       "portrait": "Assets/players/t-pendlebury.png"
     }
+  },
+  "9": {
+    "id": "p-budden",
+    "display_name": "P. Budden",
+    "name": "P. Budden",
+    "number": "9",
+    "position": "",
+    "teams": [
+      "Pretty Good"
+    ],
+    "images": {
+      "portrait": "Assets/players/p-budden.png"
+    }
   }
 }
