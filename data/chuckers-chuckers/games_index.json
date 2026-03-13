@@ -202,5 +202,17 @@
     },
     "result": "L",
     "isPlayoff": false
+  },
+  "2026-03-12-post-peaks": {
+    "filename": "2026-03-12-post-peaks.json",
+    "date": "2026-03-12",
+    "season": "2026",
+    "opponent": "Post peaks",
+    "score": {
+      "us": 35,
+      "them": 41
+    },
+    "result": "L",
+    "isPlayoff": false
   }
 }

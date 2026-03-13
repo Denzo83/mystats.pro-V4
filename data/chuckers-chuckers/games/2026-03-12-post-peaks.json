@@ -1,0 +1,45 @@
+{
+  "date": "2026-03-12",
+  "season": "2026",
+  "opponent": "Post peaks",
+  "homeAway": "home",
+  "score": {
+    "us": 35,
+    "them": 41
+  },
+  "result": "L",
+  "isPlayoff": false,
+  "stats": {
+    "22": {
+      "fg": [
+        5,
+        15
+      ],
+      "3pt": [
+        4,
+        11
+      ],
+      "ft": [
+        0,
+        0
+      ],
+      "oreb": 1,
+      "dreb": 5,
+      "foul": 1,
+      "stl": 3,
+      "to": 2,
+      "blk": 0,
+      "asst": 3,
+      "pts": 14,
+      "2pt": [
+        1,
+        4
+      ],
+      "2pt_pct": 25.0,
+      "fg_pct": 33.3,
+      "3pt_pct": 36.4,
+      "ft_pct": 0.0,
+      "reb": 6
+    }
+  }
+}
