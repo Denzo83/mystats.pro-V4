@@ -141,5 +141,18 @@
     "images": {
       "portrait": "Assets/players/p-budden.png"
     }
+  },
+  "0": {
+    "id": "lance",
+    "display_name": "Lance",
+    "name": "Lance",
+    "number": "0",
+    "position": "",
+    "teams": [
+      "Pretty Good"
+    ],
+    "images": {
+      "portrait": "Assets/players/lance.png"
+    }
   }
 }
