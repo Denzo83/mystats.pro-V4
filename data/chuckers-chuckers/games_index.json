@@ -226,5 +226,17 @@
     },
     "result": "W",
     "isPlayoff": false
+  },
+  "2026-04-02-kobe-wan-kenobi": {
+    "filename": "2026-04-02-kobe-wan-kenobi.json",
+    "date": "2026-04-02",
+    "season": "2026",
+    "opponent": "Kobe-wan kenobi",
+    "score": {
+      "us": 32,
+      "them": 66
+    },
+    "result": "L",
+    "isPlayoff": false
   }
 }

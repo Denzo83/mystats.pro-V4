@@ -1,0 +1,76 @@
+{
+  "date": "2026-04-02",
+  "season": "2026",
+  "opponent": "Kobe-wan kenobi",
+  "homeAway": "home",
+  "score": {
+    "us": 32,
+    "them": 66
+  },
+  "result": "L",
+  "isPlayoff": false,
+  "stats": {
+    "22": {
+      "fg": [
+        6,
+        17
+      ],
+      "3pt": [
+        0,
+        5
+      ],
+      "ft": [
+        0,
+        0
+      ],
+      "oreb": 2,
+      "dreb": 5,
+      "foul": 1,
+      "stl": 5,
+      "to": 4,
+      "blk": 1,
+      "asst": 3,
+      "pts": 12,
+      "2pt": [
+        6,
+        12
+      ],
+      "2pt_pct": 50.0,
+      "fg_pct": 35.3,
+      "3pt_pct": 0.0,
+      "ft_pct": 0.0,
+      "reb": 7
+    },
+    "10": {
+      "fg": [
+        0,
+        0
+      ],
+      "3pt": [
+        0,
+        0
+      ],
+      "ft": [
+        0,
+        0
+      ],
+      "oreb": 0,
+      "dreb": 0,
+      "foul": 0,
+      "stl": 0,
+      "to": 0,
+      "blk": 0,
+      "asst": 0,
+      "pts": 0,
+      "2pt": [
+        0,
+        0
+      ],
+      "2pt_pct": 0.0,
+      "fg_pct": 0.0,
+      "3pt_pct": 0.0,
+      "ft_pct": 0.0,
+      "reb": 0
+    }
+  }
+}
