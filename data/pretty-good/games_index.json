@@ -298,5 +298,17 @@
     },
     "result": "W",
     "isPlayoff": false
+  },
+  "2026-04-07-dkc": {
+    "filename": "2026-04-07-dkc.json",
+    "date": "2026-04-07",
+    "season": "2026",
+    "opponent": "DKC",
+    "score": {
+      "us": 47,
+      "them": 43
+    },
+    "result": "W",
+    "isPlayoff": false
   }
 }
