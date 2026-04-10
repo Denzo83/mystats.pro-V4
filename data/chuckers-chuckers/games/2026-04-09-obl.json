@@ -1,0 +1,45 @@
+{
+  "date": "2026-04-09",
+  "season": "2026",
+  "opponent": "OBL",
+  "homeAway": "home",
+  "score": {
+    "us": 33,
+    "them": 43
+  },
+  "result": "L",
+  "isPlayoff": false,
+  "stats": {
+    "22": {
+      "fg": [
+        1,
+        7
+      ],
+      "3pt": [
+        1,
+        4
+      ],
+      "ft": [
+        0,
+        2
+      ],
+      "oreb": 2,
+      "dreb": 3,
+      "foul": 0,
+      "stl": 3,
+      "to": 3,
+      "blk": 3,
+      "asst": 4,
+      "pts": 3,
+      "2pt": [
+        0,
+        3
+      ],
+      "2pt_pct": 0.0,
+      "fg_pct": 14.3,
+      "3pt_pct": 25.0,
+      "ft_pct": 0.0,
+      "reb": 5
+    }
+  }
+}
