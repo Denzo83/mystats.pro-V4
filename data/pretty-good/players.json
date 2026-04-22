@@ -154,5 +154,18 @@
     "images": {
       "portrait": "Assets/players/lance.png"
     }
+  },
+  "2": {
+    "id": "dan",
+    "display_name": "Dan",
+    "name": "Dan",
+    "number": "2",
+    "position": "",
+    "teams": [
+      "Pretty Good"
+    ],
+    "images": {
+      "portrait": "Assets/players/dan.png"
+    }
   }
 }
