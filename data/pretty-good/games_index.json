@@ -334,5 +334,17 @@
     },
     "result": "W",
     "isPlayoff": true
+  },
+  "2026-05-05-wins-n-tins": {
+    "filename": "2026-05-05-wins-n-tins.json",
+    "date": "2026-05-05",
+    "season": "2026",
+    "opponent": "Wins n tins",
+    "score": {
+      "us": 46,
+      "them": 34
+    },
+    "result": "W",
+    "isPlayoff": true
   }
 }
