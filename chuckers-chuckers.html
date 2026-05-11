@@ -130,7 +130,7 @@
         function BasketballStatsApp() {
             const [darkMode, setDarkMode] = useState(false);
             const [activeTab, setActiveTab] = useState('leaderboards');
-            const [selectedSeason, setSelectedSeason] = useState('2025');
+            const [selectedSeason, setSelectedSeason] = useState(null);
             const [gameType, setGameType] = useState('all');
             const [statCategory, setStatCategory] = useState('ppg');
             const [showTotals, setShowTotals] = useState(false); // Toggle for totals vs averages
@@ -173,6 +173,15 @@
                 }
             }, [selectedSeason]);
 
+            // Auto-select the latest season when seasons metadata loads
+            useEffect(() => {
+                const seasons = Object.keys(seasonsMeta);
+                if (seasons.length > 0) {
+                    const latestSeason = seasons.sort().reverse()[0];
+                    setSelectedSeason(prev => prev === null ? latestSeason : prev);
+                }
+            }, [seasonsMeta]);
+
             const loadData = async () => {
                 try {
                     setLoading(true);
@@ -183,7 +192,7 @@
                     
                     const responses = await Promise.all([
                         fetch(`${teamDataPath}/players.json`).catch(() => null),           // Team players
-                        fetch(`${teamDataPath}/seasons/${selectedSeason}.json`).catch(() => null),  // Team season stats
+                        selectedSeason ? fetch(`${teamDataPath}/seasons/${selectedSeason}.json`).catch(() => null) : Promise.resolve(null),  // Team season stats
                         fetch(`${teamDataPath}/records.json`).catch(() => null),           // Team records
                         fetch(`${teamDataPath}/games_index.json`).catch(() => null),       // Team games index
                         fetch(`${teamDataPath}/seasons_meta.json`).catch(() => null),      // Team season meta
