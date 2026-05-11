@@ -130,7 +130,7 @@
         function BasketballStatsApp() {
             const [darkMode, setDarkMode] = useState(false);
             const [activeTab, setActiveTab] = useState('leaderboards');
-            const [selectedSeason, setSelectedSeason] = useState(null);
+            const [selectedSeason, setSelectedSeason] = useState('2025');
             const [gameType, setGameType] = useState('all');
             const [statCategory, setStatCategory] = useState('ppg');
             const [showTotals, setShowTotals] = useState(false); // Toggle for totals vs averages
@@ -173,15 +173,6 @@
                 }
             }, [selectedSeason]);
 
-            // Auto-select the latest season when seasons metadata loads
-            useEffect(() => {
-                const seasons = Object.keys(seasonsMeta);
-                if (seasons.length > 0) {
-                    const latestSeason = seasons.sort().reverse()[0];
-                    setSelectedSeason(prev => prev === null ? latestSeason : prev);
-                }
-            }, [seasonsMeta]);
-
             const loadData = async () => {
                 try {
                     setLoading(true);
@@ -189,10 +180,25 @@
 
                     // Get data path from team config (handles "test teams" folder with space)
                     const teamDataPath = TEAM_CONFIG[currentTeam]?.dataPath || `data/${currentTeam}`;
-                    
+
+                    // If no season selected yet, fetch seasons_meta first to determine the latest season
+                    let activeSeason = selectedSeason;
+                    if (!activeSeason) {
+                        const metaResp = await fetch(`${teamDataPath}/seasons_meta.json`).catch(() => null);
+                        if (metaResp && metaResp.ok) {
+                            const metaData = await metaResp.json();
+                            setSeasonsMeta(metaData);
+                            const seasons = Object.keys(metaData).sort().reverse();
+                            if (seasons.length > 0) {
+                                activeSeason = seasons[0];
+                                setSelectedSeason(activeSeason);
+                            }
+                        }
+                    }
+
                     const responses = await Promise.all([
                         fetch(`${teamDataPath}/players.json`).catch(() => null),           // Team players
-                        selectedSeason ? fetch(`${teamDataPath}/seasons/${selectedSeason}.json`).catch(() => null) : Promise.resolve(null),  // Team season stats
+                        activeSeason ? fetch(`${teamDataPath}/seasons/${activeSeason}.json`).catch(() => null) : Promise.resolve(null),  // Team season stats
                         fetch(`${teamDataPath}/records.json`).catch(() => null),           // Team records
                         fetch(`${teamDataPath}/games_index.json`).catch(() => null),       // Team games index
                         fetch(`${teamDataPath}/seasons_meta.json`).catch(() => null),      // Team season meta
