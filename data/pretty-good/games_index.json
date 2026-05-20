@@ -346,5 +346,17 @@
     },
     "result": "W",
     "isPlayoff": true
+  },
+  "2026-05-19-little-big-men": {
+    "filename": "2026-05-19-little-big-men.json",
+    "date": "2026-05-19",
+    "season": "2026-winter",
+    "opponent": "Little Big Men",
+    "score": {
+      "us": 63,
+      "them": 24
+    },
+    "result": "W",
+    "isPlayoff": false
   }
 }
