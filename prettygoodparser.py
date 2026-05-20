@@ -157,15 +157,18 @@ class EasyStatsParser:
             force_season = force_season.strip()
             season_match = re.match(r'(\d{4})\s*(.+)?', force_season)
             if season_match:
-                season_key = season_match.group(1)
+                year = season_match.group(1)
                 season_suffix = season_match.group(2)
                 if season_suffix:
-                    season_display = f"{season_key} {season_suffix.strip().title()}"
+                    season_key = f"{year}-{season_suffix.strip().lower().replace(' ', '-')}"
+                    season_display = f"{year} {season_suffix.strip().title()}"
                 else:
-                    season_display = f"{season_key} Season"
+                    season_key = year
+                    season_display = f"{year} Season"
             else:
+                season_key = force_season.lower().replace(' ', '-')
                 season_display = force_season.title()
-            
+
             self.seasons_meta[season_key] = {
                 'key': season_key,
                 'display_name': season_display
