@@ -15,14 +15,13 @@
     <script type="text/babel">
         const { useState, useMemo, useEffect } = React;
 
-        // Get team from URL (pretty-good.html, chuckers-chuckers.html, etc.)
         const getTeamFromURL = () => {
             const path = window.location.pathname;
             if (path.includes('pretty-good')) return 'pretty-good';
             if (path.includes('chuckers-chuckers')) return 'chuckers-chuckers';
             if (path.includes('just-jokic-ing')) return 'just-jokic-ing';
             if (path.includes('board-man-gets-paid')) return 'board-man-gets-paid';
-            return 'pretty-good'; // default
+            return 'pretty-good';
         };
 
         const TEAM_CONFIG = {
@@ -31,44 +30,31 @@
                 displayName: 'Pretty Good Basketball',
                 logo: 'Assets/teams/pretty-good-logo.png',
                 dataPath: 'data/pretty-good',
-                colors: {
-                    primary: 'from-blue-600 to-blue-400',
-                    accent: 'blue-600'
-                }
+                colors: { primary: 'from-blue-600 to-blue-400', accent: 'blue-600' }
             },
             'chuckers-chuckers': {
                 name: 'Chuckers Chuckers',
                 displayName: 'Chuckers Chuckers Basketball',
                 logo: 'Assets/teams/chuckers-chuckers-logo.png',
                 dataPath: 'data/chuckers-chuckers',
-                colors: {
-                    primary: 'from-purple-600 to-purple-400',
-                    accent: 'purple-600'
-                }
+                colors: { primary: 'from-purple-600 to-purple-400', accent: 'purple-600' }
             },
             'just-jokic-ing': {
                 name: 'Just Jokic-ing',
                 displayName: 'Just Jokic-ing Basketball',
                 logo: 'Assets/teams/just-jokic-ing-logo.png',
                 dataPath: 'data/test teams/just-jokic-ing',
-                colors: {
-                    primary: 'from-yellow-500 to-orange-400',
-                    accent: 'yellow-600'
-                }
+                colors: { primary: 'from-yellow-500 to-orange-400', accent: 'yellow-600' }
             },
             'board-man-gets-paid': {
                 name: 'Board Man Gets Paid',
                 displayName: 'Board Man Gets Paid Basketball',
                 logo: 'Assets/teams/board-man-gets-paid-logo.png',
                 dataPath: 'data/test teams/board-man-gets-paid',
-                colors: {
-                    primary: 'from-green-600 to-teal-400',
-                    accent: 'green-600'
-                }
+                colors: { primary: 'from-green-600 to-teal-400', accent: 'green-600' }
             }
         };
 
-        // Icon components
         const BarChart3 = ({size = 24}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>;
         const Trophy = ({size = 24}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>;
         const Users = ({size = 24}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>;
@@ -81,47 +67,27 @@
         const AlertCircle = ({size = 24, className = ""}) => <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>;
         const ArrowLeft = ({size = 24}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>;
 
-        // Player Image Component - Rectangular portrait style with fallback
         const PlayerImage = ({ player, size = 'md', className = '' }) => {
             const [imgError, setImgError] = useState(false);
-            // Rectangular portrait dimensions (taller than wide)
             const sizeStyles = {
                 sm: { width: '40px', height: '52px' },
                 md: { width: '56px', height: '72px' },
                 lg: { width: '64px', height: '84px' },
                 xl: { width: '80px', height: '104px' }
             };
-            const textSizes = {
-                sm: 'text-xs',
-                md: 'text-sm',
-                lg: 'text-lg',
-                xl: 'text-xl'
-            };
-            
+            const textSizes = { sm: 'text-xs', md: 'text-sm', lg: 'text-lg', xl: 'text-xl' };
             const imgSrc = player?.images?.portrait;
             const style = sizeStyles[size];
             
             if (!imgError && imgSrc) {
                 return (
-                    <div 
-                        className={`rounded-lg overflow-hidden flex-shrink-0 bg-gray-200 ${className}`}
-                        style={style}
-                    >
-                        <img 
-                            src={imgSrc}
-                            alt={player?.name || 'Player'}
-                            className="w-full h-full object-cover"
-                            onError={() => setImgError(true)}
-                        />
+                    <div className={`rounded-lg overflow-hidden flex-shrink-0 bg-gray-200 ${className}`} style={style}>
+                        <img src={imgSrc} alt={player?.name || 'Player'} className="w-full h-full object-cover" onError={() => setImgError(true)} />
                     </div>
                 );
             }
-            
             return (
-                <div 
-                    className={`rounded-lg bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold flex-shrink-0 ${textSizes[size]} ${className}`}
-                    style={style}
-                >
+                <div className={`rounded-lg bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold flex-shrink-0 ${textSizes[size]} ${className}`} style={style}>
                     #{player?.number || '?'}
                 </div>
             );
@@ -133,33 +99,30 @@
             const [selectedSeason, setSelectedSeason] = useState(null);
             const [gameType, setGameType] = useState('all');
             const [statCategory, setStatCategory] = useState('ppg');
-            const [showTotals, setShowTotals] = useState(false); // Toggle for totals vs averages
-            const [showPlayerTotals, setShowPlayerTotals] = useState(false); // Toggle for player detail page
-            const [playerPageGameType, setPlayerPageGameType] = useState('all'); // Game type filter for player page
+            const [showTotals, setShowTotals] = useState(false);
+            const [showPlayerTotals, setShowPlayerTotals] = useState(false);
+            const [playerPageGameType, setPlayerPageGameType] = useState('all');
             const [expandedPlayer, setExpandedPlayer] = useState(null);
-            const [recordsCategory, setRecordsCategory] = useState('all'); // Filter for records category
-            const [recordsType, setRecordsType] = useState('game'); // 'game' or 'season' records
-            const [recordsScope, setRecordsScope] = useState('season'); // 'season' or 'alltime' records scope
-            const [playerDetailTab, setPlayerDetailTab] = useState('stats'); // 'stats' or 'analysis' tab
-            
+            const [recordsCategory, setRecordsCategory] = useState('all');
+            const [recordsType, setRecordsType] = useState('game');
+            const [recordsScope, setRecordsScope] = useState('season');
+            const [playerDetailTab, setPlayerDetailTab] = useState('stats');
             const [currentView, setCurrentView] = useState('main');
             const [selectedPlayerNumber, setSelectedPlayerNumber] = useState(null);
             const [selectedGameId, setSelectedGameId] = useState(null);
-            
             const [players, setPlayers] = useState({});
-            const [allPlayersData, setAllPlayersData] = useState({}); // Store all players for reference
+            const [allPlayersData, setAllPlayersData] = useState({});
             const [seasonStats, setSeasonStats] = useState({});
             const [records, setRecords] = useState({});
             const [games, setGames] = useState([]);
             const [allGames, setAllGames] = useState({});
-            const [allTimeGames, setAllTimeGames] = useState({}); // All games across all seasons
-            const [allTimeSeasonStats, setAllTimeSeasonStats] = useState({}); // All season stats keyed by season
+            const [allTimeGames, setAllTimeGames] = useState({});
+            const [allTimeSeasonStats, setAllTimeSeasonStats] = useState({});
             const [seasonsMeta, setSeasonsMeta] = useState({});
-            const [playerAnalysis, setPlayerAnalysis] = useState({}); // AI analysis for players
+            const [playerAnalysis, setPlayerAnalysis] = useState({});
             const [loading, setLoading] = useState(true);
             const [error, setError] = useState(null);
 
-            // Get current team from URL
             const currentTeam = getTeamFromURL();
             const teamConfig = TEAM_CONFIG[currentTeam];
 
@@ -178,10 +141,8 @@
                     setLoading(true);
                     setError(null);
 
-                    // Get data path from team config (handles "test teams" folder with space)
                     const teamDataPath = TEAM_CONFIG[currentTeam]?.dataPath || `data/${currentTeam}`;
 
-                    // If no season selected yet, fetch seasons_meta first to determine the latest season
                     let activeSeason = selectedSeason;
                     if (!activeSeason) {
                         const metaResp = await fetch(`${teamDataPath}/seasons_meta.json`).catch(() => null);
@@ -197,12 +158,12 @@
                     }
 
                     const responses = await Promise.all([
-                        fetch(`${teamDataPath}/players.json`).catch(() => null),           // Team players
-                        activeSeason ? fetch(`${teamDataPath}/seasons/${activeSeason}.json`).catch(() => null) : Promise.resolve(null),  // Team season stats
-                        fetch(`${teamDataPath}/records.json`).catch(() => null),           // Team records
-                        fetch(`${teamDataPath}/games_index.json`).catch(() => null),       // Team games index
-                        fetch(`${teamDataPath}/seasons_meta.json`).catch(() => null),      // Team season meta
-                        fetch(`${teamDataPath}/analysis.json`).catch(() => null)           // Player analysis
+                        fetch(`${teamDataPath}/players.json`).catch(() => null),
+                        activeSeason ? fetch(`${teamDataPath}/seasons/${activeSeason}.json`).catch(() => null) : Promise.resolve(null),
+                        fetch(`${teamDataPath}/records.json`).catch(() => null),
+                        fetch(`${teamDataPath}/games_index.json`).catch(() => null),
+                        fetch(`${teamDataPath}/seasons_meta.json`).catch(() => null),
+                        fetch(`${teamDataPath}/analysis.json`).catch(() => null)
                     ]);
 
                     if (responses[0] && responses[0].ok) {
@@ -216,10 +177,8 @@
 
                     if (responses[1] && responses[1].ok) {
                         const seasonData = await responses[1].json();
-                        console.log('Season stats loaded:', seasonData);
                         setSeasonStats(seasonData);
                     } else {
-                        console.log('Failed to load season stats');
                         setSeasonStats({});
                     }
 
@@ -228,19 +187,18 @@
                             const recordsData = await responses[2].json();
                             setRecords(recordsData);
                         } catch (e) {
-                            console.log('Could not parse records.json:', e);
                             setRecords({});
                         }
                     } else {
                         setRecords({});
                     }
 
+                    let currentSeasonsMeta = {};
                     if (responses[4] && responses[4].ok) {
                         try {
-                            const metaData = await responses[4].json();
-                            setSeasonsMeta(metaData);
+                            currentSeasonsMeta = await responses[4].json();
+                            setSeasonsMeta(currentSeasonsMeta);
                         } catch (e) {
-                            console.log('Could not parse seasons_meta.json:', e);
                             setSeasonsMeta({});
                         }
                     } else {
@@ -252,7 +210,6 @@
                             const analysisData = await responses[5].json();
                             setPlayerAnalysis(analysisData);
                         } catch (e) {
-                            console.log('Could not parse analysis.json:', e);
                             setPlayerAnalysis({});
                         }
                     } else {
@@ -263,54 +220,46 @@
                         try {
                             const gamesIndexData = await responses[3].json();
                             const loadedGames = {};
-                            const allLoadedGames = {}; // For all-time records
-                            
-                            console.log('Games index loaded:', gamesIndexData);
-                            console.log('Selected season:', selectedSeason);
-                        
-                        for (const [gameId, gameInfo] of Object.entries(gamesIndexData)) {
-                            const gameSeason = gameInfo.season || '';
-                            const dateYear = gameInfo.date?.substring(0, 4) || '';
-                            
-                            try {
-                                const gameResponse = await fetch(`${teamDataPath}/games/${gameInfo.filename}`);
-                                if (gameResponse.ok) {
-                                    const gameData = await gameResponse.json();
-                                    // Add to all-time games
-                                    allLoadedGames[gameId] = gameData;
-                                    
-                                    // Add to selected season games if matches
-                                    if (gameSeason === selectedSeason || dateYear === selectedSeason) {
-                                        loadedGames[gameId] = gameData;
-                                        console.log(`Loaded game: ${gameId}`);
+                            const allLoadedGames = {};
+
+                            for (const [gameId, gameInfo] of Object.entries(gamesIndexData)) {
+                                const gameSeason = gameInfo.season || '';
+                                const dateYear = gameInfo.date?.substring(0, 4) || '';
+
+                                try {
+                                    const gameResponse = await fetch(`${teamDataPath}/games/${gameInfo.filename}`);
+                                    if (gameResponse.ok) {
+                                        const gameData = await gameResponse.json();
+                                        allLoadedGames[gameId] = gameData;
+
+                                        // *** FIX: use activeSeason not selectedSeason ***
+                                        if (gameSeason === activeSeason || dateYear === activeSeason) {
+                                            loadedGames[gameId] = gameData;
+                                        }
                                     }
+                                } catch (e) {
+                                    console.log(`Could not load game: ${gameInfo.filename}`, e);
                                 }
-                            } catch (e) {
-                                console.log(`Could not load game: ${gameInfo.filename}`, e);
                             }
-                        }
-                        
-                        console.log('Total games loaded for season:', Object.keys(loadedGames).length);
-                        console.log('Total all-time games loaded:', Object.keys(allLoadedGames).length);
-                        setAllGames(loadedGames);
-                        setGames(Object.values(loadedGames));
-                        setAllTimeGames(allLoadedGames);
+
+                            setAllGames(loadedGames);
+                            setGames(Object.values(loadedGames));
+                            setAllTimeGames(allLoadedGames);
                         } catch (e) {
-                            console.log('Could not parse games_index.json:', e);
                             setAllGames({});
                             setGames([]);
                             setAllTimeGames({});
                         }
                     } else {
-                        console.log('No games_index.json found');
                         setAllGames({});
                         setGames([]);
                         setAllTimeGames({});
                     }
 
                     // Load all season stats for all-time records
+                    const availableSeasonsForLoad = Object.keys(currentSeasonsMeta);
                     const allSeasonStats = {};
-                    for (const seasonKey of availableSeasons) {
+                    for (const seasonKey of availableSeasonsForLoad) {
                         try {
                             const seasonResponse = await fetch(`${teamDataPath}/seasons/${seasonKey}.json`);
                             if (seasonResponse.ok) {
@@ -331,7 +280,6 @@
                 }
             };
 
-            // Stat categories - separate averages and totals
             const averageCategories = [
                 { key: 'ppg', label: 'PPG', desc: 'Points Per Game' },
                 { key: 'rpg', label: 'RPG', desc: 'Rebounds Per Game' },
@@ -353,7 +301,7 @@
                 { key: '3pm_pg', label: '3PM', desc: '3PT Made Per Game' },
                 { key: 'ftm_pg', label: 'FTM', desc: 'FT Made Per Game' }
             ];
-            
+
             const totalCategories = [
                 { key: 'pts', label: 'PTS', desc: 'Total Points' },
                 { key: 'reb', label: 'REB', desc: 'Total Rebounds' },
@@ -366,10 +314,9 @@
                 { key: 'dreb', label: 'DREB', desc: 'Total Def. Rebounds' },
                 { key: 'gp', label: 'GP', desc: 'Games Played' }
             ];
-            
+
             const statCategories = showTotals ? totalCategories : averageCategories;
 
-            // Reset stat category when switching between totals and averages
             useEffect(() => {
                 if (showTotals && !totalCategories.find(c => c.key === statCategory)) {
                     setStatCategory('pts');
@@ -379,60 +326,29 @@
             }, [showTotals]);
 
             const sortedPlayers = useMemo(() => {
-                console.log('Computing sortedPlayers');
-                console.log('seasonStats:', seasonStats);
-                console.log('gameType:', gameType);
-                console.log('statCategory:', statCategory);
-                
-                if (!seasonStats[gameType]) {
-                    console.log(`No stats for gameType: ${gameType}`);
-                    return [];
-                }
-                
-                console.log(`Stats available for ${gameType}:`, Object.keys(seasonStats[gameType]));
-                
-                const result = Object.entries(seasonStats[gameType])
+                if (!seasonStats[gameType]) return [];
+                return Object.entries(seasonStats[gameType])
                     .map(([num, stats]) => {
                         const playerInfo = players[num] || allPlayersData[num] || { name: `Player #${num}`, number: num };
-                        const merged = {
-                            ...playerInfo,
-                            ...stats,
-                            number: num
-                        };
-                        console.log(`Player ${num} (${playerInfo.name}): ${statCategory} = ${stats[statCategory]}`);
-                        return merged;
+                        return { ...playerInfo, ...stats, number: num };
                     })
                     .filter(p => p.gp > 0)
-                    .sort((a, b) => {
-                        // Handle both integer and float values, treating undefined/null as 0
-                        const aVal = Number(a[statCategory]) || 0;
-                        const bVal = Number(b[statCategory]) || 0;
-                        return bVal - aVal;
-                    });
-                
-                console.log('Sorted players result:', result.map(p => ({ name: p.name, stat: p[statCategory] })));
-                return result;
+                    .sort((a, b) => (Number(b[statCategory]) || 0) - (Number(a[statCategory]) || 0));
             }, [seasonStats, gameType, statCategory, players, allPlayersData]);
 
-            // Format date for display - ensures YYYY-MM-DD format even if season name got mixed in
             const formatDate = (dateStr) => {
                 if (!dateStr) return '';
-                // Extract just the date part if season name got concatenated
                 const match = dateStr.match(/(\d{4}-\d{2}-\d{2})/);
                 return match ? match[1] : dateStr;
             };
 
-            // Get season display name
             const getSeasonDisplayName = (key) => {
                 return seasonsMeta[key]?.display_name || `${key} Season`;
             };
 
-            // Available seasons from meta or default
             const availableSeasons = useMemo(() => {
                 const seasons = Object.keys(seasonsMeta);
-                if (seasons.length === 0) {
-                    return ['2025', '2024']; // Default fallback
-                }
+                if (seasons.length === 0) return ['2025', '2024'];
                 return seasons.sort().reverse();
             }, [seasonsMeta]);
 
@@ -444,17 +360,12 @@
             const accentClass = `bg-gradient-to-r ${teamConfig.colors.primary}`;
             const accentColor = teamConfig.colors.accent;
 
-            // Format stat value for display
             const formatStatValue = (value, isPercentage = false) => {
                 if (value === null || value === undefined) return '0';
                 const num = Number(value);
                 if (isNaN(num)) return '0';
-                if (isPercentage || statCategory.includes('pct')) {
-                    return num.toFixed(1);
-                }
-                if (showTotals) {
-                    return Math.round(num).toString();
-                }
+                if (isPercentage || statCategory.includes('pct')) return num.toFixed(1);
+                if (showTotals) return Math.round(num).toString();
                 return num.toFixed(1);
             };
 
@@ -479,14 +390,7 @@
                                     <span>Back to Team Selection</span>
                                 </a>
                                 <div className="flex items-center gap-4">
-                                    <img 
-                                        src={teamConfig.logo} 
-                                        alt={teamConfig.name}
-                                        className="w-12 h-12 object-contain"
-                                        onError={(e) => {
-                                            e.target.style.display = 'none';
-                                        }}
-                                    />
+                                    <img src={teamConfig.logo} alt={teamConfig.name} className="w-12 h-12 object-contain" onError={(e) => { e.target.style.display = 'none'; }} />
                                     <div>
                                         <h1 className="text-2xl font-bold">{teamConfig.displayName}</h1>
                                         <p className="text-blue-100 text-sm">Team Statistics</p>
@@ -518,22 +422,15 @@
                 );
             }
 
-            // Box Score View
             if (currentView === 'boxscore' && selectedGameId) {
                 const game = allGames[selectedGameId];
-                if (!game) {
-                    setCurrentView('main');
-                    return null;
-                }
+                if (!game) { setCurrentView('main'); return null; }
 
                 return (
                     <div className={`min-h-screen ${bgClass} transition-colors duration-300`}>
                         <header className={`${accentClass} text-white sticky top-0 z-50 shadow-lg`}>
                             <div className="max-w-7xl mx-auto px-4 py-4">
-                                <button 
-                                    onClick={() => setCurrentView('main')}
-                                    className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-3 transition-colors text-sm"
-                                >
+                                <button onClick={() => setCurrentView('main')} className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-3 transition-colors text-sm">
                                     <ArrowLeft size={16} />
                                     <span>Back to Games</span>
                                 </button>
@@ -548,7 +445,6 @@
                                 </div>
                             </div>
                         </header>
-
                         <div className="max-w-7xl mx-auto px-4 py-6">
                             <div className={`${cardClass} rounded-lg border ${borderClass} overflow-hidden`}>
                                 <div className="overflow-x-auto">
@@ -605,49 +501,24 @@
                                         <tfoot className={darkMode ? 'bg-gray-700' : 'bg-gray-100'}>
                                             <tr className={`border-t-2 ${borderClass} font-bold`}>
                                                 <td className={`px-4 py-3 ${headingClass}`}>TEAM TOTALS</td>
-                                                <td className={`px-3 py-3 text-center text-${accentColor}`}>
-                                                    {Object.values(game.stats || {}).reduce((sum, s) => sum + (s.pts || 0), 0)}
-                                                </td>
-                                                <td className="px-3 py-3 text-center">
-                                                    {Object.values(game.stats || {}).reduce((sum, s) => sum + (s.reb || 0), 0)}
-                                                </td>
-                                                <td className="px-3 py-3 text-center">
-                                                    {Object.values(game.stats || {}).reduce((sum, s) => sum + (s.asst || 0), 0)}
-                                                </td>
-                                                <td className="px-3 py-3 text-center">
-                                                    {Object.values(game.stats || {}).reduce((sum, s) => sum + (s.stl || 0), 0)}
-                                                </td>
-                                                <td className="px-3 py-3 text-center">
-                                                    {Object.values(game.stats || {}).reduce((sum, s) => sum + (s.blk || 0), 0)}
-                                                </td>
-                                                <td className="px-3 py-3 text-center">
-                                                    {Object.values(game.stats || {}).reduce((sum, s) => sum + (s.to || 0), 0)}
-                                                </td>
-                                                <td className="px-3 py-3 text-center whitespace-nowrap">
-                                                    {Object.values(game.stats || {}).reduce((sum, s) => sum + (s.fg?.[0] || 0), 0)}-{Object.values(game.stats || {}).reduce((sum, s) => sum + (s.fg?.[1] || 0), 0)}
-                                                </td>
-                                                <td className="px-3 py-3 text-center whitespace-nowrap">
-                                                    {Object.values(game.stats || {}).reduce((sum, s) => sum + (s['3pt']?.[0] || 0), 0)}-{Object.values(game.stats || {}).reduce((sum, s) => sum + (s['3pt']?.[1] || 0), 0)}
-                                                </td>
-                                                <td className="px-3 py-3 text-center whitespace-nowrap">
-                                                    {Object.values(game.stats || {}).reduce((sum, s) => sum + (s.ft?.[0] || 0), 0)}-{Object.values(game.stats || {}).reduce((sum, s) => sum + (s.ft?.[1] || 0), 0)}
-                                                </td>
-                                                <td className="px-3 py-3 text-center">
-                                                    {Object.values(game.stats || {}).reduce((sum, s) => sum + (s.oreb || 0), 0)}
-                                                </td>
-                                                <td className="px-3 py-3 text-center">
-                                                    {Object.values(game.stats || {}).reduce((sum, s) => sum + (s.dreb || 0), 0)}
-                                                </td>
-                                                <td className="px-3 py-3 text-center">
-                                                    {Object.values(game.stats || {}).reduce((sum, s) => sum + (s.foul || 0), 0)}
-                                                </td>
+                                                <td className={`px-3 py-3 text-center text-${accentColor}`}>{Object.values(game.stats || {}).reduce((sum, s) => sum + (s.pts || 0), 0)}</td>
+                                                <td className="px-3 py-3 text-center">{Object.values(game.stats || {}).reduce((sum, s) => sum + (s.reb || 0), 0)}</td>
+                                                <td className="px-3 py-3 text-center">{Object.values(game.stats || {}).reduce((sum, s) => sum + (s.asst || 0), 0)}</td>
+                                                <td className="px-3 py-3 text-center">{Object.values(game.stats || {}).reduce((sum, s) => sum + (s.stl || 0), 0)}</td>
+                                                <td className="px-3 py-3 text-center">{Object.values(game.stats || {}).reduce((sum, s) => sum + (s.blk || 0), 0)}</td>
+                                                <td className="px-3 py-3 text-center">{Object.values(game.stats || {}).reduce((sum, s) => sum + (s.to || 0), 0)}</td>
+                                                <td className="px-3 py-3 text-center whitespace-nowrap">{Object.values(game.stats || {}).reduce((sum, s) => sum + (s.fg?.[0] || 0), 0)}-{Object.values(game.stats || {}).reduce((sum, s) => sum + (s.fg?.[1] || 0), 0)}</td>
+                                                <td className="px-3 py-3 text-center whitespace-nowrap">{Object.values(game.stats || {}).reduce((sum, s) => sum + (s['3pt']?.[0] || 0), 0)}-{Object.values(game.stats || {}).reduce((sum, s) => sum + (s['3pt']?.[1] || 0), 0)}</td>
+                                                <td className="px-3 py-3 text-center whitespace-nowrap">{Object.values(game.stats || {}).reduce((sum, s) => sum + (s.ft?.[0] || 0), 0)}-{Object.values(game.stats || {}).reduce((sum, s) => sum + (s.ft?.[1] || 0), 0)}</td>
+                                                <td className="px-3 py-3 text-center">{Object.values(game.stats || {}).reduce((sum, s) => sum + (s.oreb || 0), 0)}</td>
+                                                <td className="px-3 py-3 text-center">{Object.values(game.stats || {}).reduce((sum, s) => sum + (s.dreb || 0), 0)}</td>
+                                                <td className="px-3 py-3 text-center">{Object.values(game.stats || {}).reduce((sum, s) => sum + (s.foul || 0), 0)}</td>
                                             </tr>
                                         </tfoot>
                                     </table>
                                 </div>
                             </div>
                         </div>
-
                         <footer className={`${cardClass} border-t ${borderClass} mt-12 py-6`}>
                             <div className={`max-w-7xl mx-auto px-4 text-center ${textClass}`}>
                                 <p>{teamConfig.name} • Season Stats • Powered by EasyStats</p>
@@ -657,17 +528,11 @@
                 );
             }
 
-            // Player Detail View
             if (currentView === 'player' && selectedPlayerNumber) {
                 const player = players[selectedPlayerNumber] || allPlayersData[selectedPlayerNumber];
                 const playerStats = seasonStats[playerPageGameType]?.[selectedPlayerNumber] || {};
-                
-                if (!player) {
-                    setCurrentView('main');
-                    return null;
-                }
+                if (!player) { setCurrentView('main'); return null; }
 
-                // Get player's games
                 const playerGames = Object.entries(allGames)
                     .filter(([_, game]) => {
                         const hasStats = game.stats && game.stats[selectedPlayerNumber];
@@ -677,22 +542,18 @@
                     })
                     .sort((a, b) => new Date(b[1].date) - new Date(a[1].date));
 
-                // Calculate leaderboard positions for this player (with tie handling)
                 const getLeaderboardPosition = (statKey) => {
                     if (!seasonStats[playerPageGameType]) return null;
                     const allPlayers = Object.entries(seasonStats[playerPageGameType])
                         .filter(([_, stats]) => stats.gp > 0)
                         .map(([num, stats]) => ({ number: num, value: Number(stats[statKey]) || 0 }))
                         .sort((a, b) => b.value - a.value);
-                    
                     const playerValue = Number(seasonStats[playerPageGameType][selectedPlayerNumber]?.[statKey]) || 0;
                     const rank = allPlayers.filter(p => p.value > playerValue).length + 1;
                     const isTied = allPlayers.filter(p => p.value === playerValue).length > 1;
-                    
                     return { rank, isTied };
                 };
 
-                // Stats to show in player profile
                 const playerStatCategories = [
                     { key: 'ppg', totalKey: 'pts', label: 'Points', perGame: true },
                     { key: 'rpg', totalKey: 'reb', label: 'Rebounds', perGame: true },
@@ -713,10 +574,7 @@
                     <div className={`min-h-screen ${bgClass} transition-colors duration-300`}>
                         <header className={`${accentClass} text-white sticky top-0 z-50 shadow-lg`}>
                             <div className="max-w-7xl mx-auto px-4 py-4">
-                                <button 
-                                    onClick={() => setCurrentView('main')}
-                                    className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-3 transition-colors text-sm"
-                                >
+                                <button onClick={() => setCurrentView('main')} className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-3 transition-colors text-sm">
                                     <ArrowLeft size={16} />
                                     <span>Back to Roster</span>
                                 </button>
@@ -725,19 +583,14 @@
                                     <div>
                                         <h1 className="text-2xl font-bold">{player.display_name || player.name}</h1>
                                         <p className="text-white/80">#{player.number}</p>
-                                        {player.teams && (
-                                            <p className="text-white/60 text-sm">{player.teams.join(' • ')}</p>
-                                        )}
+                                        {player.teams && <p className="text-white/60 text-sm">{player.teams.join(' • ')}</p>}
                                     </div>
                                     <div className="ml-auto flex items-center gap-4">
                                         <div className="text-right">
                                             <div className="text-3xl font-bold">{playerStats.gp || 0}</div>
                                             <div className="text-white/80 text-sm">Games Played</div>
                                         </div>
-                                        <button
-                                            onClick={() => setDarkMode(!darkMode)}
-                                            className="p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors"
-                                        >
+                                        <button onClick={() => setDarkMode(!darkMode)} className="p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors">
                                             {darkMode ? <Sun size={24} /> : <Moon size={24} />}
                                         </button>
                                     </div>
@@ -745,45 +598,18 @@
                             </div>
                         </header>
 
-                        {/* Season Selector Bar */}
                         <div className={`${cardClass} sticky top-[88px] z-40 border-b ${borderClass} shadow-md`}>
                             <div className="max-w-7xl mx-auto px-4 py-3">
                                 <div className="flex items-center gap-3">
                                     <span className={`text-sm font-medium ${textClass}`}>Season:</span>
-                                    <select
-                                        value={selectedSeason}
-                                        onChange={(e) => setSelectedSeason(e.target.value)}
-                                        className={`px-3 py-2 rounded-lg border ${borderClass} ${cardClass} text-sm font-medium`}
-                                    >
+                                    <select value={selectedSeason} onChange={(e) => setSelectedSeason(e.target.value)} className={`px-3 py-2 rounded-lg border ${borderClass} ${cardClass} text-sm font-medium`}>
                                         {availableSeasons.map(season => (
-                                            <option key={season} value={season}>
-                                                {getSeasonDisplayName(season)}
-                                            </option>
+                                            <option key={season} value={season}>{getSeasonDisplayName(season)}</option>
                                         ))}
                                     </select>
-                                    
-                                    {/* Player Detail Tabs */}
                                     <div className={`flex rounded-lg border ${borderClass} overflow-hidden ml-auto`}>
-                                        <button
-                                            onClick={() => setPlayerDetailTab('stats')}
-                                            className={`px-4 py-2 text-sm font-medium transition-colors ${
-                                                playerDetailTab === 'stats'
-                                                    ? `${accentClass} text-white` 
-                                                    : `${cardClass} hover:opacity-80`
-                                            }`}
-                                        >
-                                            Stats
-                                        </button>
-                                        <button
-                                            onClick={() => setPlayerDetailTab('analysis')}
-                                            className={`px-4 py-2 text-sm font-medium transition-colors ${
-                                                playerDetailTab === 'analysis'
-                                                    ? `${accentClass} text-white` 
-                                                    : `${cardClass} hover:opacity-80`
-                                            }`}
-                                        >
-                                            AI Analysis
-                                        </button>
+                                        <button onClick={() => setPlayerDetailTab('stats')} className={`px-4 py-2 text-sm font-medium transition-colors ${playerDetailTab === 'stats' ? `${accentClass} text-white` : `${cardClass} hover:opacity-80`}`}>Stats</button>
+                                        <button onClick={() => setPlayerDetailTab('analysis')} className={`px-4 py-2 text-sm font-medium transition-colors ${playerDetailTab === 'analysis' ? `${accentClass} text-white` : `${cardClass} hover:opacity-80`}`}>AI Analysis</button>
                                     </div>
                                 </div>
                             </div>
@@ -791,71 +617,30 @@
 
                         {playerDetailTab === 'stats' ? (
                         <div className="max-w-7xl mx-auto px-4 py-6 space-y-6">
-                            {/* Season Stats Section */}
                             <div className={`${cardClass} rounded-lg border ${borderClass} p-6`}>
                                 <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
                                     <h2 className={`text-xl font-bold ${headingClass}`}>Season Statistics</h2>
                                     <div className="flex flex-wrap gap-2">
-                                        {/* Game Type Filter */}
                                         <div className={`flex rounded-lg border ${borderClass} overflow-hidden`}>
-                                            {[
-                                                { key: 'all', label: 'All' },
-                                                { key: 'regular', label: 'Regular' },
-                                                { key: 'playoff', label: 'Playoffs' }
-                                            ].map(opt => (
-                                                <button
-                                                    key={opt.key}
-                                                    onClick={() => setPlayerPageGameType(opt.key)}
-                                                    className={`px-3 py-1.5 text-sm font-medium transition-colors ${
-                                                        playerPageGameType === opt.key
-                                                            ? `${accentClass} text-white` 
-                                                            : `${cardClass} hover:opacity-80`
-                                                    }`}
-                                                >
-                                                    {opt.label}
-                                                </button>
+                                            {[{ key: 'all', label: 'All' }, { key: 'regular', label: 'Regular' }, { key: 'playoff', label: 'Playoffs' }].map(opt => (
+                                                <button key={opt.key} onClick={() => setPlayerPageGameType(opt.key)} className={`px-3 py-1.5 text-sm font-medium transition-colors ${playerPageGameType === opt.key ? `${accentClass} text-white` : `${cardClass} hover:opacity-80`}`}>{opt.label}</button>
                                             ))}
                                         </div>
-                                        {/* Per Game / Totals Toggle */}
                                         <div className={`flex rounded-lg border ${borderClass} overflow-hidden`}>
-                                            <button
-                                                onClick={() => setShowPlayerTotals(false)}
-                                                className={`px-3 py-1.5 text-sm font-medium transition-colors ${
-                                                    !showPlayerTotals 
-                                                        ? `${accentClass} text-white` 
-                                                        : `${cardClass} hover:opacity-80`
-                                                }`}
-                                            >
-                                                Per Game
-                                            </button>
-                                            <button
-                                                onClick={() => setShowPlayerTotals(true)}
-                                                className={`px-3 py-1.5 text-sm font-medium transition-colors ${
-                                                    showPlayerTotals 
-                                                        ? `${accentClass} text-white` 
-                                                        : `${cardClass} hover:opacity-80`
-                                                }`}
-                                            >
-                                                Totals
-                                            </button>
+                                            <button onClick={() => setShowPlayerTotals(false)} className={`px-3 py-1.5 text-sm font-medium transition-colors ${!showPlayerTotals ? `${accentClass} text-white` : `${cardClass} hover:opacity-80`}`}>Per Game</button>
+                                            <button onClick={() => setShowPlayerTotals(true)} className={`px-3 py-1.5 text-sm font-medium transition-colors ${showPlayerTotals ? `${accentClass} text-white` : `${cardClass} hover:opacity-80`}`}>Totals</button>
                                         </div>
                                     </div>
                                 </div>
-                                
                                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                                     {playerStatCategories.map(({ key, totalKey, label, perGame }) => {
                                         const displayKey = (showPlayerTotals && perGame && totalKey) ? totalKey : key;
                                         const value = playerStats[displayKey];
                                         const positionData = getLeaderboardPosition(displayKey);
-                                        
                                         return (
                                             <div key={key} className={`p-3 rounded-lg ${darkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
                                                 <div className={`text-2xl font-bold text-${accentColor}`}>
-                                                    {value !== undefined && value !== null 
-                                                        ? (typeof value === 'number' 
-                                                            ? (showPlayerTotals && perGame ? Math.round(value) : value.toFixed(1))
-                                                            : value)
-                                                        : '-'}
+                                                    {value !== undefined && value !== null ? (typeof value === 'number' ? (showPlayerTotals && perGame ? Math.round(value) : value.toFixed(1)) : value) : '-'}
                                                 </div>
                                                 <div className={`text-sm ${textClass}`}>{label}</div>
                                                 {positionData && positionData.rank && (
@@ -867,103 +652,41 @@
                                         );
                                     })}
                                 </div>
-
-                                {/* Shooting Splits */}
                                 {playerStats.fg && (
                                     <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
                                         <h3 className={`text-sm font-semibold mb-3 ${headingClass}`}>Shooting Splits</h3>
                                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm">
-                                            <div>
-                                                <span className={textClass}>FG: </span>
-                                                <span className={`font-bold ${headingClass}`}>
-                                                    {playerStats.fg[0]}-{playerStats.fg[1]} ({playerStats.fg_pct?.toFixed(1) || 0}%)
-                                                </span>
-                                            </div>
-                                            <div>
-                                                <span className={textClass}>3PT: </span>
-                                                <span className={`font-bold ${headingClass}`}>
-                                                    {playerStats['3pt']?.[0] || 0}-{playerStats['3pt']?.[1] || 0} ({playerStats['3pt_pct']?.toFixed(1) || 0}%)
-                                                </span>
-                                            </div>
-                                            <div>
-                                                <span className={textClass}>2PT: </span>
-                                                <span className={`font-bold ${headingClass}`}>
-                                                    {playerStats['2pt']?.[0] || 0}-{playerStats['2pt']?.[1] || 0} ({playerStats['2pt_pct']?.toFixed(1) || 0}%)
-                                                </span>
-                                            </div>
-                                            <div>
-                                                <span className={textClass}>FT: </span>
-                                                <span className={`font-bold ${headingClass}`}>
-                                                    {playerStats.ft?.[0] || 0}-{playerStats.ft?.[1] || 0} ({playerStats.ft_pct?.toFixed(1) || 0}%)
-                                                </span>
-                                            </div>
+                                            <div><span className={textClass}>FG: </span><span className={`font-bold ${headingClass}`}>{playerStats.fg[0]}-{playerStats.fg[1]} ({playerStats.fg_pct?.toFixed(1) || 0}%)</span></div>
+                                            <div><span className={textClass}>3PT: </span><span className={`font-bold ${headingClass}`}>{playerStats['3pt']?.[0] || 0}-{playerStats['3pt']?.[1] || 0} ({playerStats['3pt_pct']?.toFixed(1) || 0}%)</span></div>
+                                            <div><span className={textClass}>2PT: </span><span className={`font-bold ${headingClass}`}>{playerStats['2pt']?.[0] || 0}-{playerStats['2pt']?.[1] || 0} ({playerStats['2pt_pct']?.toFixed(1) || 0}%)</span></div>
+                                            <div><span className={textClass}>FT: </span><span className={`font-bold ${headingClass}`}>{playerStats.ft?.[0] || 0}-{playerStats.ft?.[1] || 0} ({playerStats.ft_pct?.toFixed(1) || 0}%)</span></div>
                                         </div>
                                     </div>
                                 )}
                             </div>
 
-                            {/* Leaderboard Rankings */}
                             <div className={`${cardClass} rounded-lg border ${borderClass} p-6`}>
                                 <div className="flex items-center justify-between mb-4">
                                     <h2 className={`text-xl font-bold ${headingClass}`}>Leaderboard Rankings</h2>
                                     <div className={`flex rounded-lg border ${borderClass} overflow-hidden`}>
-                                        <button
-                                            onClick={() => setShowPlayerTotals(false)}
-                                            className={`px-3 py-1.5 text-sm font-medium transition-colors ${
-                                                !showPlayerTotals 
-                                                    ? `${accentClass} text-white` 
-                                                    : `${cardClass} hover:opacity-80`
-                                            }`}
-                                        >
-                                            Per Game
-                                        </button>
-                                        <button
-                                            onClick={() => setShowPlayerTotals(true)}
-                                            className={`px-3 py-1.5 text-sm font-medium transition-colors ${
-                                                showPlayerTotals 
-                                                    ? `${accentClass} text-white` 
-                                                    : `${cardClass} hover:opacity-80`
-                                            }`}
-                                        >
-                                            Totals
-                                        </button>
+                                        <button onClick={() => setShowPlayerTotals(false)} className={`px-3 py-1.5 text-sm font-medium transition-colors ${!showPlayerTotals ? `${accentClass} text-white` : `${cardClass} hover:opacity-80`}`}>Per Game</button>
+                                        <button onClick={() => setShowPlayerTotals(true)} className={`px-3 py-1.5 text-sm font-medium transition-colors ${showPlayerTotals ? `${accentClass} text-white` : `${cardClass} hover:opacity-80`}`}>Totals</button>
                                     </div>
                                 </div>
                                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
                                     {(showPlayerTotals ? [
-                                        { key: 'pts', label: 'PTS' },
-                                        { key: 'reb', label: 'REB' },
-                                        { key: 'asst', label: 'AST' },
-                                        { key: 'stl', label: 'STL' },
-                                        { key: 'blk', label: 'BLK' },
-                                        { key: 'to', label: 'TO' },
-                                        { key: 'foul', label: 'PF' },
-                                        { key: 'oreb', label: 'OREB' },
-                                        { key: 'dreb', label: 'DREB' },
-                                        { key: 'gp', label: 'GP' },
-                                        { key: 'fg_pct', label: 'FG%' },
-                                        { key: '3pt_pct', label: '3P%' },
-                                        { key: 'ft_pct', label: 'FT%' },
-                                        { key: '2pt_pct', label: '2P%' }
+                                        { key: 'pts', label: 'PTS' }, { key: 'reb', label: 'REB' }, { key: 'asst', label: 'AST' },
+                                        { key: 'stl', label: 'STL' }, { key: 'blk', label: 'BLK' }, { key: 'to', label: 'TO' },
+                                        { key: 'foul', label: 'PF' }, { key: 'oreb', label: 'OREB' }, { key: 'dreb', label: 'DREB' },
+                                        { key: 'gp', label: 'GP' }, { key: 'fg_pct', label: 'FG%' }, { key: '3pt_pct', label: '3P%' },
+                                        { key: 'ft_pct', label: 'FT%' }, { key: '2pt_pct', label: '2P%' }
                                     ] : [
-                                        { key: 'ppg', label: 'PPG' },
-                                        { key: 'rpg', label: 'RPG' },
-                                        { key: 'apg', label: 'APG' },
-                                        { key: 'spg', label: 'SPG' },
-                                        { key: 'bpg', label: 'BPG' },
-                                        { key: 'tpg', label: 'TPG' },
-                                        { key: 'fpg', label: 'FPG' },
-                                        { key: 'orebpg', label: 'ORPG' },
-                                        { key: 'drebpg', label: 'DRPG' },
-                                        { key: 'fga_pg', label: 'FGA' },
-                                        { key: '3pa_pg', label: '3PA' },
-                                        { key: 'fta_pg', label: 'FTA' },
-                                        { key: 'fgm_pg', label: 'FGM' },
-                                        { key: '3pm_pg', label: '3PM' },
-                                        { key: 'ftm_pg', label: 'FTM' },
-                                        { key: 'fg_pct', label: 'FG%' },
-                                        { key: '3pt_pct', label: '3P%' },
-                                        { key: 'ft_pct', label: 'FT%' },
+                                        { key: 'ppg', label: 'PPG' }, { key: 'rpg', label: 'RPG' }, { key: 'apg', label: 'APG' },
+                                        { key: 'spg', label: 'SPG' }, { key: 'bpg', label: 'BPG' }, { key: 'tpg', label: 'TPG' },
+                                        { key: 'fpg', label: 'FPG' }, { key: 'orebpg', label: 'ORPG' }, { key: 'drebpg', label: 'DRPG' },
+                                        { key: 'fga_pg', label: 'FGA' }, { key: '3pa_pg', label: '3PA' }, { key: 'fta_pg', label: 'FTA' },
+                                        { key: 'fgm_pg', label: 'FGM' }, { key: '3pm_pg', label: '3PM' }, { key: 'ftm_pg', label: 'FTM' },
+                                        { key: 'fg_pct', label: 'FG%' }, { key: '3pt_pct', label: '3P%' }, { key: 'ft_pct', label: 'FT%' },
                                         { key: '2pt_pct', label: '2P%' }
                                     ]).map(({ key, label }) => {
                                         const positionData = getLeaderboardPosition(key);
@@ -971,41 +694,28 @@
                                         const isTied = positionData?.isTied;
                                         const value = playerStats[key];
                                         const isTotal = showPlayerTotals && !key.includes('pct');
-                                        
                                         return (
-                                            <div 
-                                                key={key} 
-                                                className={`p-3 rounded-lg text-center ${
-                                                    position === 1 ? (darkMode ? 'bg-yellow-900/30 border-2 border-yellow-400' : 'bg-yellow-100 border-2 border-yellow-400') :
-                                                    position === 2 ? (darkMode ? 'bg-gray-600 border-2 border-gray-400' : 'bg-gray-200 border-2 border-gray-400') :
-                                                    position === 3 ? (darkMode ? 'bg-orange-900/30 border-2 border-orange-400' : 'bg-orange-100 border-2 border-orange-400') :
-                                                    darkMode ? 'bg-gray-700' : 'bg-gray-100'
-                                                }`}
-                                            >
-                                                <div className={`text-2xl font-bold ${
-                                                    position === 1 ? 'text-yellow-600' :
-                                                    position === 2 ? (darkMode ? 'text-white' : 'text-gray-700') :
-                                                    position === 3 ? 'text-orange-500' :
-                                                    `text-${accentColor}`
-                                                }`}>
+                                            <div key={key} className={`p-3 rounded-lg text-center ${
+                                                position === 1 ? (darkMode ? 'bg-yellow-900/30 border-2 border-yellow-400' : 'bg-yellow-100 border-2 border-yellow-400') :
+                                                position === 2 ? (darkMode ? 'bg-gray-600 border-2 border-gray-400' : 'bg-gray-200 border-2 border-gray-400') :
+                                                position === 3 ? (darkMode ? 'bg-orange-900/30 border-2 border-orange-400' : 'bg-orange-100 border-2 border-orange-400') :
+                                                darkMode ? 'bg-gray-700' : 'bg-gray-100'
+                                            }`}>
+                                                <div className={`text-2xl font-bold ${position === 1 ? 'text-yellow-600' : position === 2 ? (darkMode ? 'text-white' : 'text-gray-700') : position === 3 ? 'text-orange-500' : `text-${accentColor}`}`}>
                                                     {position ? `${isTied ? 'T' : ''}#${position}` : '-'}
                                                 </div>
                                                 <div className={`text-xs font-medium ${textClass}`}>{label}</div>
-                                                <div className={`text-xs ${textClass}`}>
-                                                    {value !== undefined ? (typeof value === 'number' ? (isTotal ? Math.round(value) : value.toFixed(1)) : value) : '-'}
-                                                </div>
+                                                <div className={`text-xs ${textClass}`}>{value !== undefined ? (typeof value === 'number' ? (isTotal ? Math.round(value) : value.toFixed(1)) : value) : '-'}</div>
                                             </div>
                                         );
                                     })}
                                 </div>
                             </div>
 
-                            {/* Game Log */}
                             <div className={`${cardClass} rounded-lg border ${borderClass} overflow-hidden`}>
                                 <div className="p-4 border-b ${borderClass}">
                                     <h2 className={`text-xl font-bold ${headingClass}`}>Game Log</h2>
                                 </div>
-                                
                                 {playerGames.length === 0 ? (
                                     <div className={`p-8 text-center ${textClass}`}>
                                         <Calendar size={48} className="mx-auto mb-4 opacity-50" />
@@ -1037,28 +747,12 @@
                                                 {playerGames.map(([gameId, game]) => {
                                                     const stats = game.stats[selectedPlayerNumber];
                                                     return (
-                                                        <tr 
-                                                            key={gameId} 
-                                                            className={`border-t ${borderClass} hover:${darkMode ? 'bg-gray-700' : 'bg-gray-50'} cursor-pointer`}
-                                                            onClick={() => {
-                                                                setSelectedGameId(gameId);
-                                                                setCurrentView('boxscore');
-                                                            }}
-                                                        >
-                                                            <td className={`px-4 py-3 ${headingClass}`}>
-                                                                {formatDate(game.date)}
-                                                                {game.isPlayoff && (
-                                                                    <span className="ml-2 px-1.5 py-0.5 bg-yellow-500 text-white text-xs rounded">P</span>
-                                                                )}
-                                                            </td>
+                                                        <tr key={gameId} className={`border-t ${borderClass} hover:${darkMode ? 'bg-gray-700' : 'bg-gray-50'} cursor-pointer`} onClick={() => { setSelectedGameId(gameId); setCurrentView('boxscore'); }}>
+                                                            <td className={`px-4 py-3 ${headingClass}`}>{formatDate(game.date)}{game.isPlayoff && <span className="ml-2 px-1.5 py-0.5 bg-yellow-500 text-white text-xs rounded">P</span>}</td>
                                                             <td className={`px-3 py-3 ${textClass}`}>vs {game.opponent}</td>
                                                             <td className="px-3 py-3 text-center">
-                                                                <span className={`font-bold ${game.result === 'W' ? 'text-green-600' : 'text-red-600'}`}>
-                                                                    {game.result}
-                                                                </span>
-                                                                <span className={`ml-1 ${textClass}`}>
-                                                                    {game.score.us}-{game.score.them}
-                                                                </span>
+                                                                <span className={`font-bold ${game.result === 'W' ? 'text-green-600' : 'text-red-600'}`}>{game.result}</span>
+                                                                <span className={`ml-1 ${textClass}`}>{game.score.us}-{game.score.them}</span>
                                                             </td>
                                                             <td className={`px-3 py-3 text-center font-bold text-${accentColor}`}>{stats.pts || 0}</td>
                                                             <td className="px-3 py-3 text-center">{stats.reb || 0}</td>
@@ -1082,7 +776,6 @@
                             </div>
                         </div>
                         ) : (
-                        /* AI Analysis Tab */
                         <div className="max-w-7xl mx-auto px-4 py-6">
                             <div className={`${cardClass} rounded-lg border ${borderClass} p-6`}>
                                 <h2 className={`text-xl font-bold mb-4 ${headingClass}`}>AI Analysis</h2>
@@ -1095,17 +788,13 @@
                                                 <p className={`text-sm ${textClass}`}>{player.display_name || player.name}</p>
                                             </div>
                                         </div>
-                                        <div className={`${textClass} leading-relaxed whitespace-pre-wrap`}>
-                                            {playerAnalysis[selectedPlayerNumber]}
-                                        </div>
+                                        <div className={`${textClass} leading-relaxed whitespace-pre-wrap`}>{playerAnalysis[selectedPlayerNumber]}</div>
                                     </div>
                                 ) : (
                                     <div className={`${darkMode ? 'bg-gray-700' : 'bg-gray-100'} rounded-lg p-8 text-center`}>
                                         <div className="text-6xl mb-4">🤖</div>
                                         <p className={`text-xl font-medium ${headingClass}`}>Coming Soon</p>
-                                        <p className={`mt-2 ${textClass}`}>
-                                            AI-powered analysis for {player.display_name || player.name} will be available later this season.
-                                        </p>
+                                        <p className={`mt-2 ${textClass}`}>AI-powered analysis for {player.display_name || player.name} will be available later this season.</p>
                                     </div>
                                 )}
                             </div>
@@ -1131,23 +820,13 @@
                             </a>
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-4">
-                                    <img 
-                                        src={teamConfig.logo} 
-                                        alt={teamConfig.name}
-                                        className="w-12 h-12 object-contain"
-                                        onError={(e) => {
-                                            e.target.style.display = 'none';
-                                        }}
-                                    />
+                                    <img src={teamConfig.logo} alt={teamConfig.name} className="w-12 h-12 object-contain" onError={(e) => { e.target.style.display = 'none'; }} />
                                     <div>
                                         <h1 className="text-2xl font-bold">{teamConfig.displayName}</h1>
                                         <p className="text-white/80 text-sm">Team Statistics</p>
                                     </div>
                                 </div>
-                                <button
-                                    onClick={() => setDarkMode(!darkMode)}
-                                    className="p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors"
-                                >
+                                <button onClick={() => setDarkMode(!darkMode)} className="p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors">
                                     {darkMode ? <Sun size={24} /> : <Moon size={24} />}
                                 </button>
                             </div>
@@ -1158,23 +837,12 @@
                         <div className="max-w-7xl mx-auto px-4 py-3">
                             <div className="flex flex-wrap gap-3 items-center justify-between">
                                 <div className="flex gap-2">
-                                    <select
-                                        value={selectedSeason}
-                                        onChange={(e) => setSelectedSeason(e.target.value)}
-                                        className={`px-3 py-2 rounded-lg border ${borderClass} ${cardClass} text-sm font-medium`}
-                                    >
+                                    <select value={selectedSeason} onChange={(e) => setSelectedSeason(e.target.value)} className={`px-3 py-2 rounded-lg border ${borderClass} ${cardClass} text-sm font-medium`}>
                                         {availableSeasons.map(season => (
-                                            <option key={season} value={season}>
-                                                {getSeasonDisplayName(season)}
-                                            </option>
+                                            <option key={season} value={season}>{getSeasonDisplayName(season)}</option>
                                         ))}
                                     </select>
-                                    
-                                    <select
-                                        value={gameType}
-                                        onChange={(e) => setGameType(e.target.value)}
-                                        className={`px-3 py-2 rounded-lg border ${borderClass} ${cardClass} text-sm font-medium`}
-                                    >
+                                    <select value={gameType} onChange={(e) => setGameType(e.target.value)} className={`px-3 py-2 rounded-lg border ${borderClass} ${cardClass} text-sm font-medium`}>
                                         <option value="all">All Games</option>
                                         <option value="regular">Regular Season</option>
                                         <option value="playoff">Playoffs</option>
@@ -1192,15 +860,7 @@
                                 { id: 'players', icon: Users, label: 'Players' },
                                 { id: 'games', icon: Calendar, label: 'Games' }
                             ].map(tab => (
-                                <button
-                                    key={tab.id}
-                                    onClick={() => setActiveTab(tab.id)}
-                                    className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium whitespace-nowrap transition-colors ${
-                                        activeTab === tab.id
-                                            ? `${accentClass} text-white shadow-lg`
-                                            : `${cardClass} hover:opacity-80`
-                                    }`}
-                                >
+                                <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium whitespace-nowrap transition-colors ${activeTab === tab.id ? `${accentClass} text-white shadow-lg` : `${cardClass} hover:opacity-80`}`}>
                                     <tab.icon size={18} />
                                     {tab.label}
                                 </button>
@@ -1209,50 +869,21 @@
 
                         {activeTab === 'leaderboards' && (
                             <div>
-                                {/* Totals/Averages Toggle */}
                                 <div className="flex items-center gap-4 mb-4">
                                     <span className={`text-sm font-medium ${headingClass}`}>Show:</span>
                                     <div className={`flex rounded-lg border ${borderClass} overflow-hidden`}>
-                                        <button
-                                            onClick={() => setShowTotals(false)}
-                                            className={`px-4 py-2 text-sm font-medium transition-colors ${
-                                                !showTotals 
-                                                    ? `${accentClass} text-white` 
-                                                    : `${cardClass} hover:opacity-80`
-                                            }`}
-                                        >
-                                            Averages
-                                        </button>
-                                        <button
-                                            onClick={() => setShowTotals(true)}
-                                            className={`px-4 py-2 text-sm font-medium transition-colors ${
-                                                showTotals 
-                                                    ? `${accentClass} text-white` 
-                                                    : `${cardClass} hover:opacity-80`
-                                            }`}
-                                        >
-                                            Totals
-                                        </button>
+                                        <button onClick={() => setShowTotals(false)} className={`px-4 py-2 text-sm font-medium transition-colors ${!showTotals ? `${accentClass} text-white` : `${cardClass} hover:opacity-80`}`}>Averages</button>
+                                        <button onClick={() => setShowTotals(true)} className={`px-4 py-2 text-sm font-medium transition-colors ${showTotals ? `${accentClass} text-white` : `${cardClass} hover:opacity-80`}`}>Totals</button>
                                     </div>
                                 </div>
-
                                 <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-2 mb-6">
                                     {statCategories.map(cat => (
-                                        <button
-                                            key={cat.key}
-                                            onClick={() => setStatCategory(cat.key)}
-                                            className={`p-3 rounded-lg border-2 transition-all ${
-                                                statCategory === cat.key
-                                                    ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
-                                                    : `border-transparent ${cardClass}`
-                                            }`}
-                                        >
+                                        <button key={cat.key} onClick={() => setStatCategory(cat.key)} className={`p-3 rounded-lg border-2 transition-all ${statCategory === cat.key ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20' : `border-transparent ${cardClass}`}`}>
                                             <div className={`text-lg font-bold text-${accentColor}`}>{cat.label}</div>
                                             <div className={`text-xs ${textClass} truncate`}>{cat.desc}</div>
                                         </button>
                                     ))}
                                 </div>
-
                                 <div className="space-y-3">
                                     {sortedPlayers.length === 0 ? (
                                         <div className={`${cardClass} rounded-lg border ${borderClass} p-8 text-center ${textClass}`}>
@@ -1261,43 +892,24 @@
                                         </div>
                                     ) : (
                                         sortedPlayers.map((player, idx) => {
-                                            // Calculate rank with ties
                                             const currentValue = Number(player[statCategory]) || 0;
                                             const rank = sortedPlayers.filter(p => (Number(p[statCategory]) || 0) > currentValue).length + 1;
                                             const isTied = sortedPlayers.filter(p => (Number(p[statCategory]) || 0) === currentValue).length > 1;
-                                            
                                             return (
-                                            <div 
-                                                key={player.number} 
-                                                className={`${cardClass} rounded-lg border ${borderClass} p-4 hover:shadow-lg transition-shadow cursor-pointer`}
-                                                onClick={() => {
-                                                    setSelectedPlayerNumber(player.number);
-                                                    setCurrentView('player');
-                                                }}
-                                            >
-                                                <div className="flex items-center gap-4">
-                                                    <div className={`text-3xl font-bold ${rank <= 3 ? 'text-blue-600' : textClass} w-14 text-center`}>
-                                                        {isTied ? 'T' : ''}{rank}
-                                                    </div>
-                                                    <PlayerImage player={player} size="md" />
-                                                    <div className="flex-1 min-w-0">
-                                                        <div className={`font-bold text-lg truncate ${headingClass}`}>{player.display_name || player.name}</div>
-                                                        <div className={`text-sm ${textClass}`}>
-                                                            {player.gp} GP{player.teams ? ` • ${player.teams.join(', ')}` : ''}
+                                                <div key={player.number} className={`${cardClass} rounded-lg border ${borderClass} p-4 hover:shadow-lg transition-shadow cursor-pointer`} onClick={() => { setSelectedPlayerNumber(player.number); setCurrentView('player'); }}>
+                                                    <div className="flex items-center gap-4">
+                                                        <div className={`text-3xl font-bold ${rank <= 3 ? 'text-blue-600' : textClass} w-14 text-center`}>{isTied ? 'T' : ''}{rank}</div>
+                                                        <PlayerImage player={player} size="md" />
+                                                        <div className="flex-1 min-w-0">
+                                                            <div className={`font-bold text-lg truncate ${headingClass}`}>{player.display_name || player.name}</div>
+                                                            <div className={`text-sm ${textClass}`}>{player.gp} GP{player.teams ? ` • ${player.teams.join(', ')}` : ''}</div>
                                                         </div>
-                                                    </div>
-                                                    <div className="text-right">
-                                                        <div className="text-3xl font-bold text-blue-600">
-                                                            {formatStatValue(player[statCategory])}
-                                                        </div>
-                                                        <div className={`text-xs ${textClass}`}>
-                                                            {(averageCategories.find(c => c.key === statCategory) || 
-                                                              totalCategories.find(c => c.key === statCategory))?.label || 
-                                                             statCategory.replace(/_pg$/i, '').toUpperCase()}
+                                                        <div className="text-right">
+                                                            <div className="text-3xl font-bold text-blue-600">{formatStatValue(player[statCategory])}</div>
+                                                            <div className={`text-xs ${textClass}`}>{(averageCategories.find(c => c.key === statCategory) || totalCategories.find(c => c.key === statCategory))?.label || statCategory.replace(/_pg$/i, '').toUpperCase()}</div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
                                             );
                                         })
                                     )}
@@ -1312,44 +924,22 @@
                                     {Object.values(players).map(player => {
                                         const stats = seasonStats[gameType]?.[player.number] || {};
                                         return (
-                                            <div 
-                                                key={player.number} 
-                                                className={`${cardClass} rounded-lg border ${borderClass} p-4 cursor-pointer hover:shadow-lg transition-shadow`}
-                                                onClick={() => {
-                                                    setSelectedPlayerNumber(player.number);
-                                                    setCurrentView('player');
-                                                }}
-                                            >
+                                            <div key={player.number} className={`${cardClass} rounded-lg border ${borderClass} p-4 cursor-pointer hover:shadow-lg transition-shadow`} onClick={() => { setSelectedPlayerNumber(player.number); setCurrentView('player'); }}>
                                                 <div className="flex items-center gap-4">
                                                     <PlayerImage player={player} size="lg" />
                                                     <div className="flex-1 min-w-0">
                                                         <div className={`font-bold text-xl truncate ${headingClass}`}>{player.display_name || player.name}</div>
                                                         <div className={textClass}>#{player.number}</div>
-                                                        {player.teams && player.teams.length > 0 && (
-                                                            <div className={`text-sm ${textClass} mt-1`}>
-                                                                {player.teams.join(' • ')}
-                                                            </div>
-                                                        )}
+                                                        {player.teams && player.teams.length > 0 && <div className={`text-sm ${textClass} mt-1`}>{player.teams.join(' • ')}</div>}
                                                         {stats.gp > 0 && (
                                                             <div className="flex gap-3 mt-2 text-sm">
-                                                                <div>
-                                                                    <span className="font-bold text-blue-600">{stats.ppg?.toFixed(1) || '0.0'}</span>
-                                                                    <span className={textClass}> PPG</span>
-                                                                </div>
-                                                                <div>
-                                                                    <span className="font-bold text-blue-600">{stats.rpg?.toFixed(1) || '0.0'}</span>
-                                                                    <span className={textClass}> RPG</span>
-                                                                </div>
-                                                                <div>
-                                                                    <span className="font-bold text-blue-600">{stats.apg?.toFixed(1) || '0.0'}</span>
-                                                                    <span className={textClass}> APG</span>
-                                                                </div>
+                                                                <div><span className="font-bold text-blue-600">{stats.ppg?.toFixed(1) || '0.0'}</span><span className={textClass}> PPG</span></div>
+                                                                <div><span className="font-bold text-blue-600">{stats.rpg?.toFixed(1) || '0.0'}</span><span className={textClass}> RPG</span></div>
+                                                                <div><span className="font-bold text-blue-600">{stats.apg?.toFixed(1) || '0.0'}</span><span className={textClass}> APG</span></div>
                                                             </div>
                                                         )}
                                                     </div>
-                                                    <div className={`${textClass}`}>
-                                                        <ChevronDown size={20} className="-rotate-90" />
-                                                    </div>
+                                                    <div className={textClass}><ChevronDown size={20} className="-rotate-90" /></div>
                                                 </div>
                                             </div>
                                         );
@@ -1363,58 +953,15 @@
                                 <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
                                     <h2 className={`text-2xl font-bold ${headingClass}`}>Team Records</h2>
                                     <div className="flex flex-wrap gap-2">
-                                        {/* Records Scope Toggle */}
                                         <div className={`flex rounded-lg border ${borderClass} overflow-hidden`}>
-                                            <button
-                                                onClick={() => setRecordsScope('season')}
-                                                className={`px-3 py-1.5 text-sm font-medium transition-colors ${
-                                                    recordsScope === 'season'
-                                                        ? `${accentClass} text-white` 
-                                                        : `${cardClass} hover:opacity-80`
-                                                }`}
-                                            >
-                                                {getSeasonDisplayName(selectedSeason)}
-                                            </button>
-                                            <button
-                                                onClick={() => setRecordsScope('alltime')}
-                                                className={`px-3 py-1.5 text-sm font-medium transition-colors ${
-                                                    recordsScope === 'alltime'
-                                                        ? `${accentClass} text-white` 
-                                                        : `${cardClass} hover:opacity-80`
-                                                }`}
-                                            >
-                                                All Time
-                                            </button>
+                                            <button onClick={() => setRecordsScope('season')} className={`px-3 py-1.5 text-sm font-medium transition-colors ${recordsScope === 'season' ? `${accentClass} text-white` : `${cardClass} hover:opacity-80`}`}>{getSeasonDisplayName(selectedSeason)}</button>
+                                            <button onClick={() => setRecordsScope('alltime')} className={`px-3 py-1.5 text-sm font-medium transition-colors ${recordsScope === 'alltime' ? `${accentClass} text-white` : `${cardClass} hover:opacity-80`}`}>All Time</button>
                                         </div>
-                                        {/* Records Type Toggle */}
                                         <div className={`flex rounded-lg border ${borderClass} overflow-hidden`}>
-                                            <button
-                                                onClick={() => setRecordsType('game')}
-                                                className={`px-3 py-1.5 text-sm font-medium transition-colors ${
-                                                    recordsType === 'game'
-                                                        ? `${accentClass} text-white` 
-                                                        : `${cardClass} hover:opacity-80`
-                                                }`}
-                                            >
-                                                Single Game
-                                            </button>
-                                            <button
-                                                onClick={() => setRecordsType('season')}
-                                                className={`px-3 py-1.5 text-sm font-medium transition-colors ${
-                                                    recordsType === 'season'
-                                                        ? `${accentClass} text-white` 
-                                                        : `${cardClass} hover:opacity-80`
-                                                }`}
-                                            >
-                                                Season
-                                            </button>
+                                            <button onClick={() => setRecordsType('game')} className={`px-3 py-1.5 text-sm font-medium transition-colors ${recordsType === 'game' ? `${accentClass} text-white` : `${cardClass} hover:opacity-80`}`}>Single Game</button>
+                                            <button onClick={() => setRecordsType('season')} className={`px-3 py-1.5 text-sm font-medium transition-colors ${recordsType === 'season' ? `${accentClass} text-white` : `${cardClass} hover:opacity-80`}`}>Season</button>
                                         </div>
-                                        {/* Category Filter */}
-                                        <select
-                                            value={recordsCategory}
-                                            onChange={(e) => setRecordsCategory(e.target.value)}
-                                            className={`px-3 py-2 rounded-lg border ${borderClass} ${cardClass} text-sm font-medium`}
-                                        >
+                                        <select value={recordsCategory} onChange={(e) => setRecordsCategory(e.target.value)} className={`px-3 py-2 rounded-lg border ${borderClass} ${cardClass} text-sm font-medium`}>
                                             <option value="all">All Categories</option>
                                             <option value="pts">Points</option>
                                             <option value="reb">Rebounds</option>
@@ -1431,338 +978,196 @@
                                         </select>
                                     </div>
                                 </div>
-                                
-                                {recordsType === 'game' ? (
-                                    /* Single Game Records */
-                                    (() => {
-                                        const gamesToUse = recordsScope === 'alltime' ? allTimeGames : allGames;
-                                        if (!gamesToUse || Object.keys(gamesToUse).length === 0) {
-                                            return (
-                                                <div className={`${cardClass} rounded-lg border ${borderClass} p-8 text-center ${textClass}`}>
-                                                    <Trophy size={48} className="mx-auto mb-4 opacity-50" />
-                                                    <p>No records available yet.</p>
-                                                    <p className="text-sm mt-2">Records will appear after processing games.</p>
-                                                </div>
-                                            );
-                                        }
-                                        
-                                        const recordCategories = [
-                                            { key: 'most_pts', label: 'Most Points', statKey: 'pts' },
-                                            { key: 'most_reb', label: 'Most Total Rebounds', statKey: 'reb' },
-                                            { key: 'most_oreb', label: 'Most Offensive Rebounds', statKey: 'oreb' },
-                                            { key: 'most_dreb', label: 'Most Defensive Rebounds', statKey: 'dreb' },
-                                            { key: 'most_asst', label: 'Most Assists', statKey: 'asst' },
-                                            { key: 'most_stl', label: 'Most Steals', statKey: 'stl' },
-                                            { key: 'most_blk', label: 'Most Blocks', statKey: 'blk' },
-                                            { key: 'most_3pt', label: 'Most 3-Pointers Made', statKey: '3pt' },
-                                            { key: 'most_fg', label: 'Most Field Goals Made', statKey: 'fg' },
-                                            { key: 'most_ft', label: 'Most Free Throws Made', statKey: 'ft' },
-                                            { key: 'most_to', label: 'Most Turnovers', statKey: 'to' },
-                                            { key: 'most_foul', label: 'Most Fouls', statKey: 'foul' }
-                                        ];
-                                        
-                                        const filteredCategories = recordsCategory === 'all' 
-                                            ? recordCategories 
-                                            : recordCategories.filter(c => c.statKey === recordsCategory);
-                                        
-                                        // Build top 3 for each category from games
-                                        const getTop3ForCategory = (statKey) => {
-                                            const performances = [];
-                                            Object.entries(gamesToUse).forEach(([gameId, game]) => {
-                                                if (gameType === 'regular' && game.isPlayoff) return;
-                                                if (gameType === 'playoff' && !game.isPlayoff) return;
-                                                
-                                                Object.entries(game.stats || {}).forEach(([playerNum, stats]) => {
-                                                    let value = stats[statKey];
-                                                    if (Array.isArray(value)) value = value[0];
-                                                    if (value && value > 0) {
-                                                        const player = players[playerNum] || allPlayersData[playerNum];
-                                                        performances.push({
-                                                            playerNum,
-                                                            playerName: player?.display_name || player?.name || `#${playerNum}`,
-                                                            player,
-                                                            value,
-                                                            date: game.date,
-                                                            opponent: game.opponent,
-                                                            season: game.season
-                                                        });
-                                                    }
-                                                });
-                                                });
-                                                
-                                                // Sort by value desc, then by date asc (earliest first)
-                                                performances.sort((a, b) => {
-                                                    if (b.value !== a.value) return b.value - a.value;
-                                                    return new Date(a.date) - new Date(b.date);
-                                                });
-                                                
-                                                // Get top 3 with tie handling
-                                                const top3 = [];
-                                                let rank = 1;
-                                                for (let i = 0; i < performances.length && top3.length < 3; i++) {
-                                                    const perf = performances[i];
-                                                    const isTied = i > 0 && performances[i-1].value === perf.value;
-                                                    if (!isTied && top3.length > 0) {
-                                                        rank = top3.length + 1;
-                                                    }
-                                                    top3.push({ ...perf, rank, isTied });
+
+                                {recordsType === 'game' ? (() => {
+                                    const gamesToUse = recordsScope === 'alltime' ? allTimeGames : allGames;
+                                    if (!gamesToUse || Object.keys(gamesToUse).length === 0) {
+                                        return (
+                                            <div className={`${cardClass} rounded-lg border ${borderClass} p-8 text-center ${textClass}`}>
+                                                <Trophy size={48} className="mx-auto mb-4 opacity-50" />
+                                                <p>No records available yet.</p>
+                                            </div>
+                                        );
+                                    }
+                                    const recordCategories = [
+                                        { key: 'most_pts', label: 'Most Points', statKey: 'pts' },
+                                        { key: 'most_reb', label: 'Most Total Rebounds', statKey: 'reb' },
+                                        { key: 'most_oreb', label: 'Most Offensive Rebounds', statKey: 'oreb' },
+                                        { key: 'most_dreb', label: 'Most Defensive Rebounds', statKey: 'dreb' },
+                                        { key: 'most_asst', label: 'Most Assists', statKey: 'asst' },
+                                        { key: 'most_stl', label: 'Most Steals', statKey: 'stl' },
+                                        { key: 'most_blk', label: 'Most Blocks', statKey: 'blk' },
+                                        { key: 'most_3pt', label: 'Most 3-Pointers Made', statKey: '3pt' },
+                                        { key: 'most_fg', label: 'Most Field Goals Made', statKey: 'fg' },
+                                        { key: 'most_ft', label: 'Most Free Throws Made', statKey: 'ft' },
+                                        { key: 'most_to', label: 'Most Turnovers', statKey: 'to' },
+                                        { key: 'most_foul', label: 'Most Fouls', statKey: 'foul' }
+                                    ];
+                                    const filteredCategories = recordsCategory === 'all' ? recordCategories : recordCategories.filter(c => c.statKey === recordsCategory);
+                                    const getTop3ForCategory = (statKey) => {
+                                        const performances = [];
+                                        Object.entries(gamesToUse).forEach(([gameId, game]) => {
+                                            if (gameType === 'regular' && game.isPlayoff) return;
+                                            if (gameType === 'playoff' && !game.isPlayoff) return;
+                                            Object.entries(game.stats || {}).forEach(([playerNum, stats]) => {
+                                                let value = stats[statKey];
+                                                if (Array.isArray(value)) value = value[0];
+                                                if (value && value > 0) {
+                                                    const player = players[playerNum] || allPlayersData[playerNum];
+                                                    performances.push({ playerNum, playerName: player?.display_name || player?.name || `#${playerNum}`, player, value, date: game.date, opponent: game.opponent, season: game.season });
                                                 }
-                                                return top3;
-                                            };
-                                            
-                                            return (
-                                                <div className="grid gap-4 md:grid-cols-2">
-                                                    {filteredCategories.map(({ key, label, statKey }) => {
-                                                        const top3 = getTop3ForCategory(statKey);
-                                                        if (top3.length === 0) return null;
-                                                        
-                                                        return (
-                                                            <div key={key} className={`${cardClass} rounded-lg border ${borderClass} p-4`}>
-                                                                <h3 className={`font-bold text-lg mb-3 ${headingClass}`}>{label}</h3>
-                                                                <div className="space-y-2">
-                                                                    {top3.map((perf, idx) => (
-                                                                        <div 
-                                                                            key={`${perf.playerNum}-${perf.date}-${idx}`}
-                                                                            className={`flex items-center gap-3 p-2 rounded-lg cursor-pointer hover:opacity-80 transition-opacity ${
-                                                                                perf.rank === 1 ? (darkMode ? 'bg-yellow-900/30' : 'bg-yellow-100') :
-                                                                                perf.rank === 2 ? (darkMode ? 'bg-gray-600' : 'bg-gray-200') :
-                                                                                (darkMode ? 'bg-orange-900/30' : 'bg-orange-100')
-                                                                            }`}
-                                                                            onClick={() => {
-                                                                                setSelectedPlayerNumber(perf.playerNum);
-                                                                                setCurrentView('player');
-                                                                            }}
-                                                                        >
-                                                                            <div className={`text-xl font-bold w-8 text-center ${
-                                                                                perf.rank === 1 ? 'text-yellow-600' :
-                                                                                perf.rank === 2 ? (darkMode ? 'text-white' : 'text-gray-700') :
-                                                                                'text-orange-500'
-                                                                            }`}>
-                                                                                {perf.isTied ? 'T' : ''}{perf.rank}
-                                                                            </div>
-                                                                            <PlayerImage player={perf.player} size="sm" />
-                                                                            <div className="flex-1 min-w-0">
-                                                                                <div className={`font-medium truncate ${headingClass}`}>{perf.playerName}</div>
-                                                                                <div className={`text-xs ${textClass}`}>
-                                                                                    vs {perf.opponent} • {formatDate(perf.date)}
-                                                                                    {recordsScope === 'alltime' && perf.season && ` • ${getSeasonDisplayName(perf.season)}`}
-                                                                                </div>
-                                                                            </div>
-                                                                            <div className={`text-2xl font-bold text-${accentColor}`}>{perf.value}</div>
-                                                                        </div>
-                                                                    ))}
-                                                                </div>
-                                                            </div>
-                                                        );
-                                                    })}
-                                                </div>
-                                            );
-                                        })()
-                                ) : (
-                                    /* Season Records */
-                                    (() => {
-                                        const statsToUse = recordsScope === 'alltime' ? allTimeSeasonStats : { [selectedSeason]: seasonStats };
-                                        const hasStats = recordsScope === 'alltime' 
-                                            ? Object.keys(allTimeSeasonStats).length > 0
-                                            : seasonStats[gameType] && Object.keys(seasonStats[gameType]).length > 0;
-                                        
-                                        if (!hasStats) {
-                                            return (
-                                                <div className={`${cardClass} rounded-lg border ${borderClass} p-8 text-center ${textClass}`}>
-                                                    <Trophy size={48} className="mx-auto mb-4 opacity-50" />
-                                                    <p>No season records available yet.</p>
-                                                    <p className="text-sm mt-2">Season records will appear after processing games.</p>
-                                                </div>
-                                            );
+                                            });
+                                        });
+                                        performances.sort((a, b) => b.value !== a.value ? b.value - a.value : new Date(a.date) - new Date(b.date));
+                                        const top3 = [];
+                                        let rank = 1;
+                                        for (let i = 0; i < performances.length && top3.length < 3; i++) {
+                                            const perf = performances[i];
+                                            const isTied = i > 0 && performances[i-1].value === perf.value;
+                                            if (!isTied && top3.length > 0) rank = top3.length + 1;
+                                            top3.push({ ...perf, rank, isTied });
                                         }
-                                        
-                                        const seasonRecordCategories = [
-                                            { key: 'ppg', label: 'Points Per Game (Season Avg)', statKey: 'pts', isAvg: true },
-                                            { key: 'pts', label: 'Total Points (Season)', statKey: 'pts', isAvg: false },
-                                            { key: 'rpg', label: 'Rebounds Per Game (Season Avg)', statKey: 'reb', isAvg: true },
-                                            { key: 'reb', label: 'Total Rebounds (Season)', statKey: 'reb', isAvg: false },
-                                            { key: 'apg', label: 'Assists Per Game (Season Avg)', statKey: 'asst', isAvg: true },
-                                            { key: 'asst', label: 'Total Assists (Season)', statKey: 'asst', isAvg: false },
-                                            { key: 'spg', label: 'Steals Per Game (Season Avg)', statKey: 'stl', isAvg: true },
-                                            { key: 'stl', label: 'Total Steals (Season)', statKey: 'stl', isAvg: false },
-                                            { key: 'bpg', label: 'Blocks Per Game (Season Avg)', statKey: 'blk', isAvg: true },
-                                            { key: 'blk', label: 'Total Blocks (Season)', statKey: 'blk', isAvg: false },
-                                            { key: '3pm_pg', label: '3PM Per Game (Season Avg)', statKey: '3pt', isAvg: true },
-                                            { key: '3pt_made', label: 'Total 3-Pointers Made (Season)', statKey: '3pt', isAvg: false },
-                                            { key: 'fg_pct', label: 'Field Goal % (Season)', statKey: 'fg', isAvg: true, isPct: true },
-                                            { key: '3pt_pct', label: '3-Point % (Season)', statKey: '3pt', isAvg: true, isPct: true },
-                                            { key: 'ft_pct', label: 'Free Throw % (Season)', statKey: 'ft', isAvg: true, isPct: true },
-                                            { key: 'orebpg', label: 'Off. Reb Per Game (Season Avg)', statKey: 'oreb', isAvg: true },
-                                            { key: 'oreb', label: 'Total Off. Rebounds (Season)', statKey: 'oreb', isAvg: false },
-                                            { key: 'drebpg', label: 'Def. Reb Per Game (Season Avg)', statKey: 'dreb', isAvg: true },
-                                            { key: 'dreb', label: 'Total Def. Rebounds (Season)', statKey: 'dreb', isAvg: false },
-                                            { key: 'tpg', label: 'Turnovers Per Game (Season Avg)', statKey: 'to', isAvg: true },
-                                            { key: 'to', label: 'Total Turnovers (Season)', statKey: 'to', isAvg: false },
-                                            { key: 'fpg', label: 'Fouls Per Game (Season Avg)', statKey: 'foul', isAvg: true },
-                                            { key: 'foul', label: 'Total Fouls (Season)', statKey: 'foul', isAvg: false }
-                                        ];
-                                        
-                                        const filteredCategories = recordsCategory === 'all' 
-                                            ? seasonRecordCategories 
-                                            : seasonRecordCategories.filter(c => c.statKey === recordsCategory);
-                                        
-                                        const getTop3SeasonRecord = (statKey, isAvg, isPct) => {
-                                            const playerSeasonStats = [];
-                                            
-                                            if (recordsScope === 'alltime') {
-                                                // Loop through all seasons
-                                                Object.entries(allTimeSeasonStats).forEach(([seasonKey, seasonData]) => {
-                                                    Object.entries(seasonData[gameType] || {}).forEach(([playerNum, stats]) => {
-                                                        if (!stats.gp || stats.gp === 0) return;
-                                                        
-                                                        let value;
-                                                        if (isPct) {
-                                                            value = stats[`${statKey}_pct`] || 0;
-                                                        } else if (isAvg) {
-                                                            const avgKey = statKey === 'asst' ? 'apg' : 
-                                                                          statKey === 'stl' ? 'spg' :
-                                                                          statKey === 'blk' ? 'bpg' :
-                                                                          statKey === 'to' ? 'tpg' :
-                                                                          statKey === 'foul' ? 'fpg' :
-                                                                          statKey === 'oreb' ? 'orebpg' :
-                                                                          statKey === 'dreb' ? 'drebpg' :
-                                                                          statKey === '3pt' ? '3pm_pg' :
-                                                                          `${statKey.charAt(0)}pg`;
-                                                            value = stats[avgKey] || 0;
-                                                        } else {
-                                                            if (statKey === '3pt') {
-                                                                value = stats['3pt']?.[0] || 0;
-                                                            } else {
-                                                                value = stats[statKey] || 0;
-                                                            }
-                                                        }
-                                                        
-                                                        if (value > 0) {
-                                                            const player = players[playerNum] || allPlayersData[playerNum];
-                                                            playerSeasonStats.push({
-                                                                playerNum,
-                                                                playerName: player?.display_name || player?.name || `#${playerNum}`,
-                                                                player,
-                                                                value,
-                                                                gp: stats.gp,
-                                                                season: seasonKey
-                                                            });
-                                                        }
-                                                    });
-                                                });
-                                            } else {
-                                                // Current season only
-                                                Object.entries(seasonStats[gameType] || {}).forEach(([playerNum, stats]) => {
+                                        return top3;
+                                    };
+                                    return (
+                                        <div className="grid gap-4 md:grid-cols-2">
+                                            {filteredCategories.map(({ key, label, statKey }) => {
+                                                const top3 = getTop3ForCategory(statKey);
+                                                if (top3.length === 0) return null;
+                                                return (
+                                                    <div key={key} className={`${cardClass} rounded-lg border ${borderClass} p-4`}>
+                                                        <h3 className={`font-bold text-lg mb-3 ${headingClass}`}>{label}</h3>
+                                                        <div className="space-y-2">
+                                                            {top3.map((perf, idx) => (
+                                                                <div key={`${perf.playerNum}-${perf.date}-${idx}`} className={`flex items-center gap-3 p-2 rounded-lg cursor-pointer hover:opacity-80 transition-opacity ${perf.rank === 1 ? (darkMode ? 'bg-yellow-900/30' : 'bg-yellow-100') : perf.rank === 2 ? (darkMode ? 'bg-gray-600' : 'bg-gray-200') : (darkMode ? 'bg-orange-900/30' : 'bg-orange-100')}`} onClick={() => { setSelectedPlayerNumber(perf.playerNum); setCurrentView('player'); }}>
+                                                                    <div className={`text-xl font-bold w-8 text-center ${perf.rank === 1 ? 'text-yellow-600' : perf.rank === 2 ? (darkMode ? 'text-white' : 'text-gray-700') : 'text-orange-500'}`}>{perf.isTied ? 'T' : ''}{perf.rank}</div>
+                                                                    <PlayerImage player={perf.player} size="sm" />
+                                                                    <div className="flex-1 min-w-0">
+                                                                        <div className={`font-medium truncate ${headingClass}`}>{perf.playerName}</div>
+                                                                        <div className={`text-xs ${textClass}`}>vs {perf.opponent} • {formatDate(perf.date)}{recordsScope === 'alltime' && perf.season && ` • ${getSeasonDisplayName(perf.season)}`}</div>
+                                                                    </div>
+                                                                    <div className={`text-2xl font-bold text-${accentColor}`}>{perf.value}</div>
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    );
+                                })() : (() => {
+                                    const hasStats = recordsScope === 'alltime' ? Object.keys(allTimeSeasonStats).length > 0 : seasonStats[gameType] && Object.keys(seasonStats[gameType]).length > 0;
+                                    if (!hasStats) {
+                                        return (
+                                            <div className={`${cardClass} rounded-lg border ${borderClass} p-8 text-center ${textClass}`}>
+                                                <Trophy size={48} className="mx-auto mb-4 opacity-50" />
+                                                <p>No season records available yet.</p>
+                                            </div>
+                                        );
+                                    }
+                                    const seasonRecordCategories = [
+                                        { key: 'ppg', label: 'Points Per Game (Season Avg)', statKey: 'pts', isAvg: true },
+                                        { key: 'pts', label: 'Total Points (Season)', statKey: 'pts', isAvg: false },
+                                        { key: 'rpg', label: 'Rebounds Per Game (Season Avg)', statKey: 'reb', isAvg: true },
+                                        { key: 'reb', label: 'Total Rebounds (Season)', statKey: 'reb', isAvg: false },
+                                        { key: 'apg', label: 'Assists Per Game (Season Avg)', statKey: 'asst', isAvg: true },
+                                        { key: 'asst', label: 'Total Assists (Season)', statKey: 'asst', isAvg: false },
+                                        { key: 'spg', label: 'Steals Per Game (Season Avg)', statKey: 'stl', isAvg: true },
+                                        { key: 'stl', label: 'Total Steals (Season)', statKey: 'stl', isAvg: false },
+                                        { key: 'bpg', label: 'Blocks Per Game (Season Avg)', statKey: 'blk', isAvg: true },
+                                        { key: 'blk', label: 'Total Blocks (Season)', statKey: 'blk', isAvg: false },
+                                        { key: '3pm_pg', label: '3PM Per Game (Season Avg)', statKey: '3pt', isAvg: true },
+                                        { key: '3pt_made', label: 'Total 3-Pointers Made (Season)', statKey: '3pt', isAvg: false },
+                                        { key: 'fg_pct', label: 'Field Goal % (Season)', statKey: 'fg', isAvg: true, isPct: true },
+                                        { key: '3pt_pct', label: '3-Point % (Season)', statKey: '3pt', isAvg: true, isPct: true },
+                                        { key: 'ft_pct', label: 'Free Throw % (Season)', statKey: 'ft', isAvg: true, isPct: true },
+                                        { key: 'orebpg', label: 'Off. Reb Per Game (Season Avg)', statKey: 'oreb', isAvg: true },
+                                        { key: 'oreb', label: 'Total Off. Rebounds (Season)', statKey: 'oreb', isAvg: false },
+                                        { key: 'drebpg', label: 'Def. Reb Per Game (Season Avg)', statKey: 'dreb', isAvg: true },
+                                        { key: 'dreb', label: 'Total Def. Rebounds (Season)', statKey: 'dreb', isAvg: false },
+                                        { key: 'tpg', label: 'Turnovers Per Game (Season Avg)', statKey: 'to', isAvg: true },
+                                        { key: 'to', label: 'Total Turnovers (Season)', statKey: 'to', isAvg: false },
+                                        { key: 'fpg', label: 'Fouls Per Game (Season Avg)', statKey: 'foul', isAvg: true },
+                                        { key: 'foul', label: 'Total Fouls (Season)', statKey: 'foul', isAvg: false }
+                                    ];
+                                    const filteredCategories = recordsCategory === 'all' ? seasonRecordCategories : seasonRecordCategories.filter(c => c.statKey === recordsCategory);
+                                    const getTop3SeasonRecord = (statKey, isAvg, isPct) => {
+                                        const playerSeasonStats = [];
+                                        if (recordsScope === 'alltime') {
+                                            Object.entries(allTimeSeasonStats).forEach(([seasonKey, seasonData]) => {
+                                                Object.entries(seasonData[gameType] || {}).forEach(([playerNum, stats]) => {
                                                     if (!stats.gp || stats.gp === 0) return;
-                                                    
                                                     let value;
-                                                    if (isPct) {
-                                                        value = stats[`${statKey}_pct`] || 0;
-                                                    } else if (isAvg) {
-                                                        const avgKey = statKey === 'asst' ? 'apg' : 
-                                                                      statKey === 'stl' ? 'spg' :
-                                                                      statKey === 'blk' ? 'bpg' :
-                                                                      statKey === 'to' ? 'tpg' :
-                                                                      statKey === 'foul' ? 'fpg' :
-                                                                      statKey === 'oreb' ? 'orebpg' :
-                                                                      statKey === 'dreb' ? 'drebpg' :
-                                                                      statKey === '3pt' ? '3pm_pg' :
-                                                                      `${statKey.charAt(0)}pg`;
+                                                    if (isPct) { value = stats[`${statKey}_pct`] || 0; }
+                                                    else if (isAvg) {
+                                                        const avgKey = statKey === 'asst' ? 'apg' : statKey === 'stl' ? 'spg' : statKey === 'blk' ? 'bpg' : statKey === 'to' ? 'tpg' : statKey === 'foul' ? 'fpg' : statKey === 'oreb' ? 'orebpg' : statKey === 'dreb' ? 'drebpg' : statKey === '3pt' ? '3pm_pg' : `${statKey.charAt(0)}pg`;
                                                         value = stats[avgKey] || 0;
-                                                    } else {
-                                                        if (statKey === '3pt') {
-                                                            value = stats['3pt']?.[0] || 0;
-                                                        } else {
-                                                            value = stats[statKey] || 0;
-                                                        }
-                                                    }
-                                                    
+                                                    } else { value = statKey === '3pt' ? (stats['3pt']?.[0] || 0) : (stats[statKey] || 0); }
                                                     if (value > 0) {
                                                         const player = players[playerNum] || allPlayersData[playerNum];
-                                                        playerSeasonStats.push({
-                                                            playerNum,
-                                                            playerName: player?.display_name || player?.name || `#${playerNum}`,
-                                                            player,
-                                                            value,
-                                                            gp: stats.gp,
-                                                            season: selectedSeason
-                                                        });
+                                                        playerSeasonStats.push({ playerNum, playerName: player?.display_name || player?.name || `#${playerNum}`, player, value, gp: stats.gp, season: seasonKey });
                                                     }
                                                 });
-                                            }
-                                            
-                                            playerSeasonStats.sort((a, b) => b.value - a.value);
-                                            
-                                            const top3 = [];
-                                            let rank = 1;
-                                            for (let i = 0; i < playerSeasonStats.length && top3.length < 3; i++) {
-                                                const stat = playerSeasonStats[i];
-                                                const isTied = i > 0 && playerSeasonStats[i-1].value === stat.value;
-                                                if (!isTied && top3.length > 0) {
-                                                    rank = top3.length + 1;
+                                            });
+                                        } else {
+                                            Object.entries(seasonStats[gameType] || {}).forEach(([playerNum, stats]) => {
+                                                if (!stats.gp || stats.gp === 0) return;
+                                                let value;
+                                                if (isPct) { value = stats[`${statKey}_pct`] || 0; }
+                                                else if (isAvg) {
+                                                    const avgKey = statKey === 'asst' ? 'apg' : statKey === 'stl' ? 'spg' : statKey === 'blk' ? 'bpg' : statKey === 'to' ? 'tpg' : statKey === 'foul' ? 'fpg' : statKey === 'oreb' ? 'orebpg' : statKey === 'dreb' ? 'drebpg' : statKey === '3pt' ? '3pm_pg' : `${statKey.charAt(0)}pg`;
+                                                    value = stats[avgKey] || 0;
+                                                } else { value = statKey === '3pt' ? (stats['3pt']?.[0] || 0) : (stats[statKey] || 0); }
+                                                if (value > 0) {
+                                                    const player = players[playerNum] || allPlayersData[playerNum];
+                                                    playerSeasonStats.push({ playerNum, playerName: player?.display_name || player?.name || `#${playerNum}`, player, value, gp: stats.gp, season: selectedSeason });
                                                 }
-                                                top3.push({ ...stat, rank, isTied });
-                                            }
-                                            return top3;
-                                        };
-                                            
-                                            return (
-                                                <div className="grid gap-4 md:grid-cols-2">
-                                                    {filteredCategories.map(({ key, label, statKey, isAvg, isPct }) => {
-                                                        const top3 = getTop3SeasonRecord(statKey, isAvg, isPct);
-                                                        if (top3.length === 0) return null;
-                                                        
-                                                        return (
-                                                            <div key={key} className={`${cardClass} rounded-lg border ${borderClass} p-4`}>
-                                                                <h3 className={`font-bold text-lg mb-3 ${headingClass}`}>{label}</h3>
-                                                                <div className="space-y-2">
-                                                                    {top3.map((stat, idx) => (
-                                                                        <div 
-                                                                            key={`${stat.playerNum}-${idx}`}
-                                                                            className={`flex items-center gap-3 p-2 rounded-lg cursor-pointer hover:opacity-80 transition-opacity ${
-                                                                                stat.rank === 1 ? (darkMode ? 'bg-yellow-900/30' : 'bg-yellow-100') :
-                                                                                stat.rank === 2 ? (darkMode ? 'bg-gray-600' : 'bg-gray-200') :
-                                                                                (darkMode ? 'bg-orange-900/30' : 'bg-orange-100')
-                                                                            }`}
-                                                                            onClick={() => {
-                                                                                setSelectedPlayerNumber(stat.playerNum);
-                                                                                setCurrentView('player');
-                                                                            }}
-                                                                        >
-                                                                            <div className={`text-xl font-bold w-8 text-center ${
-                                                                                stat.rank === 1 ? 'text-yellow-600' :
-                                                                                stat.rank === 2 ? (darkMode ? 'text-white' : 'text-gray-700') :
-                                                                                'text-orange-500'
-                                                                            }`}>
-                                                                                {stat.isTied ? 'T' : ''}{stat.rank}
-                                                                            </div>
-                                                                            <PlayerImage player={stat.player} size="sm" />
-                                                                            <div className="flex-1 min-w-0">
-                                                                                <div className={`font-medium truncate ${headingClass}`}>{stat.playerName}</div>
-                                                                                <div className={`text-xs ${textClass}`}>{getSeasonDisplayName(stat.season || selectedSeason)} • {stat.gp} games</div>
-                                                                            </div>
-                                                                            <div className={`text-2xl font-bold text-${accentColor}`}>
-                                                                                {isPct ? `${stat.value.toFixed(1)}%` : 
-                                                                                 isAvg ? stat.value.toFixed(1) : 
-                                                                                 stat.value}
-                                                                            </div>
-                                                                        </div>
-                                                                    ))}
+                                            });
+                                        }
+                                        playerSeasonStats.sort((a, b) => b.value - a.value);
+                                        const top3 = [];
+                                        let rank = 1;
+                                        for (let i = 0; i < playerSeasonStats.length && top3.length < 3; i++) {
+                                            const stat = playerSeasonStats[i];
+                                            const isTied = i > 0 && playerSeasonStats[i-1].value === stat.value;
+                                            if (!isTied && top3.length > 0) rank = top3.length + 1;
+                                            top3.push({ ...stat, rank, isTied });
+                                        }
+                                        return top3;
+                                    };
+                                    return (
+                                        <div className="grid gap-4 md:grid-cols-2">
+                                            {filteredCategories.map(({ key, label, statKey, isAvg, isPct }) => {
+                                                const top3 = getTop3SeasonRecord(statKey, isAvg, isPct);
+                                                if (top3.length === 0) return null;
+                                                return (
+                                                    <div key={key} className={`${cardClass} rounded-lg border ${borderClass} p-4`}>
+                                                        <h3 className={`font-bold text-lg mb-3 ${headingClass}`}>{label}</h3>
+                                                        <div className="space-y-2">
+                                                            {top3.map((stat, idx) => (
+                                                                <div key={`${stat.playerNum}-${idx}`} className={`flex items-center gap-3 p-2 rounded-lg cursor-pointer hover:opacity-80 transition-opacity ${stat.rank === 1 ? (darkMode ? 'bg-yellow-900/30' : 'bg-yellow-100') : stat.rank === 2 ? (darkMode ? 'bg-gray-600' : 'bg-gray-200') : (darkMode ? 'bg-orange-900/30' : 'bg-orange-100')}`} onClick={() => { setSelectedPlayerNumber(stat.playerNum); setCurrentView('player'); }}>
+                                                                    <div className={`text-xl font-bold w-8 text-center ${stat.rank === 1 ? 'text-yellow-600' : stat.rank === 2 ? (darkMode ? 'text-white' : 'text-gray-700') : 'text-orange-500'}`}>{stat.isTied ? 'T' : ''}{stat.rank}</div>
+                                                                    <PlayerImage player={stat.player} size="sm" />
+                                                                    <div className="flex-1 min-w-0">
+                                                                        <div className={`font-medium truncate ${headingClass}`}>{stat.playerName}</div>
+                                                                        <div className={`text-xs ${textClass}`}>{getSeasonDisplayName(stat.season || selectedSeason)} • {stat.gp} games</div>
+                                                                    </div>
+                                                                    <div className={`text-2xl font-bold text-${accentColor}`}>{isPct ? `${stat.value.toFixed(1)}%` : isAvg ? stat.value.toFixed(1) : stat.value}</div>
                                                                 </div>
-                                                            </div>
-                                                        );
-                                                    })}
-                                                </div>
-                                            );
-                                        })()
-                                )}
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    );
+                                })()}
                             </div>
                         )}
 
                         {activeTab === 'games' && (
                             <div className="space-y-4">
                                 <h2 className={`text-2xl font-bold mb-4 ${headingClass}`}>Game Log</h2>
-                                
                                 {Object.keys(allGames).length === 0 ? (
                                     <div className={`${cardClass} rounded-lg border ${borderClass} p-6 text-center ${textClass}`}>
                                         <Calendar size={48} className="mx-auto mb-4 opacity-50" />
@@ -1772,60 +1177,36 @@
                                 ) : (
                                     <div className="space-y-3">
                                         {Object.entries(allGames)
-                                            .filter(([_, game]) => {
-                                                if (gameType === 'regular') return !game.isPlayoff;
-                                                if (gameType === 'playoff') return game.isPlayoff;
-                                                return true;
-                                            })
+                                            .filter(([_, game]) => { if (gameType === 'regular') return !game.isPlayoff; if (gameType === 'playoff') return game.isPlayoff; return true; })
                                             .sort((a, b) => new Date(b[1].date) - new Date(a[1].date))
                                             .map(([gameId, game]) => {
                                                 const totalPts = Object.values(game.stats || {}).reduce((sum, s) => sum + (s.pts || 0), 0);
-                                                
                                                 return (
-                                                    <div
-                                                        key={gameId}
-                                                        className={`${cardClass} p-4 rounded-lg border ${borderClass} hover:shadow-lg transition-shadow cursor-pointer`}
-                                                        onClick={() => {
-                                                            setSelectedGameId(gameId);
-                                                            setCurrentView('boxscore');
-                                                        }}
-                                                    >
+                                                    <div key={gameId} className={`${cardClass} p-4 rounded-lg border ${borderClass} hover:shadow-lg transition-shadow cursor-pointer`} onClick={() => { setSelectedGameId(gameId); setCurrentView('boxscore'); }}>
                                                         <div className="flex justify-between items-start mb-3">
                                                             <div>
                                                                 <div className={`font-bold text-lg flex items-center gap-2 ${headingClass}`}>
-                                                                    <span className={`font-bold ${game.result === 'W' ? 'text-green-600' : 'text-red-600'}`}>
-                                                                        {game.result}
-                                                                    </span>
+                                                                    <span className={`font-bold ${game.result === 'W' ? 'text-green-600' : 'text-red-600'}`}>{game.result}</span>
                                                                     vs {game.opponent}
                                                                 </div>
-                                                                <div className={`text-sm ${textClass}`}>
-                                                                    {game.date} • {game.homeAway === 'home' ? 'Home' : 'Away'}
-                                                                    {game.isPlayoff && <span className="ml-2 px-2 py-0.5 bg-yellow-500 text-white text-xs rounded">PLAYOFF</span>}
-                                                                </div>
+                                                                <div className={`text-sm ${textClass}`}>{game.date} • {game.homeAway === 'home' ? 'Home' : 'Away'}{game.isPlayoff && <span className="ml-2 px-2 py-0.5 bg-yellow-500 text-white text-xs rounded">PLAYOFF</span>}</div>
                                                             </div>
                                                             <div className="text-right">
-                                                                <div className={`text-2xl font-bold ${game.result === 'W' ? 'text-green-600' : 'text-red-600'}`}>
-                                                                    {game.score.us} - {game.score.them}
-                                                                </div>
+                                                                <div className={`text-2xl font-bold ${game.result === 'W' ? 'text-green-600' : 'text-red-600'}`}>{game.score.us} - {game.score.them}</div>
                                                                 <div className={`text-xs ${textClass}`}>Click for box score →</div>
                                                             </div>
                                                         </div>
-                                                        
                                                         <div className="grid grid-cols-3 gap-4 text-sm">
                                                             <div className={`text-center p-2 rounded ${darkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
                                                                 <div className={`font-bold text-${accentColor}`}>{totalPts}</div>
                                                                 <div className={textClass}>Team PTS</div>
                                                             </div>
                                                             <div className={`text-center p-2 rounded ${darkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
-                                                                <div className={`font-bold text-${accentColor}`}>
-                                                                    {Object.values(game.stats || {}).reduce((sum, s) => sum + (s.reb || 0), 0)}
-                                                                </div>
+                                                                <div className={`font-bold text-${accentColor}`}>{Object.values(game.stats || {}).reduce((sum, s) => sum + (s.reb || 0), 0)}</div>
                                                                 <div className={textClass}>Team REB</div>
                                                             </div>
                                                             <div className={`text-center p-2 rounded ${darkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
-                                                                <div className={`font-bold text-${accentColor}`}>
-                                                                    {Object.values(game.stats || {}).reduce((sum, s) => sum + (s.asst || 0), 0)}
-                                                                </div>
+                                                                <div className={`font-bold text-${accentColor}`}>{Object.values(game.stats || {}).reduce((sum, s) => sum + (s.asst || 0), 0)}</div>
                                                                 <div className={textClass}>Team AST</div>
                                                             </div>
                                                         </div>
