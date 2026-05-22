@@ -1,0 +1,45 @@
+{
+  "date": "2026-05-22",
+  "season": "2026--winter",
+  "opponent": "SOB",
+  "homeAway": "home",
+  "score": {
+    "us": 39,
+    "them": 39
+  },
+  "result": "L",
+  "isPlayoff": false,
+  "stats": {
+    "22": {
+      "fg": [
+        6,
+        17
+      ],
+      "3pt": [
+        3,
+        6
+      ],
+      "ft": [
+        0,
+        0
+      ],
+      "oreb": 1,
+      "dreb": 1,
+      "foul": 0,
+      "stl": 2,
+      "to": 1,
+      "blk": 0,
+      "asst": 5,
+      "pts": 15,
+      "2pt": [
+        3,
+        11
+      ],
+      "2pt_pct": 27.3,
+      "fg_pct": 35.3,
+      "3pt_pct": 50.0,
+      "ft_pct": 0.0,
+      "reb": 2
+    }
+  }
+}

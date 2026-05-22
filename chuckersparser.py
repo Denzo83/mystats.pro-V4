@@ -30,12 +30,10 @@ class EasyStatsParser:
         self.games_index_file = self.base_dir / 'games_index.json'
         self.seasons_meta_file = self.base_dir / 'seasons_meta.json'
         
-        # Create directories
         self.base_dir.mkdir(parents=True, exist_ok=True)
         self.games_dir.mkdir(exist_ok=True)
         self.seasons_dir.mkdir(exist_ok=True)
         
-        # Load existing data
         self.players = self._load_json(self.players_file, {})
         self.records = self._load_json(self.records_file, {'regular': {}, 'playoff': {}, 'all': {}})
         self.games_index = self._load_json(self.games_index_file, {})
@@ -157,15 +155,18 @@ class EasyStatsParser:
             force_season = force_season.strip()
             season_match = re.match(r'(\d{4})\s*(.+)?', force_season)
             if season_match:
-                season_key = season_match.group(1)
+                year = season_match.group(1)
                 season_suffix = season_match.group(2)
                 if season_suffix:
-                    season_display = f"{season_key} {season_suffix.strip().title()}"
+                    season_key = f"{year}-{season_suffix.strip().lower().replace(' ', '-')}"
+                    season_display = f"{year} {season_suffix.strip().title()}"
                 else:
-                    season_display = f"{season_key} Season"
+                    season_key = year
+                    season_display = f"{year} Season"
             else:
+                season_key = force_season.lower().replace(' ', '-')
                 season_display = force_season.title()
-            
+
             self.seasons_meta[season_key] = {
                 'key': season_key,
                 'display_name': season_display

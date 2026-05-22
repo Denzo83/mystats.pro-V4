@@ -262,5 +262,17 @@
     },
     "result": "L",
     "isPlayoff": false
+  },
+  "2026-05-22-sob": {
+    "filename": "2026-05-22-sob.json",
+    "date": "2026-05-22",
+    "season": "2026--winter",
+    "opponent": "SOB",
+    "score": {
+      "us": 39,
+      "them": 39
+    },
+    "result": "L",
+    "isPlayoff": false
   }
 }
