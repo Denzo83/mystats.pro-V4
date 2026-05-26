@@ -167,5 +167,18 @@
     "images": {
       "portrait": "Assets/players/dan.png"
     }
+  },
+  "3": {
+    "id": "tunde",
+    "display_name": "Tunde",
+    "name": "Tunde",
+    "number": "3",
+    "position": "",
+    "teams": [
+      "Pretty Good"
+    ],
+    "images": {
+      "portrait": "Assets/players/tunde.png"
+    }
   }
 }
