@@ -233,7 +233,7 @@
                                         allLoadedGames[gameId] = gameData;
 
                                         // *** FIX: use activeSeason not selectedSeason ***
-                                        if (gameSeason === activeSeason || dateYear === activeSeason) {
+                                        if ((gameSeason || dateYear) === activeSeason) {
                                             loadedGames[gameId] = gameData;
                                         }
                                     }
