@@ -11,6 +11,7 @@
 
 ## Folder Structure
 
+
 ```
 ├── index.html                      # Landing page - team selection
 ├── pretty-good.html                # Pretty Good stats viewer
