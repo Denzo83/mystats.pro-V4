@@ -526,6 +526,69 @@ function BasketballStatsApp() {
     }
     return seasonStats;
   }, [isAllTime, allTimeSeasonStats, seasonStats, gameType]);
+
+  // Career stats across all seasons for the currently selected player (used on player view only,
+  // but computed unconditionally on every render so hook order/count never changes between views)
+  const careerStats = useMemo(() => {
+    const combined = {
+      gp: 0,
+      pts: 0,
+      reb: 0,
+      asst: 0,
+      stl: 0,
+      blk: 0,
+      to: 0,
+      foul: 0,
+      oreb: 0,
+      dreb: 0,
+      fg: [0, 0],
+      '2pt': [0, 0],
+      '3pt': [0, 0],
+      ft: [0, 0]
+    };
+    if (!selectedPlayerNumber) return combined;
+    Object.values(allTimeSeasonStats).forEach(seasonData => {
+      const s = seasonData[playerPageGameType]?.[selectedPlayerNumber];
+      if (!s) return;
+      combined.gp += s.gp || 0;
+      for (const k of ['pts', 'reb', 'asst', 'stl', 'blk', 'to', 'foul', 'oreb', 'dreb']) combined[k] += s[k] || 0;
+      for (const k of ['fg', '2pt', '3pt', 'ft']) {
+        combined[k][0] += s[k]?.[0] || 0;
+        combined[k][1] += s[k]?.[1] || 0;
+      }
+    });
+    const gp = combined.gp;
+    if (gp > 0) {
+      combined.ppg = round1(combined.pts / gp);
+      combined.rpg = round1(combined.reb / gp);
+      combined.apg = round1(combined.asst / gp);
+      combined.spg = round1(combined.stl / gp);
+      combined.bpg = round1(combined.blk / gp);
+      combined.tpg = round1(combined.to / gp);
+      combined.fpg = round1(combined.foul / gp);
+      combined.orebpg = round1(combined.oreb / gp);
+      combined.drebpg = round1(combined.dreb / gp);
+      combined.fg_pct = combined.fg[1] > 0 ? round1(combined.fg[0] / combined.fg[1] * 100) : 0;
+      combined['3pt_pct'] = combined['3pt'][1] > 0 ? round1(combined['3pt'][0] / combined['3pt'][1] * 100) : 0;
+      combined['2pt_pct'] = combined['2pt'][1] > 0 ? round1(combined['2pt'][0] / combined['2pt'][1] * 100) : 0;
+      combined.ft_pct = combined.ft[1] > 0 ? round1(combined.ft[0] / combined.ft[1] * 100) : 0;
+    }
+    return combined;
+  }, [allTimeSeasonStats, selectedPlayerNumber, playerPageGameType]);
+
+  // Per-season breakdown for the currently selected player (player view, all-time mode only;
+  // also computed unconditionally to keep hook order/count stable across views)
+  const playerSeasonBreakdown = useMemo(() => {
+    if (!selectedPlayerNumber) return [];
+    return Object.entries(allTimeSeasonStats).map(([seasonKey, seasonData]) => {
+      const s = seasonData[playerPageGameType]?.[selectedPlayerNumber];
+      if (!s || s.gp === 0) return null;
+      return {
+        seasonKey,
+        ...s
+      };
+    }).filter(Boolean).sort((a, b) => b.seasonKey.localeCompare(a.seasonKey));
+  }, [allTimeSeasonStats, selectedPlayerNumber, playerPageGameType]);
   const averageCategories = [{
     key: 'ppg',
     label: 'PPG',
@@ -847,53 +910,6 @@ function BasketballStatsApp() {
   // PLAYER VIEW
   if (currentView === 'player' && selectedPlayerNumber) {
     const player = players[selectedPlayerNumber] || allPlayersData[selectedPlayerNumber];
-
-    // Career stats across all seasons for this player
-    const careerStats = useMemo(() => {
-      const combined = {
-        gp: 0,
-        pts: 0,
-        reb: 0,
-        asst: 0,
-        stl: 0,
-        blk: 0,
-        to: 0,
-        foul: 0,
-        oreb: 0,
-        dreb: 0,
-        fg: [0, 0],
-        '2pt': [0, 0],
-        '3pt': [0, 0],
-        ft: [0, 0]
-      };
-      Object.values(allTimeSeasonStats).forEach(seasonData => {
-        const s = seasonData[playerPageGameType]?.[selectedPlayerNumber];
-        if (!s) return;
-        combined.gp += s.gp || 0;
-        for (const k of ['pts', 'reb', 'asst', 'stl', 'blk', 'to', 'foul', 'oreb', 'dreb']) combined[k] += s[k] || 0;
-        for (const k of ['fg', '2pt', '3pt', 'ft']) {
-          combined[k][0] += s[k]?.[0] || 0;
-          combined[k][1] += s[k]?.[1] || 0;
-        }
-      });
-      const gp = combined.gp;
-      if (gp > 0) {
-        combined.ppg = round1(combined.pts / gp);
-        combined.rpg = round1(combined.reb / gp);
-        combined.apg = round1(combined.asst / gp);
-        combined.spg = round1(combined.stl / gp);
-        combined.bpg = round1(combined.blk / gp);
-        combined.tpg = round1(combined.to / gp);
-        combined.fpg = round1(combined.foul / gp);
-        combined.orebpg = round1(combined.oreb / gp);
-        combined.drebpg = round1(combined.dreb / gp);
-        combined.fg_pct = combined.fg[1] > 0 ? round1(combined.fg[0] / combined.fg[1] * 100) : 0;
-        combined['3pt_pct'] = combined['3pt'][1] > 0 ? round1(combined['3pt'][0] / combined['3pt'][1] * 100) : 0;
-        combined['2pt_pct'] = combined['2pt'][1] > 0 ? round1(combined['2pt'][0] / combined['2pt'][1] * 100) : 0;
-        combined.ft_pct = combined.ft[1] > 0 ? round1(combined.ft[0] / combined.ft[1] * 100) : 0;
-      }
-      return combined;
-    }, [allTimeSeasonStats, selectedPlayerNumber, playerPageGameType]);
     const playerStats = isAllTime ? careerStats : activeSeasonStats[playerPageGameType]?.[selectedPlayerNumber] || {};
     const playerGames = Object.entries(allGames).filter(([_, game]) => {
       const hasStats = game.stats && game.stats[selectedPlayerNumber];
@@ -980,16 +996,6 @@ function BasketballStatsApp() {
     }];
 
     // Per-season breakdown for all-time view
-    const playerSeasonBreakdown = useMemo(() => {
-      return Object.entries(allTimeSeasonStats).map(([seasonKey, seasonData]) => {
-        const s = seasonData[playerPageGameType]?.[selectedPlayerNumber];
-        if (!s || s.gp === 0) return null;
-        return {
-          seasonKey,
-          ...s
-        };
-      }).filter(Boolean).sort((a, b) => b.seasonKey.localeCompare(a.seasonKey));
-    }, [allTimeSeasonStats, selectedPlayerNumber, playerPageGameType]);
     if (!player) {
       setCurrentView('main');
       return null;
