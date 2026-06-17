@@ -847,10 +847,6 @@ function BasketballStatsApp() {
   // PLAYER VIEW
   if (currentView === 'player' && selectedPlayerNumber) {
     const player = players[selectedPlayerNumber] || allPlayersData[selectedPlayerNumber];
-    if (!player) {
-      setCurrentView('main');
-      return null;
-    }
 
     // Career stats across all seasons for this player
     const careerStats = useMemo(() => {
@@ -994,6 +990,10 @@ function BasketballStatsApp() {
         };
       }).filter(Boolean).sort((a, b) => b.seasonKey.localeCompare(a.seasonKey));
     }, [allTimeSeasonStats, selectedPlayerNumber, playerPageGameType]);
+    if (!player) {
+      setCurrentView('main');
+      return null;
+    }
     return /*#__PURE__*/React.createElement("div", {
       className: `min-h-screen ${bgClass} transition-colors duration-300`
     }, /*#__PURE__*/React.createElement("header", {
