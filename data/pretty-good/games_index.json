@@ -430,5 +430,17 @@
     },
     "result": "W",
     "isPlayoff": false
+  },
+  "2026-07-07-wins-n-tins": {
+    "filename": "2026-07-07-wins-n-tins.json",
+    "date": "2026-07-07",
+    "season": "2026-winter",
+    "opponent": "Wins n tins",
+    "score": {
+      "us": 44,
+      "them": 29
+    },
+    "result": "W",
+    "isPlayoff": false
   }
 }
