@@ -442,5 +442,17 @@
     },
     "result": "W",
     "isPlayoff": false
+  },
+  "2026-07-14-rippit-good": {
+    "filename": "2026-07-14-rippit-good.json",
+    "date": "2026-07-14",
+    "season": "2026-winter",
+    "opponent": "Rippit good",
+    "score": {
+      "us": 41,
+      "them": 40
+    },
+    "result": "W",
+    "isPlayoff": false
   }
 }
