@@ -6,1069 +6,1891 @@
     <title>Pretty Good Basketball Stats</title>
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
     <div id="root"></div>
     
-    <script type="text/babel">
-        const { useState, useMemo, useEffect } = React;
-
-        const getTeamFromURL = () => {
-            const path = window.location.pathname;
-            if (path.includes('pretty-good')) return 'pretty-good';
-            if (path.includes('chuckers-chuckers')) return 'chuckers-chuckers';
-            if (path.includes('just-jokic-ing')) return 'just-jokic-ing';
-            if (path.includes('board-man-gets-paid')) return 'board-man-gets-paid';
-            return 'pretty-good';
-        };
-
-        const TEAM_CONFIG = {
-            'pretty-good': {
-                name: 'Pretty Good',
-                displayName: 'Pretty Good Basketball',
-                logo: 'Assets/teams/pretty-good-logo.png',
-                dataPath: 'data/pretty-good',
-                colors: { primary: 'from-blue-600 to-blue-400', accent: 'blue-600' }
-            },
-            'chuckers-chuckers': {
-                name: 'Chuckers Chuckers',
-                displayName: 'Chuckers Chuckers Basketball',
-                logo: 'Assets/teams/chuckers-chuckers-logo.png',
-                dataPath: 'data/chuckers-chuckers',
-                colors: { primary: 'from-purple-600 to-purple-400', accent: 'purple-600' }
-            },
-            'just-jokic-ing': {
-                name: 'Just Jokic-ing',
-                displayName: 'Just Jokic-ing Basketball',
-                logo: 'Assets/teams/just-jokic-ing-logo.png',
-                dataPath: 'data/test teams/just-jokic-ing',
-                colors: { primary: 'from-yellow-500 to-orange-400', accent: 'yellow-600' }
-            },
-            'board-man-gets-paid': {
-                name: 'Board Man Gets Paid',
-                displayName: 'Board Man Gets Paid Basketball',
-                logo: 'Assets/teams/board-man-gets-paid-logo.png',
-                dataPath: 'data/test teams/board-man-gets-paid',
-                colors: { primary: 'from-green-600 to-teal-400', accent: 'green-600' }
-            }
-        };
-
-        const BarChart3 = ({size = 24}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>;
-        const Trophy = ({size = 24}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>;
-        const Users = ({size = 24}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>;
-        const Calendar = ({size = 24}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>;
-        const Moon = ({size = 24}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>;
-        const Sun = ({size = 24}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>;
-        const ChevronDown = ({size = 24, className = ""}) => <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="6 9 12 15 18 9"/></svg>;
-        const TrendingUp = ({size = 24}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>;
-        const AlertCircle = ({size = 24, className = ""}) => <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>;
-        const ArrowLeft = ({size = 24}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>;
-
-        const PlayerImage = ({ player, size = 'md', className = '' }) => {
-            const [imgError, setImgError] = useState(false);
-            const sizeStyles = {
-                sm: { width: '40px', height: '52px' },
-                md: { width: '56px', height: '72px' },
-                lg: { width: '64px', height: '84px' },
-                xl: { width: '80px', height: '104px' }
-            };
-            const textSizes = { sm: 'text-xs', md: 'text-sm', lg: 'text-lg', xl: 'text-xl' };
-            const imgSrc = player?.images?.portrait;
-            const style = sizeStyles[size];
-            if (!imgError && imgSrc) {
-                return (
-                    <div className={`rounded-lg overflow-hidden flex-shrink-0 bg-gray-200 ${className}`} style={style}>
-                        <img src={imgSrc} alt={player?.name || 'Player'} className="w-full h-full object-cover" onError={() => setImgError(true)} />
-                    </div>
-                );
-            }
-            return (
-                <div className={`rounded-lg bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold flex-shrink-0 ${textSizes[size]} ${className}`} style={style}>
-                    #{player?.number || '?'}
-                </div>
-            );
-        };
-
-        function BasketballStatsApp() {
-            const [darkMode, setDarkMode] = useState(false);
-            const [activeTab, setActiveTab] = useState('leaderboards');
-            const [selectedSeason, setSelectedSeason] = useState(null);
-            const [gameType, setGameType] = useState('all');
-            const [statCategory, setStatCategory] = useState('ppg');
-            const [showTotals, setShowTotals] = useState(false);
-            const [showPlayerTotals, setShowPlayerTotals] = useState(false);
-            const [playerPageGameType, setPlayerPageGameType] = useState('all');
-            const [expandedPlayer, setExpandedPlayer] = useState(null);
-            const [recordsCategory, setRecordsCategory] = useState('all');
-            const [recordsType, setRecordsType] = useState('game');
-            const [recordsScope, setRecordsScope] = useState('season');
-            const [playerDetailTab, setPlayerDetailTab] = useState('stats');
-            const [currentView, setCurrentView] = useState('main');
-            const [selectedPlayerNumber, setSelectedPlayerNumber] = useState(null);
-            const [selectedGameId, setSelectedGameId] = useState(null);
-            const [players, setPlayers] = useState({});
-            const [allPlayersData, setAllPlayersData] = useState({});
-            const [seasonStats, setSeasonStats] = useState({});
-            const [records, setRecords] = useState({});
-            const [games, setGames] = useState([]);
-            const [allGames, setAllGames] = useState({});
-            const [allTimeGames, setAllTimeGames] = useState({});
-            const [allTimeSeasonStats, setAllTimeSeasonStats] = useState({});
-            const [seasonsMeta, setSeasonsMeta] = useState({});
-            const [playerAnalysis, setPlayerAnalysis] = useState({});
-            const [loading, setLoading] = useState(true);
-            const [error, setError] = useState(null);
-
-            const currentTeam = getTeamFromURL();
-            const teamConfig = TEAM_CONFIG[currentTeam];
-
-            useEffect(() => { loadData(); }, []);
-            useEffect(() => { if (!loading) { loadData(); } }, [selectedSeason]);
-
-            const loadData = async () => {
-                try {
-                    setLoading(true);
-                    setError(null);
-                    const teamDataPath = TEAM_CONFIG[currentTeam]?.dataPath || `data/${currentTeam}`;
-
-                    let activeSeason = selectedSeason;
-                    if (!activeSeason) {
-                        const metaResp = await fetch(`${teamDataPath}/seasons_meta.json`).catch(() => null);
-                        if (metaResp && metaResp.ok) {
-                            const metaData = await metaResp.json();
-                            setSeasonsMeta(metaData);
-                            const seasons = Object.keys(metaData).sort().reverse();
-                            if (seasons.length > 0) {
-                                activeSeason = seasons[0];
-                                setSelectedSeason(activeSeason);
-                            }
-                        }
-                    }
-
-                    const responses = await Promise.all([
-                        fetch(`${teamDataPath}/players.json`).catch(() => null),
-                        activeSeason ? fetch(`${teamDataPath}/seasons/${activeSeason}.json`).catch(() => null) : Promise.resolve(null),
-                        fetch(`${teamDataPath}/records.json`).catch(() => null),
-                        fetch(`${teamDataPath}/games_index.json`).catch(() => null),
-                        fetch(`${teamDataPath}/seasons_meta.json`).catch(() => null),
-                        fetch(`${teamDataPath}/analysis.json`).catch(() => null)
-                    ]);
-
-                    if (responses[0] && responses[0].ok) {
-                        const playersData = await responses[0].json();
-                        setPlayers(playersData);
-                        setAllPlayersData(playersData);
-                    } else { setPlayers({}); setAllPlayersData({}); }
-
-                    if (responses[1] && responses[1].ok) {
-                        const seasonData = await responses[1].json();
-                        setSeasonStats(seasonData);
-                    } else { setSeasonStats({}); }
-
-                    if (responses[2] && responses[2].ok) {
-                        try { setRecords(await responses[2].json()); } catch(e) { setRecords({}); }
-                    } else { setRecords({}); }
-
-                    let currentSeasonsMeta = {};
-                    if (responses[4] && responses[4].ok) {
-                        try { currentSeasonsMeta = await responses[4].json(); setSeasonsMeta(currentSeasonsMeta); } catch(e) { setSeasonsMeta({}); }
-                    } else { setSeasonsMeta({}); }
-
-                    if (responses[5] && responses[5].ok) {
-                        try { setPlayerAnalysis(await responses[5].json()); } catch(e) { setPlayerAnalysis({}); }
-                    } else { setPlayerAnalysis({}); }
-
-                    if (responses[3] && responses[3].ok) {
-                        try {
-                            const gamesIndexData = await responses[3].json();
-                            const loadedGames = {};
-                            const allLoadedGames = {};
-
-                            for (const [gameId, gameInfo] of Object.entries(gamesIndexData)) {
-                                const gameSeason = gameInfo.season || '';
-                                const dateYear = gameInfo.date?.substring(0, 4) || '';
-                                try {
-                                    const gameResponse = await fetch(`${teamDataPath}/games/${gameInfo.filename}`);
-                                    if (gameResponse.ok) {
-                                        const gameData = await gameResponse.json();
-                                        allLoadedGames[gameId] = gameData;
-                                        // *** FIX: use activeSeason not selectedSeason ***
-                                        if ((gameSeason || dateYear) === activeSeason) {
-                                            loadedGames[gameId] = gameData;
-                                        }
-                                    }
-                                } catch(e) { console.log(`Could not load game: ${gameInfo.filename}`, e); }
-                            }
-
-                            setAllGames(loadedGames);
-                            setGames(Object.values(loadedGames));
-                            setAllTimeGames(allLoadedGames);
-                        } catch(e) { setAllGames({}); setGames([]); setAllTimeGames({}); }
-                    } else { setAllGames({}); setGames([]); setAllTimeGames({}); }
-
-                    const availableSeasonsForLoad = Object.keys(currentSeasonsMeta);
-                    const allSeasonStats = {};
-                    for (const seasonKey of availableSeasonsForLoad) {
-                        try {
-                            const seasonResponse = await fetch(`${teamDataPath}/seasons/${seasonKey}.json`);
-                            if (seasonResponse.ok) { allSeasonStats[seasonKey] = await seasonResponse.json(); }
-                        } catch(e) { console.log(`Could not load season ${seasonKey}:`, e); }
-                    }
-                    setAllTimeSeasonStats(allSeasonStats);
-                    setLoading(false);
-                } catch(err) {
-                    console.error('Error loading data:', err);
-                    setError('Error loading data. Check console for details.');
-                    setLoading(false);
-                }
-            };
-
-            const averageCategories = [
-                { key: 'ppg', label: 'PPG', desc: 'Points Per Game' },
-                { key: 'rpg', label: 'RPG', desc: 'Rebounds Per Game' },
-                { key: 'apg', label: 'APG', desc: 'Assists Per Game' },
-                { key: 'spg', label: 'SPG', desc: 'Steals Per Game' },
-                { key: 'bpg', label: 'BPG', desc: 'Blocks Per Game' },
-                { key: 'fg_pct', label: 'FG%', desc: 'Field Goal %' },
-                { key: '3pt_pct', label: '3P%', desc: 'Three Point %' },
-                { key: 'ft_pct', label: 'FT%', desc: 'Free Throw %' },
-                { key: '2pt_pct', label: '2P%', desc: 'Two Point %' },
-                { key: 'tpg', label: 'TPG', desc: 'Turnovers Per Game' },
-                { key: 'fpg', label: 'FPG', desc: 'Fouls Per Game' },
-                { key: 'orebpg', label: 'ORPG', desc: 'Off. Reb Per Game' },
-                { key: 'drebpg', label: 'DRPG', desc: 'Def. Reb Per Game' },
-                { key: 'fga_pg', label: 'FGA', desc: 'FG Attempts Per Game' },
-                { key: '3pa_pg', label: '3PA', desc: '3PT Attempts Per Game' },
-                { key: 'fta_pg', label: 'FTA', desc: 'FT Attempts Per Game' },
-                { key: 'fgm_pg', label: 'FGM', desc: 'FG Made Per Game' },
-                { key: '3pm_pg', label: '3PM', desc: '3PT Made Per Game' },
-                { key: 'ftm_pg', label: 'FTM', desc: 'FT Made Per Game' }
-            ];
-
-            const totalCategories = [
-                { key: 'pts', label: 'PTS', desc: 'Total Points' },
-                { key: 'reb', label: 'REB', desc: 'Total Rebounds' },
-                { key: 'asst', label: 'AST', desc: 'Total Assists' },
-                { key: 'stl', label: 'STL', desc: 'Total Steals' },
-                { key: 'blk', label: 'BLK', desc: 'Total Blocks' },
-                { key: 'to', label: 'TO', desc: 'Total Turnovers' },
-                { key: 'foul', label: 'PF', desc: 'Total Fouls' },
-                { key: 'oreb', label: 'OREB', desc: 'Total Off. Rebounds' },
-                { key: 'dreb', label: 'DREB', desc: 'Total Def. Rebounds' },
-                { key: 'gp', label: 'GP', desc: 'Games Played' }
-            ];
-
-            const statCategories = showTotals ? totalCategories : averageCategories;
-
-            useEffect(() => {
-                if (showTotals && !totalCategories.find(c => c.key === statCategory)) setStatCategory('pts');
-                else if (!showTotals && !averageCategories.find(c => c.key === statCategory)) setStatCategory('ppg');
-            }, [showTotals]);
-
-            const sortedPlayers = useMemo(() => {
-                if (!seasonStats[gameType]) return [];
-                return Object.entries(seasonStats[gameType])
-                    .map(([num, stats]) => {
-                        const playerInfo = players[num] || allPlayersData[num] || { name: `Player #${num}`, number: num };
-                        return { ...playerInfo, ...stats, number: num };
-                    })
-                    .filter(p => p.gp > 0)
-                    .sort((a, b) => (Number(b[statCategory]) || 0) - (Number(a[statCategory]) || 0));
-            }, [seasonStats, gameType, statCategory, players, allPlayersData]);
-
-            const formatDate = (dateStr) => {
-                if (!dateStr) return '';
-                const match = dateStr.match(/(\d{4}-\d{2}-\d{2})/);
-                return match ? match[1] : dateStr;
-            };
-
-            const getSeasonDisplayName = (key) => seasonsMeta[key]?.display_name || `${key} Season`;
-
-            const availableSeasons = useMemo(() => {
-                const seasons = Object.keys(seasonsMeta);
-                if (seasons.length === 0) return ['2025', '2024'];
-                return seasons.sort().reverse();
-            }, [seasonsMeta]);
-
-            const bgClass = darkMode ? 'bg-gray-900' : 'bg-gray-50';
-            const cardClass = darkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-900';
-            const textClass = darkMode ? 'text-gray-300' : 'text-gray-600';
-            const headingClass = darkMode ? 'text-white' : 'text-gray-900';
-            const borderClass = darkMode ? 'border-gray-700' : 'border-gray-200';
-            const accentClass = `bg-gradient-to-r ${teamConfig.colors.primary}`;
-            const accentColor = teamConfig.colors.accent;
-
-            const formatStatValue = (value, isPercentage = false) => {
-                if (value === null || value === undefined) return '0';
-                const num = Number(value);
-                if (isNaN(num)) return '0';
-                if (isPercentage || statCategory.includes('pct')) return num.toFixed(1);
-                if (showTotals) return Math.round(num).toString();
-                return num.toFixed(1);
-            };
-
-            if (loading) {
-                return (
-                    <div className={`min-h-screen ${bgClass} flex items-center justify-center`}>
-                        <div className="text-center">
-                            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-                            <p className={textClass}>Loading stats...</p>
-                        </div>
-                    </div>
-                );
-            }
-
-            if (error || Object.keys(players).length === 0) {
-                return (
-                    <div className={`min-h-screen ${bgClass}`}>
-                        <header className={`${accentClass} text-white`}>
-                            <div className="max-w-7xl mx-auto px-4 py-4">
-                                <a href="index.html" className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-3 transition-colors">
-                                    <ChevronDown size={20} className="rotate-90" />
-                                    <span>Back to Team Selection</span>
-                                </a>
-                                <div className="flex items-center gap-4">
-                                    <img src={teamConfig.logo} alt={teamConfig.name} className="w-12 h-12 object-contain" onError={(e) => { e.target.style.display = 'none'; }} />
-                                    <div>
-                                        <h1 className="text-2xl font-bold">{teamConfig.displayName}</h1>
-                                        <p className="text-blue-100 text-sm">Team Statistics</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </header>
-                        <div className="max-w-7xl mx-auto px-4 py-12">
-                            <div className={`${cardClass} rounded-lg p-8 text-center`}>
-                                <AlertCircle size={48} className="mx-auto mb-4 opacity-50" />
-                                <h2 className={`text-2xl font-bold mb-4 ${headingClass}`}>Welcome to {teamConfig.displayName} Stats!</h2>
-                                <p className={`${textClass} mb-4`}>Your stats site is ready, but no data has been uploaded yet.</p>
-                                <div className={`${textClass} text-left max-w-2xl mx-auto space-y-3`}>
-                                    <p className={`font-bold text-lg ${headingClass}`}>Next Steps:</p>
-                                    <ol className="list-decimal list-inside space-y-2">
-                                        <li>Run the parser script on your EasyStats HTML files</li>
-                                        <li>Upload the generated <code className="bg-gray-200 px-2 py-1 rounded">data/</code> folder to your GitHub repo</li>
-                                        <li>Commit and push to GitHub</li>
-                                        <li>Wait 5-10 minutes for GitHub Pages to update</li>
-                                    </ol>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                );
-            }
-
-            if (currentView === 'boxscore' && selectedGameId) {
-                const game = allGames[selectedGameId];
-                if (!game) { setCurrentView('main'); return null; }
-                return (
-                    <div className={`min-h-screen ${bgClass} transition-colors duration-300`}>
-                        <header className={`${accentClass} text-white sticky top-0 z-50 shadow-lg`}>
-                            <div className="max-w-7xl mx-auto px-4 py-4">
-                                <button onClick={() => setCurrentView('main')} className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-3 transition-colors text-sm">
-                                    <ArrowLeft size={16} /><span>Back to Games</span>
-                                </button>
-                                <div className="flex items-center justify-between">
-                                    <div>
-                                        <h1 className="text-2xl font-bold">Box Score</h1>
-                                        <p className="text-white/80 text-sm">vs {game.opponent} • {game.date}</p>
-                                    </div>
-                                    <div className={`text-3xl font-bold ${game.result === 'W' ? 'text-green-300' : 'text-red-300'}`}>{game.score.us} - {game.score.them}</div>
-                                </div>
-                            </div>
-                        </header>
-                        <div className="max-w-7xl mx-auto px-4 py-6">
-                            <div className={`${cardClass} rounded-lg border ${borderClass} overflow-hidden`}>
-                                <div className="overflow-x-auto">
-                                    <table className="w-full text-sm">
-                                        <thead className={darkMode ? 'bg-gray-700' : 'bg-gray-100'}>
-                                            <tr>
-                                                {['Player','PTS','REB','AST','STL','BLK','TO','FG','3PT','FT','OREB','DREB','PF'].map((h, i) => (
-                                                    <th key={h} className={`px-${i===0?4:3} py-3 text-${i===0?'left':'center'} font-semibold ${headingClass}`}>{h}</th>
-                                                ))}
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {Object.entries(game.stats || {}).sort((a,b) => (b[1].pts||0)-(a[1].pts||0)).map(([playerNum, stats]) => {
-                                                const player = players[playerNum] || allPlayersData[playerNum] || { name: `#${playerNum}`, number: playerNum };
-                                                return (
-                                                    <tr key={playerNum} className={`border-t ${borderClass}`}>
-                                                        <td className="px-4 py-3">
-                                                            <div className="flex items-center gap-3">
-                                                                <PlayerImage player={player} size="sm" />
-                                                                <div>
-                                                                    <div className={`font-medium ${headingClass}`}>{player.display_name || player.name}</div>
-                                                                    <div className={`text-xs ${textClass}`}>#{player.number}</div>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                        <td className={`px-3 py-3 text-center font-bold text-${accentColor}`}>{stats.pts||0}</td>
-                                                        <td className="px-3 py-3 text-center">{stats.reb||0}</td>
-                                                        <td className="px-3 py-3 text-center">{stats.asst||0}</td>
-                                                        <td className="px-3 py-3 text-center">{stats.stl||0}</td>
-                                                        <td className="px-3 py-3 text-center">{stats.blk||0}</td>
-                                                        <td className="px-3 py-3 text-center">{stats.to||0}</td>
-                                                        <td className="px-3 py-3 text-center whitespace-nowrap">{stats.fg?`${stats.fg[0]}-${stats.fg[1]}`:'-'}</td>
-                                                        <td className="px-3 py-3 text-center whitespace-nowrap">{stats['3pt']?`${stats['3pt'][0]}-${stats['3pt'][1]}`:'-'}</td>
-                                                        <td className="px-3 py-3 text-center whitespace-nowrap">{stats.ft?`${stats.ft[0]}-${stats.ft[1]}`:'-'}</td>
-                                                        <td className="px-3 py-3 text-center">{stats.oreb||0}</td>
-                                                        <td className="px-3 py-3 text-center">{stats.dreb||0}</td>
-                                                        <td className="px-3 py-3 text-center">{stats.foul||0}</td>
-                                                    </tr>
-                                                );
-                                            })}
-                                        </tbody>
-                                        <tfoot className={darkMode ? 'bg-gray-700' : 'bg-gray-100'}>
-                                            <tr className={`border-t-2 ${borderClass} font-bold`}>
-                                                <td className={`px-4 py-3 ${headingClass}`}>TEAM TOTALS</td>
-                                                <td className={`px-3 py-3 text-center text-${accentColor}`}>{Object.values(game.stats||{}).reduce((s,p)=>s+(p.pts||0),0)}</td>
-                                                <td className="px-3 py-3 text-center">{Object.values(game.stats||{}).reduce((s,p)=>s+(p.reb||0),0)}</td>
-                                                <td className="px-3 py-3 text-center">{Object.values(game.stats||{}).reduce((s,p)=>s+(p.asst||0),0)}</td>
-                                                <td className="px-3 py-3 text-center">{Object.values(game.stats||{}).reduce((s,p)=>s+(p.stl||0),0)}</td>
-                                                <td className="px-3 py-3 text-center">{Object.values(game.stats||{}).reduce((s,p)=>s+(p.blk||0),0)}</td>
-                                                <td className="px-3 py-3 text-center">{Object.values(game.stats||{}).reduce((s,p)=>s+(p.to||0),0)}</td>
-                                                <td className="px-3 py-3 text-center whitespace-nowrap">{Object.values(game.stats||{}).reduce((s,p)=>s+(p.fg?.[0]||0),0)}-{Object.values(game.stats||{}).reduce((s,p)=>s+(p.fg?.[1]||0),0)}</td>
-                                                <td className="px-3 py-3 text-center whitespace-nowrap">{Object.values(game.stats||{}).reduce((s,p)=>s+(p['3pt']?.[0]||0),0)}-{Object.values(game.stats||{}).reduce((s,p)=>s+(p['3pt']?.[1]||0),0)}</td>
-                                                <td className="px-3 py-3 text-center whitespace-nowrap">{Object.values(game.stats||{}).reduce((s,p)=>s+(p.ft?.[0]||0),0)}-{Object.values(game.stats||{}).reduce((s,p)=>s+(p.ft?.[1]||0),0)}</td>
-                                                <td className="px-3 py-3 text-center">{Object.values(game.stats||{}).reduce((s,p)=>s+(p.oreb||0),0)}</td>
-                                                <td className="px-3 py-3 text-center">{Object.values(game.stats||{}).reduce((s,p)=>s+(p.dreb||0),0)}</td>
-                                                <td className="px-3 py-3 text-center">{Object.values(game.stats||{}).reduce((s,p)=>s+(p.foul||0),0)}</td>
-                                            </tr>
-                                        </tfoot>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                        <footer className={`${cardClass} border-t ${borderClass} mt-12 py-6`}>
-                            <div className={`max-w-7xl mx-auto px-4 text-center ${textClass}`}><p>{teamConfig.name} • Season Stats • Powered by EasyStats</p></div>
-                        </footer>
-                    </div>
-                );
-            }
-
-            if (currentView === 'player' && selectedPlayerNumber) {
-                const player = players[selectedPlayerNumber] || allPlayersData[selectedPlayerNumber];
-                const playerStats = seasonStats[playerPageGameType]?.[selectedPlayerNumber] || {};
-                if (!player) { setCurrentView('main'); return null; }
-
-                const playerGames = Object.entries(allGames)
-                    .filter(([_, game]) => {
-                        const hasStats = game.stats && game.stats[selectedPlayerNumber];
-                        if (playerPageGameType === 'regular') return hasStats && !game.isPlayoff;
-                        if (playerPageGameType === 'playoff') return hasStats && game.isPlayoff;
-                        return hasStats;
-                    })
-                    .sort((a, b) => new Date(b[1].date) - new Date(a[1].date));
-
-                const getLeaderboardPosition = (statKey) => {
-                    if (!seasonStats[playerPageGameType]) return null;
-                    const allPlayers = Object.entries(seasonStats[playerPageGameType])
-                        .filter(([_, stats]) => stats.gp > 0)
-                        .map(([num, stats]) => ({ number: num, value: Number(stats[statKey]) || 0 }))
-                        .sort((a, b) => b.value - a.value);
-                    const playerValue = Number(seasonStats[playerPageGameType][selectedPlayerNumber]?.[statKey]) || 0;
-                    const rank = allPlayers.filter(p => p.value > playerValue).length + 1;
-                    const isTied = allPlayers.filter(p => p.value === playerValue).length > 1;
-                    return { rank, isTied };
-                };
-
-                const playerStatCategories = [
-                    { key: 'ppg', totalKey: 'pts', label: 'Points', perGame: true },
-                    { key: 'rpg', totalKey: 'reb', label: 'Rebounds', perGame: true },
-                    { key: 'apg', totalKey: 'asst', label: 'Assists', perGame: true },
-                    { key: 'spg', totalKey: 'stl', label: 'Steals', perGame: true },
-                    { key: 'bpg', totalKey: 'blk', label: 'Blocks', perGame: true },
-                    { key: 'tpg', totalKey: 'to', label: 'Turnovers', perGame: true },
-                    { key: 'fpg', totalKey: 'foul', label: 'Fouls', perGame: true },
-                    { key: 'orebpg', totalKey: 'oreb', label: 'Off. Reb', perGame: true },
-                    { key: 'drebpg', totalKey: 'dreb', label: 'Def. Reb', perGame: true },
-                    { key: 'fg_pct', label: 'FG%', perGame: false },
-                    { key: '3pt_pct', label: '3P%', perGame: false },
-                    { key: 'ft_pct', label: 'FT%', perGame: false },
-                    { key: '2pt_pct', label: '2P%', perGame: false }
-                ];
-
-                return (
-                    <div className={`min-h-screen ${bgClass} transition-colors duration-300`}>
-                        <header className={`${accentClass} text-white sticky top-0 z-50 shadow-lg`}>
-                            <div className="max-w-7xl mx-auto px-4 py-4">
-                                <button onClick={() => setCurrentView('main')} className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-3 transition-colors text-sm">
-                                    <ArrowLeft size={16} /><span>Back to Roster</span>
-                                </button>
-                                <div className="flex items-center gap-4">
-                                    <PlayerImage player={player} size="xl" />
-                                    <div>
-                                        <h1 className="text-2xl font-bold">{player.display_name || player.name}</h1>
-                                        <p className="text-white/80">#{player.number}</p>
-                                        {player.teams && <p className="text-white/60 text-sm">{player.teams.join(' • ')}</p>}
-                                    </div>
-                                    <div className="ml-auto flex items-center gap-4">
-                                        <div className="text-right">
-                                            <div className="text-3xl font-bold">{playerStats.gp || 0}</div>
-                                            <div className="text-white/80 text-sm">Games Played</div>
-                                        </div>
-                                        <button onClick={() => setDarkMode(!darkMode)} className="p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors">
-                                            {darkMode ? <Sun size={24} /> : <Moon size={24} />}
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </header>
-
-                        <div className={`${cardClass} sticky top-[88px] z-40 border-b ${borderClass} shadow-md`}>
-                            <div className="max-w-7xl mx-auto px-4 py-3">
-                                <div className="flex items-center gap-3">
-                                    <span className={`text-sm font-medium ${textClass}`}>Season:</span>
-                                    <select value={selectedSeason} onChange={(e) => setSelectedSeason(e.target.value)} className={`px-3 py-2 rounded-lg border ${borderClass} ${cardClass} text-sm font-medium`}>
-                                        {availableSeasons.map(season => <option key={season} value={season}>{getSeasonDisplayName(season)}</option>)}
-                                    </select>
-                                    <div className={`flex rounded-lg border ${borderClass} overflow-hidden ml-auto`}>
-                                        <button onClick={() => setPlayerDetailTab('stats')} className={`px-4 py-2 text-sm font-medium transition-colors ${playerDetailTab === 'stats' ? `${accentClass} text-white` : `${cardClass} hover:opacity-80`}`}>Stats</button>
-                                        <button onClick={() => setPlayerDetailTab('analysis')} className={`px-4 py-2 text-sm font-medium transition-colors ${playerDetailTab === 'analysis' ? `${accentClass} text-white` : `${cardClass} hover:opacity-80`}`}>AI Analysis</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {playerDetailTab === 'stats' ? (
-                        <div className="max-w-7xl mx-auto px-4 py-6 space-y-6">
-                            <div className={`${cardClass} rounded-lg border ${borderClass} p-6`}>
-                                <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
-                                    <h2 className={`text-xl font-bold ${headingClass}`}>Season Statistics</h2>
-                                    <div className="flex flex-wrap gap-2">
-                                        <div className={`flex rounded-lg border ${borderClass} overflow-hidden`}>
-                                            {[{key:'all',label:'All'},{key:'regular',label:'Regular'},{key:'playoff',label:'Playoffs'}].map(opt => (
-                                                <button key={opt.key} onClick={() => setPlayerPageGameType(opt.key)} className={`px-3 py-1.5 text-sm font-medium transition-colors ${playerPageGameType === opt.key ? `${accentClass} text-white` : `${cardClass} hover:opacity-80`}`}>{opt.label}</button>
-                                            ))}
-                                        </div>
-                                        <div className={`flex rounded-lg border ${borderClass} overflow-hidden`}>
-                                            <button onClick={() => setShowPlayerTotals(false)} className={`px-3 py-1.5 text-sm font-medium transition-colors ${!showPlayerTotals ? `${accentClass} text-white` : `${cardClass} hover:opacity-80`}`}>Per Game</button>
-                                            <button onClick={() => setShowPlayerTotals(true)} className={`px-3 py-1.5 text-sm font-medium transition-colors ${showPlayerTotals ? `${accentClass} text-white` : `${cardClass} hover:opacity-80`}`}>Totals</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-                                    {playerStatCategories.map(({ key, totalKey, label, perGame }) => {
-                                        const displayKey = (showPlayerTotals && perGame && totalKey) ? totalKey : key;
-                                        const value = playerStats[displayKey];
-                                        const positionData = getLeaderboardPosition(displayKey);
-                                        return (
-                                            <div key={key} className={`p-3 rounded-lg ${darkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
-                                                <div className={`text-2xl font-bold text-${accentColor}`}>
-                                                    {value !== undefined && value !== null ? (typeof value === 'number' ? (showPlayerTotals && perGame ? Math.round(value) : value.toFixed(1)) : value) : '-'}
-                                                </div>
-                                                <div className={`text-sm ${textClass}`}>{label}</div>
-                                                {positionData && positionData.rank && (
-                                                    <div className={`text-xs mt-1 ${positionData.rank <= 3 ? 'text-yellow-500 font-bold' : textClass}`}>
-                                                        {positionData.isTied ? 'T' : ''}#{positionData.rank} on team
-                                                    </div>
-                                                )}
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-                                {playerStats.fg && (
-                                    <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-                                        <h3 className={`text-sm font-semibold mb-3 ${headingClass}`}>Shooting Splits</h3>
-                                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm">
-                                            <div><span className={textClass}>FG: </span><span className={`font-bold ${headingClass}`}>{playerStats.fg[0]}-{playerStats.fg[1]} ({playerStats.fg_pct?.toFixed(1)||0}%)</span></div>
-                                            <div><span className={textClass}>3PT: </span><span className={`font-bold ${headingClass}`}>{playerStats['3pt']?.[0]||0}-{playerStats['3pt']?.[1]||0} ({playerStats['3pt_pct']?.toFixed(1)||0}%)</span></div>
-                                            <div><span className={textClass}>2PT: </span><span className={`font-bold ${headingClass}`}>{playerStats['2pt']?.[0]||0}-{playerStats['2pt']?.[1]||0} ({playerStats['2pt_pct']?.toFixed(1)||0}%)</span></div>
-                                            <div><span className={textClass}>FT: </span><span className={`font-bold ${headingClass}`}>{playerStats.ft?.[0]||0}-{playerStats.ft?.[1]||0} ({playerStats.ft_pct?.toFixed(1)||0}%)</span></div>
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-
-                            <div className={`${cardClass} rounded-lg border ${borderClass} p-6`}>
-                                <div className="flex items-center justify-between mb-4">
-                                    <h2 className={`text-xl font-bold ${headingClass}`}>Leaderboard Rankings</h2>
-                                    <div className={`flex rounded-lg border ${borderClass} overflow-hidden`}>
-                                        <button onClick={() => setShowPlayerTotals(false)} className={`px-3 py-1.5 text-sm font-medium transition-colors ${!showPlayerTotals ? `${accentClass} text-white` : `${cardClass} hover:opacity-80`}`}>Per Game</button>
-                                        <button onClick={() => setShowPlayerTotals(true)} className={`px-3 py-1.5 text-sm font-medium transition-colors ${showPlayerTotals ? `${accentClass} text-white` : `${cardClass} hover:opacity-80`}`}>Totals</button>
-                                    </div>
-                                </div>
-                                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
-                                    {(showPlayerTotals ? [
-                                        {key:'pts',label:'PTS'},{key:'reb',label:'REB'},{key:'asst',label:'AST'},{key:'stl',label:'STL'},{key:'blk',label:'BLK'},
-                                        {key:'to',label:'TO'},{key:'foul',label:'PF'},{key:'oreb',label:'OREB'},{key:'dreb',label:'DREB'},{key:'gp',label:'GP'},
-                                        {key:'fg_pct',label:'FG%'},{key:'3pt_pct',label:'3P%'},{key:'ft_pct',label:'FT%'},{key:'2pt_pct',label:'2P%'}
-                                    ] : [
-                                        {key:'ppg',label:'PPG'},{key:'rpg',label:'RPG'},{key:'apg',label:'APG'},{key:'spg',label:'SPG'},{key:'bpg',label:'BPG'},
-                                        {key:'tpg',label:'TPG'},{key:'fpg',label:'FPG'},{key:'orebpg',label:'ORPG'},{key:'drebpg',label:'DRPG'},
-                                        {key:'fga_pg',label:'FGA'},{key:'3pa_pg',label:'3PA'},{key:'fta_pg',label:'FTA'},{key:'fgm_pg',label:'FGM'},
-                                        {key:'3pm_pg',label:'3PM'},{key:'ftm_pg',label:'FTM'},{key:'fg_pct',label:'FG%'},{key:'3pt_pct',label:'3P%'},
-                                        {key:'ft_pct',label:'FT%'},{key:'2pt_pct',label:'2P%'}
-                                    ]).map(({ key, label }) => {
-                                        const positionData = getLeaderboardPosition(key);
-                                        const position = positionData?.rank;
-                                        const isTied = positionData?.isTied;
-                                        const value = playerStats[key];
-                                        const isTotal = showPlayerTotals && !key.includes('pct');
-                                        return (
-                                            <div key={key} className={`p-3 rounded-lg text-center ${
-                                                position === 1 ? (darkMode ? 'bg-yellow-900/30 border-2 border-yellow-400' : 'bg-yellow-100 border-2 border-yellow-400') :
-                                                position === 2 ? (darkMode ? 'bg-gray-600 border-2 border-gray-400' : 'bg-gray-200 border-2 border-gray-400') :
-                                                position === 3 ? (darkMode ? 'bg-orange-900/30 border-2 border-orange-400' : 'bg-orange-100 border-2 border-orange-400') :
-                                                darkMode ? 'bg-gray-700' : 'bg-gray-100'
-                                            }`}>
-                                                <div className={`text-2xl font-bold ${position === 1 ? 'text-yellow-600' : position === 2 ? (darkMode ? 'text-white' : 'text-gray-700') : position === 3 ? 'text-orange-500' : `text-${accentColor}`}`}>
-                                                    {position ? `${isTied ? 'T' : ''}#${position}` : '-'}
-                                                </div>
-                                                <div className={`text-xs font-medium ${textClass}`}>{label}</div>
-                                                <div className={`text-xs ${textClass}`}>{value !== undefined ? (typeof value === 'number' ? (isTotal ? Math.round(value) : value.toFixed(1)) : value) : '-'}</div>
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-                            </div>
-
-                            <div className={`${cardClass} rounded-lg border ${borderClass} overflow-hidden`}>
-                                <div className="p-4 border-b ${borderClass}">
-                                    <h2 className={`text-xl font-bold ${headingClass}`}>Game Log</h2>
-                                </div>
-                                {playerGames.length === 0 ? (
-                                    <div className={`p-8 text-center ${textClass}`}><Calendar size={48} className="mx-auto mb-4 opacity-50" /><p>No games found for this player.</p></div>
-                                ) : (
-                                    <div className="overflow-x-auto">
-                                        <table className="w-full text-sm">
-                                            <thead className={darkMode ? 'bg-gray-700' : 'bg-gray-100'}>
-                                                <tr>
-                                                    {['Date','Opponent','Result','PTS','REB','AST','STL','BLK','TO','FG','3PT','FT','OREB','DREB','PF'].map((h,i) => (
-                                                        <th key={h} className={`px-${i<2?4:3} py-3 text-${i<2?'left':'center'} font-semibold ${headingClass}`}>{h}</th>
-                                                    ))}
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {playerGames.map(([gameId, game]) => {
-                                                    const stats = game.stats[selectedPlayerNumber];
-                                                    return (
-                                                        <tr key={gameId} className={`border-t ${borderClass} cursor-pointer hover:opacity-80`} onClick={() => { setSelectedGameId(gameId); setCurrentView('boxscore'); }}>
-                                                            <td className={`px-4 py-3 ${headingClass}`}>{formatDate(game.date)}{game.isPlayoff && <span className="ml-2 px-1.5 py-0.5 bg-yellow-500 text-white text-xs rounded">P</span>}</td>
-                                                            <td className={`px-3 py-3 ${textClass}`}>vs {game.opponent}</td>
-                                                            <td className="px-3 py-3 text-center">
-                                                                <span className={`font-bold ${game.result==='W'?'text-green-600':'text-red-600'}`}>{game.result}</span>
-                                                                <span className={`ml-1 ${textClass}`}>{game.score.us}-{game.score.them}</span>
-                                                            </td>
-                                                            <td className={`px-3 py-3 text-center font-bold text-${accentColor}`}>{stats.pts||0}</td>
-                                                            <td className="px-3 py-3 text-center">{stats.reb||0}</td>
-                                                            <td className="px-3 py-3 text-center">{stats.asst||0}</td>
-                                                            <td className="px-3 py-3 text-center">{stats.stl||0}</td>
-                                                            <td className="px-3 py-3 text-center">{stats.blk||0}</td>
-                                                            <td className="px-3 py-3 text-center">{stats.to||0}</td>
-                                                            <td className="px-3 py-3 text-center whitespace-nowrap">{stats.fg?`${stats.fg[0]}-${stats.fg[1]}`:'-'}</td>
-                                                            <td className="px-3 py-3 text-center whitespace-nowrap">{stats['3pt']?`${stats['3pt'][0]}-${stats['3pt'][1]}`:'-'}</td>
-                                                            <td className="px-3 py-3 text-center whitespace-nowrap">{stats.ft?`${stats.ft[0]}-${stats.ft[1]}`:'-'}</td>
-                                                            <td className="px-3 py-3 text-center">{stats.oreb||0}</td>
-                                                            <td className="px-3 py-3 text-center">{stats.dreb||0}</td>
-                                                            <td className="px-3 py-3 text-center">{stats.foul||0}</td>
-                                                        </tr>
-                                                    );
-                                                })}
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                        ) : (
-                        <div className="max-w-7xl mx-auto px-4 py-6">
-                            <div className={`${cardClass} rounded-lg border ${borderClass} p-6`}>
-                                <h2 className={`text-xl font-bold mb-4 ${headingClass}`}>AI Analysis</h2>
-                                {playerAnalysis[selectedPlayerNumber] ? (
-                                    <div className={`${darkMode ? 'bg-gray-700' : 'bg-gray-100'} rounded-lg p-6`}>
-                                        <div className="flex items-start gap-4 mb-4">
-                                            <div className="text-4xl">🤖</div>
-                                            <div>
-                                                <p className={`font-bold ${headingClass}`}>Season Analysis</p>
-                                                <p className={`text-sm ${textClass}`}>{player.display_name || player.name}</p>
-                                            </div>
-                                        </div>
-                                        <div className={`${textClass} leading-relaxed whitespace-pre-wrap`}>{playerAnalysis[selectedPlayerNumber]}</div>
-                                    </div>
-                                ) : (
-                                    <div className={`${darkMode ? 'bg-gray-700' : 'bg-gray-100'} rounded-lg p-8 text-center`}>
-                                        <div className="text-6xl mb-4">🤖</div>
-                                        <p className={`text-xl font-medium ${headingClass}`}>Coming Soon</p>
-                                        <p className={`mt-2 ${textClass}`}>AI-powered analysis for {player.display_name || player.name} will be available later this season.</p>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                        )}
-                        <footer className={`${cardClass} border-t ${borderClass} mt-12 py-6`}>
-                            <div className={`max-w-7xl mx-auto px-4 text-center ${textClass}`}><p>{teamConfig.name} • Season Stats • Powered by EasyStats</p></div>
-                        </footer>
-                    </div>
-                );
-            }
-
-            return (
-                <div className={`min-h-screen ${bgClass} transition-colors duration-300`}>
-                    <header className={`${accentClass} text-white sticky top-0 z-50 shadow-lg`}>
-                        <div className="max-w-7xl mx-auto px-4 py-4">
-                            <a href="index.html" className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-3 transition-colors text-sm">
-                                <ChevronDown size={16} className="rotate-90" /><span>Back to Team Selection</span>
-                            </a>
-                            <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-4">
-                                    <img src={teamConfig.logo} alt={teamConfig.name} className="w-12 h-12 object-contain" onError={(e) => { e.target.style.display = 'none'; }} />
-                                    <div>
-                                        <h1 className="text-2xl font-bold">{teamConfig.displayName}</h1>
-                                        <p className="text-white/80 text-sm">Team Statistics</p>
-                                    </div>
-                                </div>
-                                <button onClick={() => setDarkMode(!darkMode)} className="p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors">
-                                    {darkMode ? <Sun size={24} /> : <Moon size={24} />}
-                                </button>
-                            </div>
-                        </div>
-                    </header>
-
-                    <div className={`${cardClass} sticky top-[72px] z-40 border-b ${borderClass} shadow-md`}>
-                        <div className="max-w-7xl mx-auto px-4 py-3">
-                            <div className="flex flex-wrap gap-3 items-center justify-between">
-                                <div className="flex gap-2">
-                                    <select value={selectedSeason} onChange={(e) => setSelectedSeason(e.target.value)} className={`px-3 py-2 rounded-lg border ${borderClass} ${cardClass} text-sm font-medium`}>
-                                        {availableSeasons.map(season => <option key={season} value={season}>{getSeasonDisplayName(season)}</option>)}
-                                    </select>
-                                    <select value={gameType} onChange={(e) => setGameType(e.target.value)} className={`px-3 py-2 rounded-lg border ${borderClass} ${cardClass} text-sm font-medium`}>
-                                        <option value="all">All Games</option>
-                                        <option value="regular">Regular Season</option>
-                                        <option value="playoff">Playoffs</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="max-w-7xl mx-auto px-4 py-6">
-                        <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
-                            {[
-                                { id: 'leaderboards', icon: TrendingUp, label: 'Leaderboards' },
-                                { id: 'records', icon: Trophy, label: 'Records' },
-                                { id: 'players', icon: Users, label: 'Players' },
-                                { id: 'games', icon: Calendar, label: 'Games' }
-                            ].map(tab => (
-                                <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium whitespace-nowrap transition-colors ${activeTab === tab.id ? `${accentClass} text-white shadow-lg` : `${cardClass} hover:opacity-80`}`}>
-                                    <tab.icon size={18} />{tab.label}
-                                </button>
-                            ))}
-                        </div>
-
-                        {activeTab === 'leaderboards' && (
-                            <div>
-                                <div className="flex items-center gap-4 mb-4">
-                                    <span className={`text-sm font-medium ${headingClass}`}>Show:</span>
-                                    <div className={`flex rounded-lg border ${borderClass} overflow-hidden`}>
-                                        <button onClick={() => setShowTotals(false)} className={`px-4 py-2 text-sm font-medium transition-colors ${!showTotals ? `${accentClass} text-white` : `${cardClass} hover:opacity-80`}`}>Averages</button>
-                                        <button onClick={() => setShowTotals(true)} className={`px-4 py-2 text-sm font-medium transition-colors ${showTotals ? `${accentClass} text-white` : `${cardClass} hover:opacity-80`}`}>Totals</button>
-                                    </div>
-                                </div>
-                                <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-2 mb-6">
-                                    {statCategories.map(cat => (
-                                        <button key={cat.key} onClick={() => setStatCategory(cat.key)} className={`p-3 rounded-lg border-2 transition-all ${statCategory === cat.key ? 'border-blue-500 bg-blue-50' : `border-transparent ${cardClass}`}`}>
-                                            <div className={`text-lg font-bold text-${accentColor}`}>{cat.label}</div>
-                                            <div className={`text-xs ${textClass} truncate`}>{cat.desc}</div>
-                                        </button>
-                                    ))}
-                                </div>
-                                <div className="space-y-3">
-                                    {sortedPlayers.length === 0 ? (
-                                        <div className={`${cardClass} rounded-lg border ${borderClass} p-8 text-center ${textClass}`}>
-                                            <p>No player stats available for this selection.</p>
-                                        </div>
-                                    ) : sortedPlayers.map((player) => {
-                                        const currentValue = Number(player[statCategory]) || 0;
-                                        const rank = sortedPlayers.filter(p => (Number(p[statCategory])||0) > currentValue).length + 1;
-                                        const isTied = sortedPlayers.filter(p => (Number(p[statCategory])||0) === currentValue).length > 1;
-                                        return (
-                                            <div key={player.number} className={`${cardClass} rounded-lg border ${borderClass} p-4 hover:shadow-lg transition-shadow cursor-pointer`} onClick={() => { setSelectedPlayerNumber(player.number); setCurrentView('player'); }}>
-                                                <div className="flex items-center gap-4">
-                                                    <div className={`text-3xl font-bold ${rank <= 3 ? 'text-blue-600' : textClass} w-14 text-center`}>{isTied?'T':''}{rank}</div>
-                                                    <PlayerImage player={player} size="md" />
-                                                    <div className="flex-1 min-w-0">
-                                                        <div className={`font-bold text-lg truncate ${headingClass}`}>{player.display_name || player.name}</div>
-                                                        <div className={`text-sm ${textClass}`}>{player.gp} GP{player.teams ? ` • ${player.teams.join(', ')}` : ''}</div>
-                                                    </div>
-                                                    <div className="text-right">
-                                                        <div className="text-3xl font-bold text-blue-600">{formatStatValue(player[statCategory])}</div>
-                                                        <div className={`text-xs ${textClass}`}>{(averageCategories.find(c=>c.key===statCategory)||totalCategories.find(c=>c.key===statCategory))?.label||statCategory.toUpperCase()}</div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-                            </div>
-                        )}
-
-                        {activeTab === 'players' && (
-                            <div className="space-y-4">
-                                <h2 className={`text-2xl font-bold mb-4 ${headingClass}`}>Team Roster</h2>
-                                <div className="grid md:grid-cols-2 gap-4">
-                                    {Object.values(players).map(player => {
-                                        const stats = seasonStats[gameType]?.[player.number] || {};
-                                        return (
-                                            <div key={player.number} className={`${cardClass} rounded-lg border ${borderClass} p-4 cursor-pointer hover:shadow-lg transition-shadow`} onClick={() => { setSelectedPlayerNumber(player.number); setCurrentView('player'); }}>
-                                                <div className="flex items-center gap-4">
-                                                    <PlayerImage player={player} size="lg" />
-                                                    <div className="flex-1 min-w-0">
-                                                        <div className={`font-bold text-xl truncate ${headingClass}`}>{player.display_name || player.name}</div>
-                                                        <div className={textClass}>#{player.number}</div>
-                                                        {player.teams && player.teams.length > 0 && <div className={`text-sm ${textClass} mt-1`}>{player.teams.join(' • ')}</div>}
-                                                        {stats.gp > 0 && (
-                                                            <div className="flex gap-3 mt-2 text-sm">
-                                                                <div><span className="font-bold text-blue-600">{stats.ppg?.toFixed(1)||'0.0'}</span><span className={textClass}> PPG</span></div>
-                                                                <div><span className="font-bold text-blue-600">{stats.rpg?.toFixed(1)||'0.0'}</span><span className={textClass}> RPG</span></div>
-                                                                <div><span className="font-bold text-blue-600">{stats.apg?.toFixed(1)||'0.0'}</span><span className={textClass}> APG</span></div>
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                    <div className={textClass}><ChevronDown size={20} className="-rotate-90" /></div>
-                                                </div>
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-                            </div>
-                        )}
-
-                        {activeTab === 'records' && (
-                            <div className="space-y-4">
-                                <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
-                                    <h2 className={`text-2xl font-bold ${headingClass}`}>Team Records</h2>
-                                    <div className="flex flex-wrap gap-2">
-                                        <div className={`flex rounded-lg border ${borderClass} overflow-hidden`}>
-                                            <button onClick={() => setRecordsScope('season')} className={`px-3 py-1.5 text-sm font-medium transition-colors ${recordsScope==='season'?`${accentClass} text-white`:`${cardClass} hover:opacity-80`}`}>{getSeasonDisplayName(selectedSeason)}</button>
-                                            <button onClick={() => setRecordsScope('alltime')} className={`px-3 py-1.5 text-sm font-medium transition-colors ${recordsScope==='alltime'?`${accentClass} text-white`:`${cardClass} hover:opacity-80`}`}>All Time</button>
-                                        </div>
-                                        <div className={`flex rounded-lg border ${borderClass} overflow-hidden`}>
-                                            <button onClick={() => setRecordsType('game')} className={`px-3 py-1.5 text-sm font-medium transition-colors ${recordsType==='game'?`${accentClass} text-white`:`${cardClass} hover:opacity-80`}`}>Single Game</button>
-                                            <button onClick={() => setRecordsType('season')} className={`px-3 py-1.5 text-sm font-medium transition-colors ${recordsType==='season'?`${accentClass} text-white`:`${cardClass} hover:opacity-80`}`}>Season</button>
-                                        </div>
-                                        <select value={recordsCategory} onChange={(e) => setRecordsCategory(e.target.value)} className={`px-3 py-2 rounded-lg border ${borderClass} ${cardClass} text-sm font-medium`}>
-                                            <option value="all">All Categories</option>
-                                            <option value="pts">Points</option>
-                                            <option value="reb">Rebounds</option>
-                                            <option value="asst">Assists</option>
-                                            <option value="stl">Steals</option>
-                                            <option value="blk">Blocks</option>
-                                            <option value="3pt">3-Pointers</option>
-                                            <option value="fg">Field Goals</option>
-                                            <option value="ft">Free Throws</option>
-                                            <option value="oreb">Off. Rebounds</option>
-                                            <option value="dreb">Def. Rebounds</option>
-                                            <option value="to">Turnovers</option>
-                                            <option value="foul">Fouls</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                {recordsType === 'game' ? (() => {
-                                    const gamesToUse = recordsScope === 'alltime' ? allTimeGames : allGames;
-                                    if (!gamesToUse || Object.keys(gamesToUse).length === 0) {
-                                        return <div className={`${cardClass} rounded-lg border ${borderClass} p-8 text-center ${textClass}`}><Trophy size={48} className="mx-auto mb-4 opacity-50" /><p>No records available yet.</p></div>;
-                                    }
-                                    const recordCategories = [
-                                        { key: 'most_pts', label: 'Most Points', statKey: 'pts' },
-                                        { key: 'most_reb', label: 'Most Rebounds', statKey: 'reb' },
-                                        { key: 'most_oreb', label: 'Most Off. Rebounds', statKey: 'oreb' },
-                                        { key: 'most_dreb', label: 'Most Def. Rebounds', statKey: 'dreb' },
-                                        { key: 'most_asst', label: 'Most Assists', statKey: 'asst' },
-                                        { key: 'most_stl', label: 'Most Steals', statKey: 'stl' },
-                                        { key: 'most_blk', label: 'Most Blocks', statKey: 'blk' },
-                                        { key: 'most_3pt', label: 'Most 3PM', statKey: '3pt' },
-                                        { key: 'most_fg', label: 'Most FGM', statKey: 'fg' },
-                                        { key: 'most_ft', label: 'Most FTM', statKey: 'ft' },
-                                        { key: 'most_to', label: 'Most Turnovers', statKey: 'to' },
-                                        { key: 'most_foul', label: 'Most Fouls', statKey: 'foul' }
-                                    ];
-                                    const filteredCategories = recordsCategory === 'all' ? recordCategories : recordCategories.filter(c => c.statKey === recordsCategory);
-                                    const getTop3ForCategory = (statKey) => {
-                                        const performances = [];
-                                        Object.entries(gamesToUse).forEach(([gameId, game]) => {
-                                            if (gameType === 'regular' && game.isPlayoff) return;
-                                            if (gameType === 'playoff' && !game.isPlayoff) return;
-                                            Object.entries(game.stats || {}).forEach(([playerNum, stats]) => {
-                                                let value = stats[statKey];
-                                                if (Array.isArray(value)) value = value[0];
-                                                if (value && value > 0) {
-                                                    const player = players[playerNum] || allPlayersData[playerNum];
-                                                    performances.push({ playerNum, playerName: player?.display_name || player?.name || `#${playerNum}`, player, value, date: game.date, opponent: game.opponent, season: game.season });
-                                                }
-                                            });
-                                        });
-                                        performances.sort((a, b) => b.value !== a.value ? b.value - a.value : new Date(a.date) - new Date(b.date));
-                                        const top3 = [];
-                                        let rank = 1;
-                                        for (let i = 0; i < performances.length && top3.length < 3; i++) {
-                                            const perf = performances[i];
-                                            const isTied = i > 0 && performances[i-1].value === perf.value;
-                                            if (!isTied && top3.length > 0) rank = top3.length + 1;
-                                            top3.push({ ...perf, rank, isTied });
-                                        }
-                                        return top3;
-                                    };
-                                    return (
-                                        <div className="grid gap-4 md:grid-cols-2">
-                                            {filteredCategories.map(({ key, label, statKey }) => {
-                                                const top3 = getTop3ForCategory(statKey);
-                                                if (top3.length === 0) return null;
-                                                return (
-                                                    <div key={key} className={`${cardClass} rounded-lg border ${borderClass} p-4`}>
-                                                        <h3 className={`font-bold text-lg mb-3 ${headingClass}`}>{label}</h3>
-                                                        <div className="space-y-2">
-                                                            {top3.map((perf, idx) => (
-                                                                <div key={`${perf.playerNum}-${perf.date}-${idx}`} className={`flex items-center gap-3 p-2 rounded-lg cursor-pointer hover:opacity-80 ${perf.rank===1?(darkMode?'bg-yellow-900/30':'bg-yellow-100'):perf.rank===2?(darkMode?'bg-gray-600':'bg-gray-200'):(darkMode?'bg-orange-900/30':'bg-orange-100')}`} onClick={() => { setSelectedPlayerNumber(perf.playerNum); setCurrentView('player'); }}>
-                                                                    <div className={`text-xl font-bold w-8 text-center ${perf.rank===1?'text-yellow-600':perf.rank===2?(darkMode?'text-white':'text-gray-700'):'text-orange-500'}`}>{perf.isTied?'T':''}{perf.rank}</div>
-                                                                    <PlayerImage player={perf.player} size="sm" />
-                                                                    <div className="flex-1 min-w-0">
-                                                                        <div className={`font-medium truncate ${headingClass}`}>{perf.playerName}</div>
-                                                                        <div className={`text-xs ${textClass}`}>vs {perf.opponent} • {formatDate(perf.date)}{recordsScope==='alltime'&&perf.season?` • ${getSeasonDisplayName(perf.season)}`:''}</div>
-                                                                    </div>
-                                                                    <div className={`text-2xl font-bold text-${accentColor}`}>{perf.value}</div>
-                                                                </div>
-                                                            ))}
-                                                        </div>
-                                                    </div>
-                                                );
-                                            })}
-                                        </div>
-                                    );
-                                })() : (() => {
-                                    const hasStats = recordsScope === 'alltime' ? Object.keys(allTimeSeasonStats).length > 0 : seasonStats[gameType] && Object.keys(seasonStats[gameType]).length > 0;
-                                    if (!hasStats) return <div className={`${cardClass} rounded-lg border ${borderClass} p-8 text-center ${textClass}`}><Trophy size={48} className="mx-auto mb-4 opacity-50" /><p>No season records available yet.</p></div>;
-                                    const seasonRecordCategories = [
-                                        { key: 'ppg', label: 'PPG (Season)', statKey: 'pts', isAvg: true },
-                                        { key: 'pts', label: 'Total Points (Season)', statKey: 'pts', isAvg: false },
-                                        { key: 'rpg', label: 'RPG (Season)', statKey: 'reb', isAvg: true },
-                                        { key: 'reb', label: 'Total Rebounds (Season)', statKey: 'reb', isAvg: false },
-                                        { key: 'apg', label: 'APG (Season)', statKey: 'asst', isAvg: true },
-                                        { key: 'asst', label: 'Total Assists (Season)', statKey: 'asst', isAvg: false },
-                                        { key: 'spg', label: 'SPG (Season)', statKey: 'stl', isAvg: true },
-                                        { key: 'stl', label: 'Total Steals (Season)', statKey: 'stl', isAvg: false },
-                                        { key: 'bpg', label: 'BPG (Season)', statKey: 'blk', isAvg: true },
-                                        { key: 'blk', label: 'Total Blocks (Season)', statKey: 'blk', isAvg: false },
-                                        { key: '3pm_pg', label: '3PM/G (Season)', statKey: '3pt', isAvg: true },
-                                        { key: '3pt_made', label: 'Total 3PM (Season)', statKey: '3pt', isAvg: false },
-                                        { key: 'fg_pct', label: 'FG% (Season)', statKey: 'fg', isAvg: true, isPct: true },
-                                        { key: '3pt_pct', label: '3P% (Season)', statKey: '3pt', isAvg: true, isPct: true },
-                                        { key: 'ft_pct', label: 'FT% (Season)', statKey: 'ft', isAvg: true, isPct: true }
-                                    ];
-                                    const filteredCategories = recordsCategory === 'all' ? seasonRecordCategories : seasonRecordCategories.filter(c => c.statKey === recordsCategory);
-                                    const getTop3SeasonRecord = (statKey, isAvg, isPct) => {
-                                        const playerSeasonStats = [];
-                                        const statsSource = recordsScope === 'alltime' ? allTimeSeasonStats : { [selectedSeason]: seasonStats };
-                                        Object.entries(statsSource).forEach(([seasonKey, seasonData]) => {
-                                            Object.entries(seasonData[gameType] || {}).forEach(([playerNum, stats]) => {
-                                                if (!stats.gp || stats.gp === 0) return;
-                                                let value;
-                                                if (isPct) value = stats[`${statKey}_pct`] || 0;
-                                                else if (isAvg) {
-                                                    const avgKey = statKey==='asst'?'apg':statKey==='stl'?'spg':statKey==='blk'?'bpg':statKey==='3pt'?'3pm_pg':`${statKey.charAt(0)}pg`;
-                                                    value = stats[avgKey] || 0;
-                                                } else { value = statKey==='3pt'?(stats['3pt']?.[0]||0):(stats[statKey]||0); }
-                                                if (value > 0) {
-                                                    const player = players[playerNum] || allPlayersData[playerNum];
-                                                    playerSeasonStats.push({ playerNum, player, value, gp: stats.gp, playerName: player?.display_name||player?.name||`#${playerNum}`, season: recordsScope==='alltime'?seasonKey:selectedSeason });
-                                                }
-                                            });
-                                        });
-                                        playerSeasonStats.sort((a, b) => b.value - a.value);
-                                        const top3 = [];
-                                        let rank = 1;
-                                        for (let i = 0; i < playerSeasonStats.length && top3.length < 3; i++) {
-                                            const stat = playerSeasonStats[i];
-                                            const isTied = i > 0 && playerSeasonStats[i-1].value === stat.value;
-                                            if (!isTied && top3.length > 0) rank = top3.length + 1;
-                                            top3.push({ ...stat, rank, isTied });
-                                        }
-                                        return top3;
-                                    };
-                                    return (
-                                        <div className="grid gap-4 md:grid-cols-2">
-                                            {filteredCategories.map(({ key, label, statKey, isAvg, isPct }) => {
-                                                const top3 = getTop3SeasonRecord(statKey, isAvg, isPct);
-                                                if (top3.length === 0) return null;
-                                                return (
-                                                    <div key={key} className={`${cardClass} rounded-lg border ${borderClass} p-4`}>
-                                                        <h3 className={`font-bold text-lg mb-3 ${headingClass}`}>{label}</h3>
-                                                        <div className="space-y-2">
-                                                            {top3.map((stat, idx) => (
-                                                                <div key={`${stat.playerNum}-${stat.season}-${idx}`} className={`flex items-center gap-3 p-2 rounded-lg cursor-pointer hover:opacity-80 ${stat.rank===1?(darkMode?'bg-yellow-900/30':'bg-yellow-100'):stat.rank===2?(darkMode?'bg-gray-600':'bg-gray-200'):(darkMode?'bg-orange-900/30':'bg-orange-100')}`} onClick={() => { setSelectedPlayerNumber(stat.playerNum); setCurrentView('player'); }}>
-                                                                    <div className={`text-xl font-bold w-8 text-center ${stat.rank===1?'text-yellow-600':stat.rank===2?(darkMode?'text-white':'text-gray-700'):'text-orange-500'}`}>{stat.isTied?'T':''}{stat.rank}</div>
-                                                                    <PlayerImage player={stat.player} size="sm" />
-                                                                    <div className="flex-1 min-w-0">
-                                                                        <div className={`font-medium truncate ${headingClass}`}>{stat.playerName}</div>
-                                                                        <div className={`text-xs ${textClass}`}>{getSeasonDisplayName(stat.season)} • {stat.gp} games</div>
-                                                                    </div>
-                                                                    <div className={`text-2xl font-bold text-${accentColor}`}>{isPct?`${stat.value.toFixed(1)}%`:isAvg?stat.value.toFixed(1):stat.value}</div>
-                                                                </div>
-                                                            ))}
-                                                        </div>
-                                                    </div>
-                                                );
-                                            })}
-                                        </div>
-                                    );
-                                })()}
-                            </div>
-                        )}
-
-                        {activeTab === 'games' && (
-                            <div className="space-y-4">
-                                <h2 className={`text-2xl font-bold mb-4 ${headingClass}`}>Game Log</h2>
-                                {Object.keys(allGames).length === 0 ? (
-                                    <div className={`${cardClass} rounded-lg border ${borderClass} p-6 text-center ${textClass}`}>
-                                        <Calendar size={48} className="mx-auto mb-4 opacity-50" />
-                                        <p>No games found for this season.</p>
-                                        <p className="text-sm mt-2">Make sure your data/games/ folder contains game files and games_index.json is updated.</p>
-                                    </div>
-                                ) : (
-                                    <div className="space-y-3">
-                                        {Object.entries(allGames)
-                                            .filter(([_, game]) => { if (gameType==='regular') return !game.isPlayoff; if (gameType==='playoff') return game.isPlayoff; return true; })
-                                            .sort((a, b) => new Date(b[1].date) - new Date(a[1].date))
-                                            .map(([gameId, game]) => {
-                                                const totalPts = Object.values(game.stats||{}).reduce((s,p)=>s+(p.pts||0),0);
-                                                return (
-                                                    <div key={gameId} className={`${cardClass} p-4 rounded-lg border ${borderClass} hover:shadow-lg transition-shadow cursor-pointer`} onClick={() => { setSelectedGameId(gameId); setCurrentView('boxscore'); }}>
-                                                        <div className="flex justify-between items-start mb-3">
-                                                            <div>
-                                                                <div className={`font-bold text-lg flex items-center gap-2 ${headingClass}`}>
-                                                                    <span className={`font-bold ${game.result==='W'?'text-green-600':'text-red-600'}`}>{game.result}</span>
-                                                                    vs {game.opponent}
-                                                                </div>
-                                                                <div className={`text-sm ${textClass}`}>{game.date} • {game.homeAway==='home'?'Home':'Away'}{game.isPlayoff&&<span className="ml-2 px-2 py-0.5 bg-yellow-500 text-white text-xs rounded">PLAYOFF</span>}</div>
-                                                            </div>
-                                                            <div className="text-right">
-                                                                <div className={`text-2xl font-bold ${game.result==='W'?'text-green-600':'text-red-600'}`}>{game.score.us} - {game.score.them}</div>
-                                                                <div className={`text-xs ${textClass}`}>Click for box score →</div>
-                                                            </div>
-                                                        </div>
-                                                        <div className="grid grid-cols-3 gap-4 text-sm">
-                                                            <div className={`text-center p-2 rounded ${darkMode?'bg-gray-700':'bg-gray-100'}`}><div className={`font-bold text-${accentColor}`}>{totalPts}</div><div className={textClass}>Team PTS</div></div>
-                                                            <div className={`text-center p-2 rounded ${darkMode?'bg-gray-700':'bg-gray-100'}`}><div className={`font-bold text-${accentColor}`}>{Object.values(game.stats||{}).reduce((s,p)=>s+(p.reb||0),0)}</div><div className={textClass}>Team REB</div></div>
-                                                            <div className={`text-center p-2 rounded ${darkMode?'bg-gray-700':'bg-gray-100'}`}><div className={`font-bold text-${accentColor}`}>{Object.values(game.stats||{}).reduce((s,p)=>s+(p.asst||0),0)}</div><div className={textClass}>Team AST</div></div>
-                                                        </div>
-                                                    </div>
-                                                );
-                                            })}
-                                    </div>
-                                )}
-                            </div>
-                        )}
-                    </div>
-
-                    <footer className={`${cardClass} border-t ${borderClass} mt-12 py-6`}>
-                        <div className={`max-w-7xl mx-auto px-4 text-center ${textClass}`}><p>{teamConfig.name} • Season Stats • Powered by EasyStats</p></div>
-                    </footer>
-                </div>
-            );
+    <script>
+const {
+  useState,
+  useMemo,
+  useEffect
+} = React;
+const getTeamFromURL = () => {
+  const path = window.location.pathname;
+  if (path.includes('pretty-good')) return 'pretty-good';
+  if (path.includes('chuckers-chuckers')) return 'chuckers-chuckers';
+  if (path.includes('just-jokic-ing')) return 'just-jokic-ing';
+  if (path.includes('board-man-gets-paid')) return 'board-man-gets-paid';
+  return 'pretty-good';
+};
+const TEAM_CONFIG = {
+  'pretty-good': {
+    name: 'Pretty Good',
+    displayName: 'Pretty Good Basketball',
+    logo: 'Assets/teams/pretty-good-logo.png',
+    dataPath: 'data/pretty-good',
+    colors: {
+      primary: 'from-blue-600 to-blue-400',
+      accent: 'blue-600'
+    }
+  },
+  'chuckers-chuckers': {
+    name: 'Chuckers Chuckers',
+    displayName: 'Chuckers Chuckers Basketball',
+    logo: 'Assets/teams/chuckers-chuckers-logo.png',
+    dataPath: 'data/chuckers-chuckers',
+    colors: {
+      primary: 'from-purple-600 to-purple-400',
+      accent: 'purple-600'
+    }
+  },
+  'just-jokic-ing': {
+    name: 'Just Jokic-ing',
+    displayName: 'Just Jokic-ing Basketball',
+    logo: 'Assets/teams/just-jokic-ing-logo.png',
+    dataPath: 'data/test teams/just-jokic-ing',
+    colors: {
+      primary: 'from-yellow-500 to-orange-400',
+      accent: 'yellow-600'
+    }
+  },
+  'board-man-gets-paid': {
+    name: 'Board Man Gets Paid',
+    displayName: 'Board Man Gets Paid Basketball',
+    logo: 'Assets/teams/board-man-gets-paid-logo.png',
+    dataPath: 'data/test teams/board-man-gets-paid',
+    colors: {
+      primary: 'from-green-600 to-teal-400',
+      accent: 'green-600'
+    }
+  }
+};
+const BarChart3 = ({
+  size = 24
+}) => /*#__PURE__*/React.createElement("svg", {
+  width: size,
+  height: size,
+  viewBox: "0 0 24 24",
+  fill: "none",
+  stroke: "currentColor",
+  strokeWidth: "2"
+}, /*#__PURE__*/React.createElement("path", {
+  d: "M3 3v18h18"
+}), /*#__PURE__*/React.createElement("path", {
+  d: "M18 17V9"
+}), /*#__PURE__*/React.createElement("path", {
+  d: "M13 17V5"
+}), /*#__PURE__*/React.createElement("path", {
+  d: "M8 17v-3"
+}));
+const Trophy = ({
+  size = 24
+}) => /*#__PURE__*/React.createElement("svg", {
+  width: size,
+  height: size,
+  viewBox: "0 0 24 24",
+  fill: "none",
+  stroke: "currentColor",
+  strokeWidth: "2"
+}, /*#__PURE__*/React.createElement("path", {
+  d: "M6 9H4.5a2.5 2.5 0 0 1 0-5H6"
+}), /*#__PURE__*/React.createElement("path", {
+  d: "M18 9h1.5a2.5 2.5 0 0 0 0-5H18"
+}), /*#__PURE__*/React.createElement("path", {
+  d: "M4 22h16"
+}), /*#__PURE__*/React.createElement("path", {
+  d: "M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"
+}), /*#__PURE__*/React.createElement("path", {
+  d: "M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"
+}), /*#__PURE__*/React.createElement("path", {
+  d: "M18 2H6v7a6 6 0 0 0 12 0V2Z"
+}));
+const Users = ({
+  size = 24
+}) => /*#__PURE__*/React.createElement("svg", {
+  width: size,
+  height: size,
+  viewBox: "0 0 24 24",
+  fill: "none",
+  stroke: "currentColor",
+  strokeWidth: "2"
+}, /*#__PURE__*/React.createElement("path", {
+  d: "M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"
+}), /*#__PURE__*/React.createElement("circle", {
+  cx: "9",
+  cy: "7",
+  r: "4"
+}), /*#__PURE__*/React.createElement("path", {
+  d: "M22 21v-2a4 4 0 0 0-3-3.87"
+}), /*#__PURE__*/React.createElement("path", {
+  d: "M16 3.13a4 4 0 0 1 0 7.75"
+}));
+const Calendar = ({
+  size = 24
+}) => /*#__PURE__*/React.createElement("svg", {
+  width: size,
+  height: size,
+  viewBox: "0 0 24 24",
+  fill: "none",
+  stroke: "currentColor",
+  strokeWidth: "2"
+}, /*#__PURE__*/React.createElement("rect", {
+  x: "3",
+  y: "4",
+  width: "18",
+  height: "18",
+  rx: "2",
+  ry: "2"
+}), /*#__PURE__*/React.createElement("line", {
+  x1: "16",
+  y1: "2",
+  x2: "16",
+  y2: "6"
+}), /*#__PURE__*/React.createElement("line", {
+  x1: "8",
+  y1: "2",
+  x2: "8",
+  y2: "6"
+}), /*#__PURE__*/React.createElement("line", {
+  x1: "3",
+  y1: "10",
+  x2: "21",
+  y2: "10"
+}));
+const Moon = ({
+  size = 24
+}) => /*#__PURE__*/React.createElement("svg", {
+  width: size,
+  height: size,
+  viewBox: "0 0 24 24",
+  fill: "none",
+  stroke: "currentColor",
+  strokeWidth: "2"
+}, /*#__PURE__*/React.createElement("path", {
+  d: "M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"
+}));
+const Sun = ({
+  size = 24
+}) => /*#__PURE__*/React.createElement("svg", {
+  width: size,
+  height: size,
+  viewBox: "0 0 24 24",
+  fill: "none",
+  stroke: "currentColor",
+  strokeWidth: "2"
+}, /*#__PURE__*/React.createElement("circle", {
+  cx: "12",
+  cy: "12",
+  r: "4"
+}), /*#__PURE__*/React.createElement("path", {
+  d: "M12 2v2"
+}), /*#__PURE__*/React.createElement("path", {
+  d: "M12 20v2"
+}), /*#__PURE__*/React.createElement("path", {
+  d: "m4.93 4.93 1.41 1.41"
+}), /*#__PURE__*/React.createElement("path", {
+  d: "m17.66 17.66 1.41 1.41"
+}), /*#__PURE__*/React.createElement("path", {
+  d: "M2 12h2"
+}), /*#__PURE__*/React.createElement("path", {
+  d: "M20 12h2"
+}), /*#__PURE__*/React.createElement("path", {
+  d: "m6.34 17.66-1.41 1.41"
+}), /*#__PURE__*/React.createElement("path", {
+  d: "m19.07 4.93-1.41 1.41"
+}));
+const ChevronDown = ({
+  size = 24,
+  className = ""
+}) => /*#__PURE__*/React.createElement("svg", {
+  className: className,
+  width: size,
+  height: size,
+  viewBox: "0 0 24 24",
+  fill: "none",
+  stroke: "currentColor",
+  strokeWidth: "2"
+}, /*#__PURE__*/React.createElement("polyline", {
+  points: "6 9 12 15 18 9"
+}));
+const TrendingUp = ({
+  size = 24
+}) => /*#__PURE__*/React.createElement("svg", {
+  width: size,
+  height: size,
+  viewBox: "0 0 24 24",
+  fill: "none",
+  stroke: "currentColor",
+  strokeWidth: "2"
+}, /*#__PURE__*/React.createElement("polyline", {
+  points: "23 6 13.5 15.5 8.5 10.5 1 18"
+}), /*#__PURE__*/React.createElement("polyline", {
+  points: "17 6 23 6 23 12"
+}));
+const AlertCircle = ({
+  size = 24,
+  className = ""
+}) => /*#__PURE__*/React.createElement("svg", {
+  className: className,
+  width: size,
+  height: size,
+  viewBox: "0 0 24 24",
+  fill: "none",
+  stroke: "currentColor",
+  strokeWidth: "2"
+}, /*#__PURE__*/React.createElement("circle", {
+  cx: "12",
+  cy: "12",
+  r: "10"
+}), /*#__PURE__*/React.createElement("line", {
+  x1: "12",
+  y1: "8",
+  x2: "12",
+  y2: "12"
+}), /*#__PURE__*/React.createElement("line", {
+  x1: "12",
+  y1: "16",
+  x2: "12.01",
+  y2: "16"
+}));
+const ArrowLeft = ({
+  size = 24
+}) => /*#__PURE__*/React.createElement("svg", {
+  width: size,
+  height: size,
+  viewBox: "0 0 24 24",
+  fill: "none",
+  stroke: "currentColor",
+  strokeWidth: "2"
+}, /*#__PURE__*/React.createElement("line", {
+  x1: "19",
+  y1: "12",
+  x2: "5",
+  y2: "12"
+}), /*#__PURE__*/React.createElement("polyline", {
+  points: "12 19 5 12 12 5"
+}));
+const PlayerImage = ({
+  player,
+  size = 'md',
+  className = ''
+}) => {
+  const [imgError, setImgError] = useState(false);
+  const sizeStyles = {
+    sm: {
+      width: '40px',
+      height: '52px'
+    },
+    md: {
+      width: '56px',
+      height: '72px'
+    },
+    lg: {
+      width: '64px',
+      height: '84px'
+    },
+    xl: {
+      width: '80px',
+      height: '104px'
+    }
+  };
+  const textSizes = {
+    sm: 'text-xs',
+    md: 'text-sm',
+    lg: 'text-lg',
+    xl: 'text-xl'
+  };
+  const imgSrc = player?.images?.portrait;
+  const style = sizeStyles[size];
+  if (!imgError && imgSrc) {
+    return /*#__PURE__*/React.createElement("div", {
+      className: `rounded-lg overflow-hidden flex-shrink-0 bg-gray-200 ${className}`,
+      style: style
+    }, /*#__PURE__*/React.createElement("img", {
+      src: imgSrc,
+      alt: player?.name || 'Player',
+      className: "w-full h-full object-cover",
+      onError: () => setImgError(true)
+    }));
+  }
+  return /*#__PURE__*/React.createElement("div", {
+    className: `rounded-lg bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold flex-shrink-0 ${textSizes[size]} ${className}`,
+    style: style
+  }, "#", player?.number || '?');
+};
+function BasketballStatsApp() {
+  const [darkMode, setDarkMode] = useState(false);
+  const [activeTab, setActiveTab] = useState('leaderboards');
+  const [selectedSeason, setSelectedSeason] = useState(null);
+  const [gameType, setGameType] = useState('all');
+  const [statCategory, setStatCategory] = useState('ppg');
+  const [showTotals, setShowTotals] = useState(false);
+  const [showPlayerTotals, setShowPlayerTotals] = useState(false);
+  const [playerPageGameType, setPlayerPageGameType] = useState('all');
+  const [expandedPlayer, setExpandedPlayer] = useState(null);
+  const [recordsCategory, setRecordsCategory] = useState('all');
+  const [recordsType, setRecordsType] = useState('game');
+  const [recordsScope, setRecordsScope] = useState('season');
+  const [playerDetailTab, setPlayerDetailTab] = useState('stats');
+  const [currentView, setCurrentView] = useState('main');
+  const [selectedPlayerNumber, setSelectedPlayerNumber] = useState(null);
+  const [selectedGameId, setSelectedGameId] = useState(null);
+  const [players, setPlayers] = useState({});
+  const [allPlayersData, setAllPlayersData] = useState({});
+  const [seasonStats, setSeasonStats] = useState({});
+  const [records, setRecords] = useState({});
+  const [games, setGames] = useState([]);
+  const [allGames, setAllGames] = useState({});
+  const [allTimeGames, setAllTimeGames] = useState({});
+  const [allTimeSeasonStats, setAllTimeSeasonStats] = useState({});
+  const [seasonsMeta, setSeasonsMeta] = useState({});
+  const [playerAnalysis, setPlayerAnalysis] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const currentTeam = getTeamFromURL();
+  const teamConfig = TEAM_CONFIG[currentTeam];
+  useEffect(() => {
+    loadData();
+  }, []);
+  useEffect(() => {
+    if (!loading) {
+      loadData();
+    }
+  }, [selectedSeason]);
+  const loadData = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const teamDataPath = TEAM_CONFIG[currentTeam]?.dataPath || `data/${currentTeam}`;
+      let activeSeason = selectedSeason;
+      if (!activeSeason) {
+        const metaResp = await fetch(`${teamDataPath}/seasons_meta.json`).catch(() => null);
+        if (metaResp && metaResp.ok) {
+          const metaData = await metaResp.json();
+          setSeasonsMeta(metaData);
+          const seasons = Object.keys(metaData).sort().reverse();
+          if (seasons.length > 0) {
+            activeSeason = seasons[0];
+            setSelectedSeason(activeSeason);
+          }
         }
-
-        ReactDOM.render(<BasketballStatsApp />, document.getElementById('root'));
+      }
+      const responses = await Promise.all([fetch(`${teamDataPath}/players.json`).catch(() => null), activeSeason ? fetch(`${teamDataPath}/seasons/${activeSeason}.json`).catch(() => null) : Promise.resolve(null), fetch(`${teamDataPath}/records.json`).catch(() => null), fetch(`${teamDataPath}/games_index.json`).catch(() => null), fetch(`${teamDataPath}/seasons_meta.json`).catch(() => null), fetch(`${teamDataPath}/analysis.json`).catch(() => null)]);
+      if (responses[0] && responses[0].ok) {
+        const playersData = await responses[0].json();
+        setPlayers(playersData);
+        setAllPlayersData(playersData);
+      } else {
+        setPlayers({});
+        setAllPlayersData({});
+      }
+      if (responses[1] && responses[1].ok) {
+        const seasonData = await responses[1].json();
+        setSeasonStats(seasonData);
+      } else {
+        setSeasonStats({});
+      }
+      if (responses[2] && responses[2].ok) {
+        try {
+          setRecords(await responses[2].json());
+        } catch (e) {
+          setRecords({});
+        }
+      } else {
+        setRecords({});
+      }
+      let currentSeasonsMeta = {};
+      if (responses[4] && responses[4].ok) {
+        try {
+          currentSeasonsMeta = await responses[4].json();
+          setSeasonsMeta(currentSeasonsMeta);
+        } catch (e) {
+          setSeasonsMeta({});
+        }
+      } else {
+        setSeasonsMeta({});
+      }
+      if (responses[5] && responses[5].ok) {
+        try {
+          setPlayerAnalysis(await responses[5].json());
+        } catch (e) {
+          setPlayerAnalysis({});
+        }
+      } else {
+        setPlayerAnalysis({});
+      }
+      if (responses[3] && responses[3].ok) {
+        try {
+          const gamesIndexData = await responses[3].json();
+          const loadedGames = {};
+          const allLoadedGames = {};
+          for (const [gameId, gameInfo] of Object.entries(gamesIndexData)) {
+            const gameSeason = gameInfo.season || '';
+            const dateYear = gameInfo.date?.substring(0, 4) || '';
+            try {
+              const gameResponse = await fetch(`${teamDataPath}/games/${gameInfo.filename}`);
+              if (gameResponse.ok) {
+                const gameData = await gameResponse.json();
+                allLoadedGames[gameId] = gameData;
+                // *** FIX: use activeSeason not selectedSeason ***
+                if ((gameSeason || dateYear) === activeSeason) {
+                  loadedGames[gameId] = gameData;
+                }
+              }
+            } catch (e) {
+              console.log(`Could not load game: ${gameInfo.filename}`, e);
+            }
+          }
+          setAllGames(loadedGames);
+          setGames(Object.values(loadedGames));
+          setAllTimeGames(allLoadedGames);
+        } catch (e) {
+          setAllGames({});
+          setGames([]);
+          setAllTimeGames({});
+        }
+      } else {
+        setAllGames({});
+        setGames([]);
+        setAllTimeGames({});
+      }
+      const availableSeasonsForLoad = Object.keys(currentSeasonsMeta);
+      const allSeasonStats = {};
+      for (const seasonKey of availableSeasonsForLoad) {
+        try {
+          const seasonResponse = await fetch(`${teamDataPath}/seasons/${seasonKey}.json`);
+          if (seasonResponse.ok) {
+            allSeasonStats[seasonKey] = await seasonResponse.json();
+          }
+        } catch (e) {
+          console.log(`Could not load season ${seasonKey}:`, e);
+        }
+      }
+      setAllTimeSeasonStats(allSeasonStats);
+      setLoading(false);
+    } catch (err) {
+      console.error('Error loading data:', err);
+      setError('Error loading data. Check console for details.');
+      setLoading(false);
+    }
+  };
+  const averageCategories = [{
+    key: 'ppg',
+    label: 'PPG',
+    desc: 'Points Per Game'
+  }, {
+    key: 'rpg',
+    label: 'RPG',
+    desc: 'Rebounds Per Game'
+  }, {
+    key: 'apg',
+    label: 'APG',
+    desc: 'Assists Per Game'
+  }, {
+    key: 'spg',
+    label: 'SPG',
+    desc: 'Steals Per Game'
+  }, {
+    key: 'bpg',
+    label: 'BPG',
+    desc: 'Blocks Per Game'
+  }, {
+    key: 'fg_pct',
+    label: 'FG%',
+    desc: 'Field Goal %'
+  }, {
+    key: '3pt_pct',
+    label: '3P%',
+    desc: 'Three Point %'
+  }, {
+    key: 'ft_pct',
+    label: 'FT%',
+    desc: 'Free Throw %'
+  }, {
+    key: '2pt_pct',
+    label: '2P%',
+    desc: 'Two Point %'
+  }, {
+    key: 'tpg',
+    label: 'TPG',
+    desc: 'Turnovers Per Game'
+  }, {
+    key: 'fpg',
+    label: 'FPG',
+    desc: 'Fouls Per Game'
+  }, {
+    key: 'orebpg',
+    label: 'ORPG',
+    desc: 'Off. Reb Per Game'
+  }, {
+    key: 'drebpg',
+    label: 'DRPG',
+    desc: 'Def. Reb Per Game'
+  }, {
+    key: 'fga_pg',
+    label: 'FGA',
+    desc: 'FG Attempts Per Game'
+  }, {
+    key: '3pa_pg',
+    label: '3PA',
+    desc: '3PT Attempts Per Game'
+  }, {
+    key: 'fta_pg',
+    label: 'FTA',
+    desc: 'FT Attempts Per Game'
+  }, {
+    key: 'fgm_pg',
+    label: 'FGM',
+    desc: 'FG Made Per Game'
+  }, {
+    key: '3pm_pg',
+    label: '3PM',
+    desc: '3PT Made Per Game'
+  }, {
+    key: 'ftm_pg',
+    label: 'FTM',
+    desc: 'FT Made Per Game'
+  }];
+  const totalCategories = [{
+    key: 'pts',
+    label: 'PTS',
+    desc: 'Total Points'
+  }, {
+    key: 'reb',
+    label: 'REB',
+    desc: 'Total Rebounds'
+  }, {
+    key: 'asst',
+    label: 'AST',
+    desc: 'Total Assists'
+  }, {
+    key: 'stl',
+    label: 'STL',
+    desc: 'Total Steals'
+  }, {
+    key: 'blk',
+    label: 'BLK',
+    desc: 'Total Blocks'
+  }, {
+    key: 'to',
+    label: 'TO',
+    desc: 'Total Turnovers'
+  }, {
+    key: 'foul',
+    label: 'PF',
+    desc: 'Total Fouls'
+  }, {
+    key: 'oreb',
+    label: 'OREB',
+    desc: 'Total Off. Rebounds'
+  }, {
+    key: 'dreb',
+    label: 'DREB',
+    desc: 'Total Def. Rebounds'
+  }, {
+    key: 'gp',
+    label: 'GP',
+    desc: 'Games Played'
+  }];
+  const statCategories = showTotals ? totalCategories : averageCategories;
+  useEffect(() => {
+    if (showTotals && !totalCategories.find(c => c.key === statCategory)) setStatCategory('pts');else if (!showTotals && !averageCategories.find(c => c.key === statCategory)) setStatCategory('ppg');
+  }, [showTotals]);
+  const sortedPlayers = useMemo(() => {
+    if (!seasonStats[gameType]) return [];
+    return Object.entries(seasonStats[gameType]).map(([num, stats]) => {
+      const playerInfo = players[num] || allPlayersData[num] || {
+        name: `Player #${num}`,
+        number: num
+      };
+      return {
+        ...playerInfo,
+        ...stats,
+        number: num
+      };
+    }).filter(p => p.gp > 0).sort((a, b) => (Number(b[statCategory]) || 0) - (Number(a[statCategory]) || 0));
+  }, [seasonStats, gameType, statCategory, players, allPlayersData]);
+  const formatDate = dateStr => {
+    if (!dateStr) return '';
+    const match = dateStr.match(/(\d{4}-\d{2}-\d{2})/);
+    return match ? match[1] : dateStr;
+  };
+  const getSeasonDisplayName = key => seasonsMeta[key]?.display_name || `${key} Season`;
+  const availableSeasons = useMemo(() => {
+    const seasons = Object.keys(seasonsMeta);
+    if (seasons.length === 0) return ['2025', '2024'];
+    return seasons.sort().reverse();
+  }, [seasonsMeta]);
+  const bgClass = darkMode ? 'bg-gray-900' : 'bg-gray-50';
+  const cardClass = darkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-900';
+  const textClass = darkMode ? 'text-gray-300' : 'text-gray-600';
+  const headingClass = darkMode ? 'text-white' : 'text-gray-900';
+  const borderClass = darkMode ? 'border-gray-700' : 'border-gray-200';
+  const accentClass = `bg-gradient-to-r ${teamConfig.colors.primary}`;
+  const accentColor = teamConfig.colors.accent;
+  const formatStatValue = (value, isPercentage = false) => {
+    if (value === null || value === undefined) return '0';
+    const num = Number(value);
+    if (isNaN(num)) return '0';
+    if (isPercentage || statCategory.includes('pct')) return num.toFixed(1);
+    if (showTotals) return Math.round(num).toString();
+    return num.toFixed(1);
+  };
+  if (loading) {
+    return /*#__PURE__*/React.createElement("div", {
+      className: `min-h-screen ${bgClass} flex items-center justify-center`
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "text-center"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"
+    }), /*#__PURE__*/React.createElement("p", {
+      className: textClass
+    }, "Loading stats...")));
+  }
+  if (error || Object.keys(players).length === 0) {
+    return /*#__PURE__*/React.createElement("div", {
+      className: `min-h-screen ${bgClass}`
+    }, /*#__PURE__*/React.createElement("header", {
+      className: `${accentClass} text-white`
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "max-w-7xl mx-auto px-4 py-4"
+    }, /*#__PURE__*/React.createElement("a", {
+      href: "index.html",
+      className: "inline-flex items-center gap-2 text-white/80 hover:text-white mb-3 transition-colors"
+    }, /*#__PURE__*/React.createElement(ChevronDown, {
+      size: 20,
+      className: "rotate-90"
+    }), /*#__PURE__*/React.createElement("span", null, "Back to Team Selection")), /*#__PURE__*/React.createElement("div", {
+      className: "flex items-center gap-4"
+    }, /*#__PURE__*/React.createElement("img", {
+      src: teamConfig.logo,
+      alt: teamConfig.name,
+      className: "w-12 h-12 object-contain",
+      onError: e => {
+        e.target.style.display = 'none';
+      }
+    }), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h1", {
+      className: "text-2xl font-bold"
+    }, teamConfig.displayName), /*#__PURE__*/React.createElement("p", {
+      className: "text-blue-100 text-sm"
+    }, "Team Statistics"))))), /*#__PURE__*/React.createElement("div", {
+      className: "max-w-7xl mx-auto px-4 py-12"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: `${cardClass} rounded-lg p-8 text-center`
+    }, /*#__PURE__*/React.createElement(AlertCircle, {
+      size: 48,
+      className: "mx-auto mb-4 opacity-50"
+    }), /*#__PURE__*/React.createElement("h2", {
+      className: `text-2xl font-bold mb-4 ${headingClass}`
+    }, "Welcome to ", teamConfig.displayName, " Stats!"), /*#__PURE__*/React.createElement("p", {
+      className: `${textClass} mb-4`
+    }, "Your stats site is ready, but no data has been uploaded yet."), /*#__PURE__*/React.createElement("div", {
+      className: `${textClass} text-left max-w-2xl mx-auto space-y-3`
+    }, /*#__PURE__*/React.createElement("p", {
+      className: `font-bold text-lg ${headingClass}`
+    }, "Next Steps:"), /*#__PURE__*/React.createElement("ol", {
+      className: "list-decimal list-inside space-y-2"
+    }, /*#__PURE__*/React.createElement("li", null, "Run the parser script on your EasyStats HTML files"), /*#__PURE__*/React.createElement("li", null, "Upload the generated ", /*#__PURE__*/React.createElement("code", {
+      className: "bg-gray-200 px-2 py-1 rounded"
+    }, "data/"), " folder to your GitHub repo"), /*#__PURE__*/React.createElement("li", null, "Commit and push to GitHub"), /*#__PURE__*/React.createElement("li", null, "Wait 5-10 minutes for GitHub Pages to update"))))));
+  }
+  if (currentView === 'boxscore' && selectedGameId) {
+    const game = allGames[selectedGameId];
+    if (!game) {
+      setCurrentView('main');
+      return null;
+    }
+    return /*#__PURE__*/React.createElement("div", {
+      className: `min-h-screen ${bgClass} transition-colors duration-300`
+    }, /*#__PURE__*/React.createElement("header", {
+      className: `${accentClass} text-white sticky top-0 z-50 shadow-lg`
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "max-w-7xl mx-auto px-4 py-4"
+    }, /*#__PURE__*/React.createElement("button", {
+      onClick: () => setCurrentView('main'),
+      className: "inline-flex items-center gap-2 text-white/80 hover:text-white mb-3 transition-colors text-sm"
+    }, /*#__PURE__*/React.createElement(ArrowLeft, {
+      size: 16
+    }), /*#__PURE__*/React.createElement("span", null, "Back to Games")), /*#__PURE__*/React.createElement("div", {
+      className: "flex items-center justify-between"
+    }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h1", {
+      className: "text-2xl font-bold"
+    }, "Box Score"), /*#__PURE__*/React.createElement("p", {
+      className: "text-white/80 text-sm"
+    }, "vs ", game.opponent, " • ", game.date)), /*#__PURE__*/React.createElement("div", {
+      className: `text-3xl font-bold ${game.result === 'W' ? 'text-green-300' : 'text-red-300'}`
+    }, game.score.us, " - ", game.score.them)))), /*#__PURE__*/React.createElement("div", {
+      className: "max-w-7xl mx-auto px-4 py-6"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: `${cardClass} rounded-lg border ${borderClass} overflow-hidden`
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "overflow-x-auto"
+    }, /*#__PURE__*/React.createElement("table", {
+      className: "w-full text-sm"
+    }, /*#__PURE__*/React.createElement("thead", {
+      className: darkMode ? 'bg-gray-700' : 'bg-gray-100'
+    }, /*#__PURE__*/React.createElement("tr", null, ['Player', 'PTS', 'REB', 'AST', 'STL', 'BLK', 'TO', 'FG', '3PT', 'FT', 'OREB', 'DREB', 'PF'].map((h, i) => /*#__PURE__*/React.createElement("th", {
+      key: h,
+      className: `px-${i === 0 ? 4 : 3} py-3 text-${i === 0 ? 'left' : 'center'} font-semibold ${headingClass}`
+    }, h)))), /*#__PURE__*/React.createElement("tbody", null, Object.entries(game.stats || {}).sort((a, b) => (b[1].pts || 0) - (a[1].pts || 0)).map(([playerNum, stats]) => {
+      const player = players[playerNum] || allPlayersData[playerNum] || {
+        name: `#${playerNum}`,
+        number: playerNum
+      };
+      return /*#__PURE__*/React.createElement("tr", {
+        key: playerNum,
+        className: `border-t ${borderClass}`
+      }, /*#__PURE__*/React.createElement("td", {
+        className: "px-4 py-3"
+      }, /*#__PURE__*/React.createElement("div", {
+        className: "flex items-center gap-3"
+      }, /*#__PURE__*/React.createElement(PlayerImage, {
+        player: player,
+        size: "sm"
+      }), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+        className: `font-medium ${headingClass}`
+      }, player.display_name || player.name), /*#__PURE__*/React.createElement("div", {
+        className: `text-xs ${textClass}`
+      }, "#", player.number)))), /*#__PURE__*/React.createElement("td", {
+        className: `px-3 py-3 text-center font-bold text-${accentColor}`
+      }, stats.pts || 0), /*#__PURE__*/React.createElement("td", {
+        className: "px-3 py-3 text-center"
+      }, stats.reb || 0), /*#__PURE__*/React.createElement("td", {
+        className: "px-3 py-3 text-center"
+      }, stats.asst || 0), /*#__PURE__*/React.createElement("td", {
+        className: "px-3 py-3 text-center"
+      }, stats.stl || 0), /*#__PURE__*/React.createElement("td", {
+        className: "px-3 py-3 text-center"
+      }, stats.blk || 0), /*#__PURE__*/React.createElement("td", {
+        className: "px-3 py-3 text-center"
+      }, stats.to || 0), /*#__PURE__*/React.createElement("td", {
+        className: "px-3 py-3 text-center whitespace-nowrap"
+      }, stats.fg ? `${stats.fg[0]}-${stats.fg[1]}` : '-'), /*#__PURE__*/React.createElement("td", {
+        className: "px-3 py-3 text-center whitespace-nowrap"
+      }, stats['3pt'] ? `${stats['3pt'][0]}-${stats['3pt'][1]}` : '-'), /*#__PURE__*/React.createElement("td", {
+        className: "px-3 py-3 text-center whitespace-nowrap"
+      }, stats.ft ? `${stats.ft[0]}-${stats.ft[1]}` : '-'), /*#__PURE__*/React.createElement("td", {
+        className: "px-3 py-3 text-center"
+      }, stats.oreb || 0), /*#__PURE__*/React.createElement("td", {
+        className: "px-3 py-3 text-center"
+      }, stats.dreb || 0), /*#__PURE__*/React.createElement("td", {
+        className: "px-3 py-3 text-center"
+      }, stats.foul || 0));
+    })), /*#__PURE__*/React.createElement("tfoot", {
+      className: darkMode ? 'bg-gray-700' : 'bg-gray-100'
+    }, /*#__PURE__*/React.createElement("tr", {
+      className: `border-t-2 ${borderClass} font-bold`
+    }, /*#__PURE__*/React.createElement("td", {
+      className: `px-4 py-3 ${headingClass}`
+    }, "TEAM TOTALS"), /*#__PURE__*/React.createElement("td", {
+      className: `px-3 py-3 text-center text-${accentColor}`
+    }, Object.values(game.stats || {}).reduce((s, p) => s + (p.pts || 0), 0)), /*#__PURE__*/React.createElement("td", {
+      className: "px-3 py-3 text-center"
+    }, Object.values(game.stats || {}).reduce((s, p) => s + (p.reb || 0), 0)), /*#__PURE__*/React.createElement("td", {
+      className: "px-3 py-3 text-center"
+    }, Object.values(game.stats || {}).reduce((s, p) => s + (p.asst || 0), 0)), /*#__PURE__*/React.createElement("td", {
+      className: "px-3 py-3 text-center"
+    }, Object.values(game.stats || {}).reduce((s, p) => s + (p.stl || 0), 0)), /*#__PURE__*/React.createElement("td", {
+      className: "px-3 py-3 text-center"
+    }, Object.values(game.stats || {}).reduce((s, p) => s + (p.blk || 0), 0)), /*#__PURE__*/React.createElement("td", {
+      className: "px-3 py-3 text-center"
+    }, Object.values(game.stats || {}).reduce((s, p) => s + (p.to || 0), 0)), /*#__PURE__*/React.createElement("td", {
+      className: "px-3 py-3 text-center whitespace-nowrap"
+    }, Object.values(game.stats || {}).reduce((s, p) => s + (p.fg?.[0] || 0), 0), "-", Object.values(game.stats || {}).reduce((s, p) => s + (p.fg?.[1] || 0), 0)), /*#__PURE__*/React.createElement("td", {
+      className: "px-3 py-3 text-center whitespace-nowrap"
+    }, Object.values(game.stats || {}).reduce((s, p) => s + (p['3pt']?.[0] || 0), 0), "-", Object.values(game.stats || {}).reduce((s, p) => s + (p['3pt']?.[1] || 0), 0)), /*#__PURE__*/React.createElement("td", {
+      className: "px-3 py-3 text-center whitespace-nowrap"
+    }, Object.values(game.stats || {}).reduce((s, p) => s + (p.ft?.[0] || 0), 0), "-", Object.values(game.stats || {}).reduce((s, p) => s + (p.ft?.[1] || 0), 0)), /*#__PURE__*/React.createElement("td", {
+      className: "px-3 py-3 text-center"
+    }, Object.values(game.stats || {}).reduce((s, p) => s + (p.oreb || 0), 0)), /*#__PURE__*/React.createElement("td", {
+      className: "px-3 py-3 text-center"
+    }, Object.values(game.stats || {}).reduce((s, p) => s + (p.dreb || 0), 0)), /*#__PURE__*/React.createElement("td", {
+      className: "px-3 py-3 text-center"
+    }, Object.values(game.stats || {}).reduce((s, p) => s + (p.foul || 0), 0)))))))), /*#__PURE__*/React.createElement("footer", {
+      className: `${cardClass} border-t ${borderClass} mt-12 py-6`
+    }, /*#__PURE__*/React.createElement("div", {
+      className: `max-w-7xl mx-auto px-4 text-center ${textClass}`
+    }, /*#__PURE__*/React.createElement("p", null, teamConfig.name, " • Season Stats • Powered by EasyStats"))));
+  }
+  if (currentView === 'player' && selectedPlayerNumber) {
+    const player = players[selectedPlayerNumber] || allPlayersData[selectedPlayerNumber];
+    const playerStats = seasonStats[playerPageGameType]?.[selectedPlayerNumber] || {};
+    if (!player) {
+      setCurrentView('main');
+      return null;
+    }
+    const playerGames = Object.entries(allGames).filter(([_, game]) => {
+      const hasStats = game.stats && game.stats[selectedPlayerNumber];
+      if (playerPageGameType === 'regular') return hasStats && !game.isPlayoff;
+      if (playerPageGameType === 'playoff') return hasStats && game.isPlayoff;
+      return hasStats;
+    }).sort((a, b) => new Date(b[1].date) - new Date(a[1].date));
+    const getLeaderboardPosition = statKey => {
+      if (!seasonStats[playerPageGameType]) return null;
+      const allPlayers = Object.entries(seasonStats[playerPageGameType]).filter(([_, stats]) => stats.gp > 0).map(([num, stats]) => ({
+        number: num,
+        value: Number(stats[statKey]) || 0
+      })).sort((a, b) => b.value - a.value);
+      const playerValue = Number(seasonStats[playerPageGameType][selectedPlayerNumber]?.[statKey]) || 0;
+      const rank = allPlayers.filter(p => p.value > playerValue).length + 1;
+      const isTied = allPlayers.filter(p => p.value === playerValue).length > 1;
+      return {
+        rank,
+        isTied
+      };
+    };
+    const playerStatCategories = [{
+      key: 'ppg',
+      totalKey: 'pts',
+      label: 'Points',
+      perGame: true
+    }, {
+      key: 'rpg',
+      totalKey: 'reb',
+      label: 'Rebounds',
+      perGame: true
+    }, {
+      key: 'apg',
+      totalKey: 'asst',
+      label: 'Assists',
+      perGame: true
+    }, {
+      key: 'spg',
+      totalKey: 'stl',
+      label: 'Steals',
+      perGame: true
+    }, {
+      key: 'bpg',
+      totalKey: 'blk',
+      label: 'Blocks',
+      perGame: true
+    }, {
+      key: 'tpg',
+      totalKey: 'to',
+      label: 'Turnovers',
+      perGame: true
+    }, {
+      key: 'fpg',
+      totalKey: 'foul',
+      label: 'Fouls',
+      perGame: true
+    }, {
+      key: 'orebpg',
+      totalKey: 'oreb',
+      label: 'Off. Reb',
+      perGame: true
+    }, {
+      key: 'drebpg',
+      totalKey: 'dreb',
+      label: 'Def. Reb',
+      perGame: true
+    }, {
+      key: 'fg_pct',
+      label: 'FG%',
+      perGame: false
+    }, {
+      key: '3pt_pct',
+      label: '3P%',
+      perGame: false
+    }, {
+      key: 'ft_pct',
+      label: 'FT%',
+      perGame: false
+    }, {
+      key: '2pt_pct',
+      label: '2P%',
+      perGame: false
+    }];
+    return /*#__PURE__*/React.createElement("div", {
+      className: `min-h-screen ${bgClass} transition-colors duration-300`
+    }, /*#__PURE__*/React.createElement("header", {
+      className: `${accentClass} text-white sticky top-0 z-50 shadow-lg`
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "max-w-7xl mx-auto px-4 py-4"
+    }, /*#__PURE__*/React.createElement("button", {
+      onClick: () => setCurrentView('main'),
+      className: "inline-flex items-center gap-2 text-white/80 hover:text-white mb-3 transition-colors text-sm"
+    }, /*#__PURE__*/React.createElement(ArrowLeft, {
+      size: 16
+    }), /*#__PURE__*/React.createElement("span", null, "Back to Roster")), /*#__PURE__*/React.createElement("div", {
+      className: "flex items-center gap-4"
+    }, /*#__PURE__*/React.createElement(PlayerImage, {
+      player: player,
+      size: "xl"
+    }), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h1", {
+      className: "text-2xl font-bold"
+    }, player.display_name || player.name), /*#__PURE__*/React.createElement("p", {
+      className: "text-white/80"
+    }, "#", player.number), player.teams && /*#__PURE__*/React.createElement("p", {
+      className: "text-white/60 text-sm"
+    }, player.teams.join(' • '))), /*#__PURE__*/React.createElement("div", {
+      className: "ml-auto flex items-center gap-4"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "text-right"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "text-3xl font-bold"
+    }, playerStats.gp || 0), /*#__PURE__*/React.createElement("div", {
+      className: "text-white/80 text-sm"
+    }, "Games Played")), /*#__PURE__*/React.createElement("button", {
+      onClick: () => setDarkMode(!darkMode),
+      className: "p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors"
+    }, darkMode ? /*#__PURE__*/React.createElement(Sun, {
+      size: 24
+    }) : /*#__PURE__*/React.createElement(Moon, {
+      size: 24
+    })))))), /*#__PURE__*/React.createElement("div", {
+      className: `${cardClass} sticky top-[88px] z-40 border-b ${borderClass} shadow-md`
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "max-w-7xl mx-auto px-4 py-3"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "flex items-center gap-3"
+    }, /*#__PURE__*/React.createElement("span", {
+      className: `text-sm font-medium ${textClass}`
+    }, "Season:"), /*#__PURE__*/React.createElement("select", {
+      value: selectedSeason,
+      onChange: e => setSelectedSeason(e.target.value),
+      className: `px-3 py-2 rounded-lg border ${borderClass} ${cardClass} text-sm font-medium`
+    }, availableSeasons.map(season => /*#__PURE__*/React.createElement("option", {
+      key: season,
+      value: season
+    }, getSeasonDisplayName(season)))), /*#__PURE__*/React.createElement("div", {
+      className: `flex rounded-lg border ${borderClass} overflow-hidden ml-auto`
+    }, /*#__PURE__*/React.createElement("button", {
+      onClick: () => setPlayerDetailTab('stats'),
+      className: `px-4 py-2 text-sm font-medium transition-colors ${playerDetailTab === 'stats' ? `${accentClass} text-white` : `${cardClass} hover:opacity-80`}`
+    }, "Stats"), /*#__PURE__*/React.createElement("button", {
+      onClick: () => setPlayerDetailTab('analysis'),
+      className: `px-4 py-2 text-sm font-medium transition-colors ${playerDetailTab === 'analysis' ? `${accentClass} text-white` : `${cardClass} hover:opacity-80`}`
+    }, "AI Analysis"))))), playerDetailTab === 'stats' ? /*#__PURE__*/React.createElement("div", {
+      className: "max-w-7xl mx-auto px-4 py-6 space-y-6"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: `${cardClass} rounded-lg border ${borderClass} p-6`
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "flex flex-wrap items-center justify-between gap-4 mb-4"
+    }, /*#__PURE__*/React.createElement("h2", {
+      className: `text-xl font-bold ${headingClass}`
+    }, "Season Statistics"), /*#__PURE__*/React.createElement("div", {
+      className: "flex flex-wrap gap-2"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: `flex rounded-lg border ${borderClass} overflow-hidden`
+    }, [{
+      key: 'all',
+      label: 'All'
+    }, {
+      key: 'regular',
+      label: 'Regular'
+    }, {
+      key: 'playoff',
+      label: 'Playoffs'
+    }].map(opt => /*#__PURE__*/React.createElement("button", {
+      key: opt.key,
+      onClick: () => setPlayerPageGameType(opt.key),
+      className: `px-3 py-1.5 text-sm font-medium transition-colors ${playerPageGameType === opt.key ? `${accentClass} text-white` : `${cardClass} hover:opacity-80`}`
+    }, opt.label))), /*#__PURE__*/React.createElement("div", {
+      className: `flex rounded-lg border ${borderClass} overflow-hidden`
+    }, /*#__PURE__*/React.createElement("button", {
+      onClick: () => setShowPlayerTotals(false),
+      className: `px-3 py-1.5 text-sm font-medium transition-colors ${!showPlayerTotals ? `${accentClass} text-white` : `${cardClass} hover:opacity-80`}`
+    }, "Per Game"), /*#__PURE__*/React.createElement("button", {
+      onClick: () => setShowPlayerTotals(true),
+      className: `px-3 py-1.5 text-sm font-medium transition-colors ${showPlayerTotals ? `${accentClass} text-white` : `${cardClass} hover:opacity-80`}`
+    }, "Totals")))), /*#__PURE__*/React.createElement("div", {
+      className: "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"
+    }, playerStatCategories.map(({
+      key,
+      totalKey,
+      label,
+      perGame
+    }) => {
+      const displayKey = showPlayerTotals && perGame && totalKey ? totalKey : key;
+      const value = playerStats[displayKey];
+      const positionData = getLeaderboardPosition(displayKey);
+      return /*#__PURE__*/React.createElement("div", {
+        key: key,
+        className: `p-3 rounded-lg ${darkMode ? 'bg-gray-700' : 'bg-gray-100'}`
+      }, /*#__PURE__*/React.createElement("div", {
+        className: `text-2xl font-bold text-${accentColor}`
+      }, value !== undefined && value !== null ? typeof value === 'number' ? showPlayerTotals && perGame ? Math.round(value) : value.toFixed(1) : value : '-'), /*#__PURE__*/React.createElement("div", {
+        className: `text-sm ${textClass}`
+      }, label), positionData && positionData.rank && /*#__PURE__*/React.createElement("div", {
+        className: `text-xs mt-1 ${positionData.rank <= 3 ? 'text-yellow-500 font-bold' : textClass}`
+      }, positionData.isTied ? 'T' : '', "#", positionData.rank, " on team"));
+    })), playerStats.fg && /*#__PURE__*/React.createElement("div", {
+      className: "mt-4 pt-4 border-t border-gray-200 dark:border-gray-700"
+    }, /*#__PURE__*/React.createElement("h3", {
+      className: `text-sm font-semibold mb-3 ${headingClass}`
+    }, "Shooting Splits"), /*#__PURE__*/React.createElement("div", {
+      className: "grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm"
+    }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", {
+      className: textClass
+    }, "FG: "), /*#__PURE__*/React.createElement("span", {
+      className: `font-bold ${headingClass}`
+    }, playerStats.fg[0], "-", playerStats.fg[1], " (", playerStats.fg_pct?.toFixed(1) || 0, "%)")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", {
+      className: textClass
+    }, "3PT: "), /*#__PURE__*/React.createElement("span", {
+      className: `font-bold ${headingClass}`
+    }, playerStats['3pt']?.[0] || 0, "-", playerStats['3pt']?.[1] || 0, " (", playerStats['3pt_pct']?.toFixed(1) || 0, "%)")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", {
+      className: textClass
+    }, "2PT: "), /*#__PURE__*/React.createElement("span", {
+      className: `font-bold ${headingClass}`
+    }, playerStats['2pt']?.[0] || 0, "-", playerStats['2pt']?.[1] || 0, " (", playerStats['2pt_pct']?.toFixed(1) || 0, "%)")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", {
+      className: textClass
+    }, "FT: "), /*#__PURE__*/React.createElement("span", {
+      className: `font-bold ${headingClass}`
+    }, playerStats.ft?.[0] || 0, "-", playerStats.ft?.[1] || 0, " (", playerStats.ft_pct?.toFixed(1) || 0, "%)"))))), /*#__PURE__*/React.createElement("div", {
+      className: `${cardClass} rounded-lg border ${borderClass} p-6`
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "flex items-center justify-between mb-4"
+    }, /*#__PURE__*/React.createElement("h2", {
+      className: `text-xl font-bold ${headingClass}`
+    }, "Leaderboard Rankings"), /*#__PURE__*/React.createElement("div", {
+      className: `flex rounded-lg border ${borderClass} overflow-hidden`
+    }, /*#__PURE__*/React.createElement("button", {
+      onClick: () => setShowPlayerTotals(false),
+      className: `px-3 py-1.5 text-sm font-medium transition-colors ${!showPlayerTotals ? `${accentClass} text-white` : `${cardClass} hover:opacity-80`}`
+    }, "Per Game"), /*#__PURE__*/React.createElement("button", {
+      onClick: () => setShowPlayerTotals(true),
+      className: `px-3 py-1.5 text-sm font-medium transition-colors ${showPlayerTotals ? `${accentClass} text-white` : `${cardClass} hover:opacity-80`}`
+    }, "Totals"))), /*#__PURE__*/React.createElement("div", {
+      className: "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3"
+    }, (showPlayerTotals ? [{
+      key: 'pts',
+      label: 'PTS'
+    }, {
+      key: 'reb',
+      label: 'REB'
+    }, {
+      key: 'asst',
+      label: 'AST'
+    }, {
+      key: 'stl',
+      label: 'STL'
+    }, {
+      key: 'blk',
+      label: 'BLK'
+    }, {
+      key: 'to',
+      label: 'TO'
+    }, {
+      key: 'foul',
+      label: 'PF'
+    }, {
+      key: 'oreb',
+      label: 'OREB'
+    }, {
+      key: 'dreb',
+      label: 'DREB'
+    }, {
+      key: 'gp',
+      label: 'GP'
+    }, {
+      key: 'fg_pct',
+      label: 'FG%'
+    }, {
+      key: '3pt_pct',
+      label: '3P%'
+    }, {
+      key: 'ft_pct',
+      label: 'FT%'
+    }, {
+      key: '2pt_pct',
+      label: '2P%'
+    }] : [{
+      key: 'ppg',
+      label: 'PPG'
+    }, {
+      key: 'rpg',
+      label: 'RPG'
+    }, {
+      key: 'apg',
+      label: 'APG'
+    }, {
+      key: 'spg',
+      label: 'SPG'
+    }, {
+      key: 'bpg',
+      label: 'BPG'
+    }, {
+      key: 'tpg',
+      label: 'TPG'
+    }, {
+      key: 'fpg',
+      label: 'FPG'
+    }, {
+      key: 'orebpg',
+      label: 'ORPG'
+    }, {
+      key: 'drebpg',
+      label: 'DRPG'
+    }, {
+      key: 'fga_pg',
+      label: 'FGA'
+    }, {
+      key: '3pa_pg',
+      label: '3PA'
+    }, {
+      key: 'fta_pg',
+      label: 'FTA'
+    }, {
+      key: 'fgm_pg',
+      label: 'FGM'
+    }, {
+      key: '3pm_pg',
+      label: '3PM'
+    }, {
+      key: 'ftm_pg',
+      label: 'FTM'
+    }, {
+      key: 'fg_pct',
+      label: 'FG%'
+    }, {
+      key: '3pt_pct',
+      label: '3P%'
+    }, {
+      key: 'ft_pct',
+      label: 'FT%'
+    }, {
+      key: '2pt_pct',
+      label: '2P%'
+    }]).map(({
+      key,
+      label
+    }) => {
+      const positionData = getLeaderboardPosition(key);
+      const position = positionData?.rank;
+      const isTied = positionData?.isTied;
+      const value = playerStats[key];
+      const isTotal = showPlayerTotals && !key.includes('pct');
+      return /*#__PURE__*/React.createElement("div", {
+        key: key,
+        className: `p-3 rounded-lg text-center ${position === 1 ? darkMode ? 'bg-yellow-900/30 border-2 border-yellow-400' : 'bg-yellow-100 border-2 border-yellow-400' : position === 2 ? darkMode ? 'bg-gray-600 border-2 border-gray-400' : 'bg-gray-200 border-2 border-gray-400' : position === 3 ? darkMode ? 'bg-orange-900/30 border-2 border-orange-400' : 'bg-orange-100 border-2 border-orange-400' : darkMode ? 'bg-gray-700' : 'bg-gray-100'}`
+      }, /*#__PURE__*/React.createElement("div", {
+        className: `text-2xl font-bold ${position === 1 ? 'text-yellow-600' : position === 2 ? darkMode ? 'text-white' : 'text-gray-700' : position === 3 ? 'text-orange-500' : `text-${accentColor}`}`
+      }, position ? `${isTied ? 'T' : ''}#${position}` : '-'), /*#__PURE__*/React.createElement("div", {
+        className: `text-xs font-medium ${textClass}`
+      }, label), /*#__PURE__*/React.createElement("div", {
+        className: `text-xs ${textClass}`
+      }, value !== undefined ? typeof value === 'number' ? isTotal ? Math.round(value) : value.toFixed(1) : value : '-'));
+    }))), /*#__PURE__*/React.createElement("div", {
+      className: `${cardClass} rounded-lg border ${borderClass} overflow-hidden`
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "p-4 border-b ${borderClass}"
+    }, /*#__PURE__*/React.createElement("h2", {
+      className: `text-xl font-bold ${headingClass}`
+    }, "Game Log")), playerGames.length === 0 ? /*#__PURE__*/React.createElement("div", {
+      className: `p-8 text-center ${textClass}`
+    }, /*#__PURE__*/React.createElement(Calendar, {
+      size: 48,
+      className: "mx-auto mb-4 opacity-50"
+    }), /*#__PURE__*/React.createElement("p", null, "No games found for this player.")) : /*#__PURE__*/React.createElement("div", {
+      className: "overflow-x-auto"
+    }, /*#__PURE__*/React.createElement("table", {
+      className: "w-full text-sm"
+    }, /*#__PURE__*/React.createElement("thead", {
+      className: darkMode ? 'bg-gray-700' : 'bg-gray-100'
+    }, /*#__PURE__*/React.createElement("tr", null, ['Date', 'Opponent', 'Result', 'PTS', 'REB', 'AST', 'STL', 'BLK', 'TO', 'FG', '3PT', 'FT', 'OREB', 'DREB', 'PF'].map((h, i) => /*#__PURE__*/React.createElement("th", {
+      key: h,
+      className: `px-${i < 2 ? 4 : 3} py-3 text-${i < 2 ? 'left' : 'center'} font-semibold ${headingClass}`
+    }, h)))), /*#__PURE__*/React.createElement("tbody", null, playerGames.map(([gameId, game]) => {
+      const stats = game.stats[selectedPlayerNumber];
+      return /*#__PURE__*/React.createElement("tr", {
+        key: gameId,
+        className: `border-t ${borderClass} cursor-pointer hover:opacity-80`,
+        onClick: () => {
+          setSelectedGameId(gameId);
+          setCurrentView('boxscore');
+        }
+      }, /*#__PURE__*/React.createElement("td", {
+        className: `px-4 py-3 ${headingClass}`
+      }, formatDate(game.date), game.isPlayoff && /*#__PURE__*/React.createElement("span", {
+        className: "ml-2 px-1.5 py-0.5 bg-yellow-500 text-white text-xs rounded"
+      }, "P")), /*#__PURE__*/React.createElement("td", {
+        className: `px-3 py-3 ${textClass}`
+      }, "vs ", game.opponent), /*#__PURE__*/React.createElement("td", {
+        className: "px-3 py-3 text-center"
+      }, /*#__PURE__*/React.createElement("span", {
+        className: `font-bold ${game.result === 'W' ? 'text-green-600' : 'text-red-600'}`
+      }, game.result), /*#__PURE__*/React.createElement("span", {
+        className: `ml-1 ${textClass}`
+      }, game.score.us, "-", game.score.them)), /*#__PURE__*/React.createElement("td", {
+        className: `px-3 py-3 text-center font-bold text-${accentColor}`
+      }, stats.pts || 0), /*#__PURE__*/React.createElement("td", {
+        className: "px-3 py-3 text-center"
+      }, stats.reb || 0), /*#__PURE__*/React.createElement("td", {
+        className: "px-3 py-3 text-center"
+      }, stats.asst || 0), /*#__PURE__*/React.createElement("td", {
+        className: "px-3 py-3 text-center"
+      }, stats.stl || 0), /*#__PURE__*/React.createElement("td", {
+        className: "px-3 py-3 text-center"
+      }, stats.blk || 0), /*#__PURE__*/React.createElement("td", {
+        className: "px-3 py-3 text-center"
+      }, stats.to || 0), /*#__PURE__*/React.createElement("td", {
+        className: "px-3 py-3 text-center whitespace-nowrap"
+      }, stats.fg ? `${stats.fg[0]}-${stats.fg[1]}` : '-'), /*#__PURE__*/React.createElement("td", {
+        className: "px-3 py-3 text-center whitespace-nowrap"
+      }, stats['3pt'] ? `${stats['3pt'][0]}-${stats['3pt'][1]}` : '-'), /*#__PURE__*/React.createElement("td", {
+        className: "px-3 py-3 text-center whitespace-nowrap"
+      }, stats.ft ? `${stats.ft[0]}-${stats.ft[1]}` : '-'), /*#__PURE__*/React.createElement("td", {
+        className: "px-3 py-3 text-center"
+      }, stats.oreb || 0), /*#__PURE__*/React.createElement("td", {
+        className: "px-3 py-3 text-center"
+      }, stats.dreb || 0), /*#__PURE__*/React.createElement("td", {
+        className: "px-3 py-3 text-center"
+      }, stats.foul || 0));
+    })))))) : /*#__PURE__*/React.createElement("div", {
+      className: "max-w-7xl mx-auto px-4 py-6"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: `${cardClass} rounded-lg border ${borderClass} p-6`
+    }, /*#__PURE__*/React.createElement("h2", {
+      className: `text-xl font-bold mb-4 ${headingClass}`
+    }, "AI Analysis"), playerAnalysis[selectedPlayerNumber] ? /*#__PURE__*/React.createElement("div", {
+      className: `${darkMode ? 'bg-gray-700' : 'bg-gray-100'} rounded-lg p-6`
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "flex items-start gap-4 mb-4"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "text-4xl"
+    }, "🤖"), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("p", {
+      className: `font-bold ${headingClass}`
+    }, "Season Analysis"), /*#__PURE__*/React.createElement("p", {
+      className: `text-sm ${textClass}`
+    }, player.display_name || player.name))), /*#__PURE__*/React.createElement("div", {
+      className: `${textClass} leading-relaxed whitespace-pre-wrap`
+    }, playerAnalysis[selectedPlayerNumber])) : /*#__PURE__*/React.createElement("div", {
+      className: `${darkMode ? 'bg-gray-700' : 'bg-gray-100'} rounded-lg p-8 text-center`
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "text-6xl mb-4"
+    }, "🤖"), /*#__PURE__*/React.createElement("p", {
+      className: `text-xl font-medium ${headingClass}`
+    }, "Coming Soon"), /*#__PURE__*/React.createElement("p", {
+      className: `mt-2 ${textClass}`
+    }, "AI-powered analysis for ", player.display_name || player.name, " will be available later this season.")))), /*#__PURE__*/React.createElement("footer", {
+      className: `${cardClass} border-t ${borderClass} mt-12 py-6`
+    }, /*#__PURE__*/React.createElement("div", {
+      className: `max-w-7xl mx-auto px-4 text-center ${textClass}`
+    }, /*#__PURE__*/React.createElement("p", null, teamConfig.name, " • Season Stats • Powered by EasyStats"))));
+  }
+  return /*#__PURE__*/React.createElement("div", {
+    className: `min-h-screen ${bgClass} transition-colors duration-300`
+  }, /*#__PURE__*/React.createElement("header", {
+    className: `${accentClass} text-white sticky top-0 z-50 shadow-lg`
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "max-w-7xl mx-auto px-4 py-4"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "index.html",
+    className: "inline-flex items-center gap-2 text-white/80 hover:text-white mb-3 transition-colors text-sm"
+  }, /*#__PURE__*/React.createElement(ChevronDown, {
+    size: 16,
+    className: "rotate-90"
+  }), /*#__PURE__*/React.createElement("span", null, "Back to Team Selection")), /*#__PURE__*/React.createElement("div", {
+    className: "flex items-center justify-between"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "flex items-center gap-4"
+  }, /*#__PURE__*/React.createElement("img", {
+    src: teamConfig.logo,
+    alt: teamConfig.name,
+    className: "w-12 h-12 object-contain",
+    onError: e => {
+      e.target.style.display = 'none';
+    }
+  }), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h1", {
+    className: "text-2xl font-bold"
+  }, teamConfig.displayName), /*#__PURE__*/React.createElement("p", {
+    className: "text-white/80 text-sm"
+  }, "Team Statistics"))), /*#__PURE__*/React.createElement("button", {
+    onClick: () => setDarkMode(!darkMode),
+    className: "p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors"
+  }, darkMode ? /*#__PURE__*/React.createElement(Sun, {
+    size: 24
+  }) : /*#__PURE__*/React.createElement(Moon, {
+    size: 24
+  }))))), /*#__PURE__*/React.createElement("div", {
+    className: `${cardClass} sticky top-[72px] z-40 border-b ${borderClass} shadow-md`
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "max-w-7xl mx-auto px-4 py-3"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "flex flex-wrap gap-3 items-center justify-between"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "flex gap-2"
+  }, /*#__PURE__*/React.createElement("select", {
+    value: selectedSeason,
+    onChange: e => setSelectedSeason(e.target.value),
+    className: `px-3 py-2 rounded-lg border ${borderClass} ${cardClass} text-sm font-medium`
+  }, availableSeasons.map(season => /*#__PURE__*/React.createElement("option", {
+    key: season,
+    value: season
+  }, getSeasonDisplayName(season)))), /*#__PURE__*/React.createElement("select", {
+    value: gameType,
+    onChange: e => setGameType(e.target.value),
+    className: `px-3 py-2 rounded-lg border ${borderClass} ${cardClass} text-sm font-medium`
+  }, /*#__PURE__*/React.createElement("option", {
+    value: "all"
+  }, "All Games"), /*#__PURE__*/React.createElement("option", {
+    value: "regular"
+  }, "Regular Season"), /*#__PURE__*/React.createElement("option", {
+    value: "playoff"
+  }, "Playoffs")))))), /*#__PURE__*/React.createElement("div", {
+    className: "max-w-7xl mx-auto px-4 py-6"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "flex gap-2 mb-6 overflow-x-auto pb-2"
+  }, [{
+    id: 'leaderboards',
+    icon: TrendingUp,
+    label: 'Leaderboards'
+  }, {
+    id: 'records',
+    icon: Trophy,
+    label: 'Records'
+  }, {
+    id: 'players',
+    icon: Users,
+    label: 'Players'
+  }, {
+    id: 'games',
+    icon: Calendar,
+    label: 'Games'
+  }].map(tab => /*#__PURE__*/React.createElement("button", {
+    key: tab.id,
+    onClick: () => setActiveTab(tab.id),
+    className: `flex items-center gap-2 px-4 py-2 rounded-lg font-medium whitespace-nowrap transition-colors ${activeTab === tab.id ? `${accentClass} text-white shadow-lg` : `${cardClass} hover:opacity-80`}`
+  }, /*#__PURE__*/React.createElement(tab.icon, {
+    size: 18
+  }), tab.label))), activeTab === 'leaderboards' && /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "flex items-center gap-4 mb-4"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: `text-sm font-medium ${headingClass}`
+  }, "Show:"), /*#__PURE__*/React.createElement("div", {
+    className: `flex rounded-lg border ${borderClass} overflow-hidden`
+  }, /*#__PURE__*/React.createElement("button", {
+    onClick: () => setShowTotals(false),
+    className: `px-4 py-2 text-sm font-medium transition-colors ${!showTotals ? `${accentClass} text-white` : `${cardClass} hover:opacity-80`}`
+  }, "Averages"), /*#__PURE__*/React.createElement("button", {
+    onClick: () => setShowTotals(true),
+    className: `px-4 py-2 text-sm font-medium transition-colors ${showTotals ? `${accentClass} text-white` : `${cardClass} hover:opacity-80`}`
+  }, "Totals"))), /*#__PURE__*/React.createElement("div", {
+    className: "grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-2 mb-6"
+  }, statCategories.map(cat => /*#__PURE__*/React.createElement("button", {
+    key: cat.key,
+    onClick: () => setStatCategory(cat.key),
+    className: `p-3 rounded-lg border-2 transition-all ${statCategory === cat.key ? 'border-blue-500 bg-blue-50' : `border-transparent ${cardClass}`}`
+  }, /*#__PURE__*/React.createElement("div", {
+    className: `text-lg font-bold text-${accentColor}`
+  }, cat.label), /*#__PURE__*/React.createElement("div", {
+    className: `text-xs ${textClass} truncate`
+  }, cat.desc)))), /*#__PURE__*/React.createElement("div", {
+    className: "space-y-3"
+  }, sortedPlayers.length === 0 ? /*#__PURE__*/React.createElement("div", {
+    className: `${cardClass} rounded-lg border ${borderClass} p-8 text-center ${textClass}`
+  }, /*#__PURE__*/React.createElement("p", null, "No player stats available for this selection.")) : sortedPlayers.map(player => {
+    const currentValue = Number(player[statCategory]) || 0;
+    const rank = sortedPlayers.filter(p => (Number(p[statCategory]) || 0) > currentValue).length + 1;
+    const isTied = sortedPlayers.filter(p => (Number(p[statCategory]) || 0) === currentValue).length > 1;
+    return /*#__PURE__*/React.createElement("div", {
+      key: player.number,
+      className: `${cardClass} rounded-lg border ${borderClass} p-4 hover:shadow-lg transition-shadow cursor-pointer`,
+      onClick: () => {
+        setSelectedPlayerNumber(player.number);
+        setCurrentView('player');
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "flex items-center gap-4"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: `text-3xl font-bold ${rank <= 3 ? 'text-blue-600' : textClass} w-14 text-center`
+    }, isTied ? 'T' : '', rank), /*#__PURE__*/React.createElement(PlayerImage, {
+      player: player,
+      size: "md"
+    }), /*#__PURE__*/React.createElement("div", {
+      className: "flex-1 min-w-0"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: `font-bold text-lg truncate ${headingClass}`
+    }, player.display_name || player.name), /*#__PURE__*/React.createElement("div", {
+      className: `text-sm ${textClass}`
+    }, player.gp, " GP", player.teams ? ` • ${player.teams.join(', ')}` : '')), /*#__PURE__*/React.createElement("div", {
+      className: "text-right"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "text-3xl font-bold text-blue-600"
+    }, formatStatValue(player[statCategory])), /*#__PURE__*/React.createElement("div", {
+      className: `text-xs ${textClass}`
+    }, (averageCategories.find(c => c.key === statCategory) || totalCategories.find(c => c.key === statCategory))?.label || statCategory.toUpperCase()))));
+  }))), activeTab === 'players' && /*#__PURE__*/React.createElement("div", {
+    className: "space-y-4"
+  }, /*#__PURE__*/React.createElement("h2", {
+    className: `text-2xl font-bold mb-4 ${headingClass}`
+  }, "Team Roster"), /*#__PURE__*/React.createElement("div", {
+    className: "grid md:grid-cols-2 gap-4"
+  }, Object.values(players).map(player => {
+    const stats = seasonStats[gameType]?.[player.number] || {};
+    return /*#__PURE__*/React.createElement("div", {
+      key: player.number,
+      className: `${cardClass} rounded-lg border ${borderClass} p-4 cursor-pointer hover:shadow-lg transition-shadow`,
+      onClick: () => {
+        setSelectedPlayerNumber(player.number);
+        setCurrentView('player');
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "flex items-center gap-4"
+    }, /*#__PURE__*/React.createElement(PlayerImage, {
+      player: player,
+      size: "lg"
+    }), /*#__PURE__*/React.createElement("div", {
+      className: "flex-1 min-w-0"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: `font-bold text-xl truncate ${headingClass}`
+    }, player.display_name || player.name), /*#__PURE__*/React.createElement("div", {
+      className: textClass
+    }, "#", player.number), player.teams && player.teams.length > 0 && /*#__PURE__*/React.createElement("div", {
+      className: `text-sm ${textClass} mt-1`
+    }, player.teams.join(' • ')), stats.gp > 0 && /*#__PURE__*/React.createElement("div", {
+      className: "flex gap-3 mt-2 text-sm"
+    }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", {
+      className: "font-bold text-blue-600"
+    }, stats.ppg?.toFixed(1) || '0.0'), /*#__PURE__*/React.createElement("span", {
+      className: textClass
+    }, " PPG")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", {
+      className: "font-bold text-blue-600"
+    }, stats.rpg?.toFixed(1) || '0.0'), /*#__PURE__*/React.createElement("span", {
+      className: textClass
+    }, " RPG")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", {
+      className: "font-bold text-blue-600"
+    }, stats.apg?.toFixed(1) || '0.0'), /*#__PURE__*/React.createElement("span", {
+      className: textClass
+    }, " APG")))), /*#__PURE__*/React.createElement("div", {
+      className: textClass
+    }, /*#__PURE__*/React.createElement(ChevronDown, {
+      size: 20,
+      className: "-rotate-90"
+    }))));
+  }))), activeTab === 'records' && /*#__PURE__*/React.createElement("div", {
+    className: "space-y-4"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "flex flex-wrap items-center justify-between gap-4 mb-4"
+  }, /*#__PURE__*/React.createElement("h2", {
+    className: `text-2xl font-bold ${headingClass}`
+  }, "Team Records"), /*#__PURE__*/React.createElement("div", {
+    className: "flex flex-wrap gap-2"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: `flex rounded-lg border ${borderClass} overflow-hidden`
+  }, /*#__PURE__*/React.createElement("button", {
+    onClick: () => setRecordsScope('season'),
+    className: `px-3 py-1.5 text-sm font-medium transition-colors ${recordsScope === 'season' ? `${accentClass} text-white` : `${cardClass} hover:opacity-80`}`
+  }, getSeasonDisplayName(selectedSeason)), /*#__PURE__*/React.createElement("button", {
+    onClick: () => setRecordsScope('alltime'),
+    className: `px-3 py-1.5 text-sm font-medium transition-colors ${recordsScope === 'alltime' ? `${accentClass} text-white` : `${cardClass} hover:opacity-80`}`
+  }, "All Time")), /*#__PURE__*/React.createElement("div", {
+    className: `flex rounded-lg border ${borderClass} overflow-hidden`
+  }, /*#__PURE__*/React.createElement("button", {
+    onClick: () => setRecordsType('game'),
+    className: `px-3 py-1.5 text-sm font-medium transition-colors ${recordsType === 'game' ? `${accentClass} text-white` : `${cardClass} hover:opacity-80`}`
+  }, "Single Game"), /*#__PURE__*/React.createElement("button", {
+    onClick: () => setRecordsType('season'),
+    className: `px-3 py-1.5 text-sm font-medium transition-colors ${recordsType === 'season' ? `${accentClass} text-white` : `${cardClass} hover:opacity-80`}`
+  }, "Season")), /*#__PURE__*/React.createElement("select", {
+    value: recordsCategory,
+    onChange: e => setRecordsCategory(e.target.value),
+    className: `px-3 py-2 rounded-lg border ${borderClass} ${cardClass} text-sm font-medium`
+  }, /*#__PURE__*/React.createElement("option", {
+    value: "all"
+  }, "All Categories"), /*#__PURE__*/React.createElement("option", {
+    value: "pts"
+  }, "Points"), /*#__PURE__*/React.createElement("option", {
+    value: "reb"
+  }, "Rebounds"), /*#__PURE__*/React.createElement("option", {
+    value: "asst"
+  }, "Assists"), /*#__PURE__*/React.createElement("option", {
+    value: "stl"
+  }, "Steals"), /*#__PURE__*/React.createElement("option", {
+    value: "blk"
+  }, "Blocks"), /*#__PURE__*/React.createElement("option", {
+    value: "3pt"
+  }, "3-Pointers"), /*#__PURE__*/React.createElement("option", {
+    value: "fg"
+  }, "Field Goals"), /*#__PURE__*/React.createElement("option", {
+    value: "ft"
+  }, "Free Throws"), /*#__PURE__*/React.createElement("option", {
+    value: "oreb"
+  }, "Off. Rebounds"), /*#__PURE__*/React.createElement("option", {
+    value: "dreb"
+  }, "Def. Rebounds"), /*#__PURE__*/React.createElement("option", {
+    value: "to"
+  }, "Turnovers"), /*#__PURE__*/React.createElement("option", {
+    value: "foul"
+  }, "Fouls")))), recordsType === 'game' ? (() => {
+    const gamesToUse = recordsScope === 'alltime' ? allTimeGames : allGames;
+    if (!gamesToUse || Object.keys(gamesToUse).length === 0) {
+      return /*#__PURE__*/React.createElement("div", {
+        className: `${cardClass} rounded-lg border ${borderClass} p-8 text-center ${textClass}`
+      }, /*#__PURE__*/React.createElement(Trophy, {
+        size: 48,
+        className: "mx-auto mb-4 opacity-50"
+      }), /*#__PURE__*/React.createElement("p", null, "No records available yet."));
+    }
+    const recordCategories = [{
+      key: 'most_pts',
+      label: 'Most Points',
+      statKey: 'pts'
+    }, {
+      key: 'most_reb',
+      label: 'Most Rebounds',
+      statKey: 'reb'
+    }, {
+      key: 'most_oreb',
+      label: 'Most Off. Rebounds',
+      statKey: 'oreb'
+    }, {
+      key: 'most_dreb',
+      label: 'Most Def. Rebounds',
+      statKey: 'dreb'
+    }, {
+      key: 'most_asst',
+      label: 'Most Assists',
+      statKey: 'asst'
+    }, {
+      key: 'most_stl',
+      label: 'Most Steals',
+      statKey: 'stl'
+    }, {
+      key: 'most_blk',
+      label: 'Most Blocks',
+      statKey: 'blk'
+    }, {
+      key: 'most_3pt',
+      label: 'Most 3PM',
+      statKey: '3pt'
+    }, {
+      key: 'most_fg',
+      label: 'Most FGM',
+      statKey: 'fg'
+    }, {
+      key: 'most_ft',
+      label: 'Most FTM',
+      statKey: 'ft'
+    }, {
+      key: 'most_to',
+      label: 'Most Turnovers',
+      statKey: 'to'
+    }, {
+      key: 'most_foul',
+      label: 'Most Fouls',
+      statKey: 'foul'
+    }];
+    const filteredCategories = recordsCategory === 'all' ? recordCategories : recordCategories.filter(c => c.statKey === recordsCategory);
+    const getTop3ForCategory = statKey => {
+      const performances = [];
+      Object.entries(gamesToUse).forEach(([gameId, game]) => {
+        if (gameType === 'regular' && game.isPlayoff) return;
+        if (gameType === 'playoff' && !game.isPlayoff) return;
+        Object.entries(game.stats || {}).forEach(([playerNum, stats]) => {
+          let value = stats[statKey];
+          if (Array.isArray(value)) value = value[0];
+          if (value && value > 0) {
+            const player = players[playerNum] || allPlayersData[playerNum];
+            performances.push({
+              playerNum,
+              playerName: player?.display_name || player?.name || `#${playerNum}`,
+              player,
+              value,
+              date: game.date,
+              opponent: game.opponent,
+              season: game.season
+            });
+          }
+        });
+      });
+      performances.sort((a, b) => b.value !== a.value ? b.value - a.value : new Date(a.date) - new Date(b.date));
+      const top3 = [];
+      let rank = 1;
+      for (let i = 0; i < performances.length && top3.length < 3; i++) {
+        const perf = performances[i];
+        const isTied = i > 0 && performances[i - 1].value === perf.value;
+        if (!isTied && top3.length > 0) rank = top3.length + 1;
+        top3.push({
+          ...perf,
+          rank,
+          isTied
+        });
+      }
+      return top3;
+    };
+    return /*#__PURE__*/React.createElement("div", {
+      className: "grid gap-4 md:grid-cols-2"
+    }, filteredCategories.map(({
+      key,
+      label,
+      statKey
+    }) => {
+      const top3 = getTop3ForCategory(statKey);
+      if (top3.length === 0) return null;
+      return /*#__PURE__*/React.createElement("div", {
+        key: key,
+        className: `${cardClass} rounded-lg border ${borderClass} p-4`
+      }, /*#__PURE__*/React.createElement("h3", {
+        className: `font-bold text-lg mb-3 ${headingClass}`
+      }, label), /*#__PURE__*/React.createElement("div", {
+        className: "space-y-2"
+      }, top3.map((perf, idx) => /*#__PURE__*/React.createElement("div", {
+        key: `${perf.playerNum}-${perf.date}-${idx}`,
+        className: `flex items-center gap-3 p-2 rounded-lg cursor-pointer hover:opacity-80 ${perf.rank === 1 ? darkMode ? 'bg-yellow-900/30' : 'bg-yellow-100' : perf.rank === 2 ? darkMode ? 'bg-gray-600' : 'bg-gray-200' : darkMode ? 'bg-orange-900/30' : 'bg-orange-100'}`,
+        onClick: () => {
+          setSelectedPlayerNumber(perf.playerNum);
+          setCurrentView('player');
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        className: `text-xl font-bold w-8 text-center ${perf.rank === 1 ? 'text-yellow-600' : perf.rank === 2 ? darkMode ? 'text-white' : 'text-gray-700' : 'text-orange-500'}`
+      }, perf.isTied ? 'T' : '', perf.rank), /*#__PURE__*/React.createElement(PlayerImage, {
+        player: perf.player,
+        size: "sm"
+      }), /*#__PURE__*/React.createElement("div", {
+        className: "flex-1 min-w-0"
+      }, /*#__PURE__*/React.createElement("div", {
+        className: `font-medium truncate ${headingClass}`
+      }, perf.playerName), /*#__PURE__*/React.createElement("div", {
+        className: `text-xs ${textClass}`
+      }, "vs ", perf.opponent, " • ", formatDate(perf.date), recordsScope === 'alltime' && perf.season ? ` • ${getSeasonDisplayName(perf.season)}` : '')), /*#__PURE__*/React.createElement("div", {
+        className: `text-2xl font-bold text-${accentColor}`
+      }, perf.value)))));
+    }));
+  })() : (() => {
+    const hasStats = recordsScope === 'alltime' ? Object.keys(allTimeSeasonStats).length > 0 : seasonStats[gameType] && Object.keys(seasonStats[gameType]).length > 0;
+    if (!hasStats) return /*#__PURE__*/React.createElement("div", {
+      className: `${cardClass} rounded-lg border ${borderClass} p-8 text-center ${textClass}`
+    }, /*#__PURE__*/React.createElement(Trophy, {
+      size: 48,
+      className: "mx-auto mb-4 opacity-50"
+    }), /*#__PURE__*/React.createElement("p", null, "No season records available yet."));
+    const seasonRecordCategories = [{
+      key: 'ppg',
+      label: 'PPG (Season)',
+      statKey: 'pts',
+      isAvg: true
+    }, {
+      key: 'pts',
+      label: 'Total Points (Season)',
+      statKey: 'pts',
+      isAvg: false
+    }, {
+      key: 'rpg',
+      label: 'RPG (Season)',
+      statKey: 'reb',
+      isAvg: true
+    }, {
+      key: 'reb',
+      label: 'Total Rebounds (Season)',
+      statKey: 'reb',
+      isAvg: false
+    }, {
+      key: 'apg',
+      label: 'APG (Season)',
+      statKey: 'asst',
+      isAvg: true
+    }, {
+      key: 'asst',
+      label: 'Total Assists (Season)',
+      statKey: 'asst',
+      isAvg: false
+    }, {
+      key: 'spg',
+      label: 'SPG (Season)',
+      statKey: 'stl',
+      isAvg: true
+    }, {
+      key: 'stl',
+      label: 'Total Steals (Season)',
+      statKey: 'stl',
+      isAvg: false
+    }, {
+      key: 'bpg',
+      label: 'BPG (Season)',
+      statKey: 'blk',
+      isAvg: true
+    }, {
+      key: 'blk',
+      label: 'Total Blocks (Season)',
+      statKey: 'blk',
+      isAvg: false
+    }, {
+      key: '3pm_pg',
+      label: '3PM/G (Season)',
+      statKey: '3pt',
+      isAvg: true
+    }, {
+      key: '3pt_made',
+      label: 'Total 3PM (Season)',
+      statKey: '3pt',
+      isAvg: false
+    }, {
+      key: 'fg_pct',
+      label: 'FG% (Season)',
+      statKey: 'fg',
+      isAvg: true,
+      isPct: true
+    }, {
+      key: '3pt_pct',
+      label: '3P% (Season)',
+      statKey: '3pt',
+      isAvg: true,
+      isPct: true
+    }, {
+      key: 'ft_pct',
+      label: 'FT% (Season)',
+      statKey: 'ft',
+      isAvg: true,
+      isPct: true
+    }];
+    const filteredCategories = recordsCategory === 'all' ? seasonRecordCategories : seasonRecordCategories.filter(c => c.statKey === recordsCategory);
+    const getTop3SeasonRecord = (statKey, isAvg, isPct) => {
+      const playerSeasonStats = [];
+      const statsSource = recordsScope === 'alltime' ? allTimeSeasonStats : {
+        [selectedSeason]: seasonStats
+      };
+      Object.entries(statsSource).forEach(([seasonKey, seasonData]) => {
+        Object.entries(seasonData[gameType] || {}).forEach(([playerNum, stats]) => {
+          if (!stats.gp || stats.gp === 0) return;
+          let value;
+          if (isPct) value = stats[`${statKey}_pct`] || 0;else if (isAvg) {
+            const avgKey = statKey === 'asst' ? 'apg' : statKey === 'stl' ? 'spg' : statKey === 'blk' ? 'bpg' : statKey === '3pt' ? '3pm_pg' : `${statKey.charAt(0)}pg`;
+            value = stats[avgKey] || 0;
+          } else {
+            value = statKey === '3pt' ? stats['3pt']?.[0] || 0 : stats[statKey] || 0;
+          }
+          if (value > 0) {
+            const player = players[playerNum] || allPlayersData[playerNum];
+            playerSeasonStats.push({
+              playerNum,
+              player,
+              value,
+              gp: stats.gp,
+              playerName: player?.display_name || player?.name || `#${playerNum}`,
+              season: recordsScope === 'alltime' ? seasonKey : selectedSeason
+            });
+          }
+        });
+      });
+      playerSeasonStats.sort((a, b) => b.value - a.value);
+      const top3 = [];
+      let rank = 1;
+      for (let i = 0; i < playerSeasonStats.length && top3.length < 3; i++) {
+        const stat = playerSeasonStats[i];
+        const isTied = i > 0 && playerSeasonStats[i - 1].value === stat.value;
+        if (!isTied && top3.length > 0) rank = top3.length + 1;
+        top3.push({
+          ...stat,
+          rank,
+          isTied
+        });
+      }
+      return top3;
+    };
+    return /*#__PURE__*/React.createElement("div", {
+      className: "grid gap-4 md:grid-cols-2"
+    }, filteredCategories.map(({
+      key,
+      label,
+      statKey,
+      isAvg,
+      isPct
+    }) => {
+      const top3 = getTop3SeasonRecord(statKey, isAvg, isPct);
+      if (top3.length === 0) return null;
+      return /*#__PURE__*/React.createElement("div", {
+        key: key,
+        className: `${cardClass} rounded-lg border ${borderClass} p-4`
+      }, /*#__PURE__*/React.createElement("h3", {
+        className: `font-bold text-lg mb-3 ${headingClass}`
+      }, label), /*#__PURE__*/React.createElement("div", {
+        className: "space-y-2"
+      }, top3.map((stat, idx) => /*#__PURE__*/React.createElement("div", {
+        key: `${stat.playerNum}-${stat.season}-${idx}`,
+        className: `flex items-center gap-3 p-2 rounded-lg cursor-pointer hover:opacity-80 ${stat.rank === 1 ? darkMode ? 'bg-yellow-900/30' : 'bg-yellow-100' : stat.rank === 2 ? darkMode ? 'bg-gray-600' : 'bg-gray-200' : darkMode ? 'bg-orange-900/30' : 'bg-orange-100'}`,
+        onClick: () => {
+          setSelectedPlayerNumber(stat.playerNum);
+          setCurrentView('player');
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        className: `text-xl font-bold w-8 text-center ${stat.rank === 1 ? 'text-yellow-600' : stat.rank === 2 ? darkMode ? 'text-white' : 'text-gray-700' : 'text-orange-500'}`
+      }, stat.isTied ? 'T' : '', stat.rank), /*#__PURE__*/React.createElement(PlayerImage, {
+        player: stat.player,
+        size: "sm"
+      }), /*#__PURE__*/React.createElement("div", {
+        className: "flex-1 min-w-0"
+      }, /*#__PURE__*/React.createElement("div", {
+        className: `font-medium truncate ${headingClass}`
+      }, stat.playerName), /*#__PURE__*/React.createElement("div", {
+        className: `text-xs ${textClass}`
+      }, getSeasonDisplayName(stat.season), " • ", stat.gp, " games")), /*#__PURE__*/React.createElement("div", {
+        className: `text-2xl font-bold text-${accentColor}`
+      }, isPct ? `${stat.value.toFixed(1)}%` : isAvg ? stat.value.toFixed(1) : stat.value)))));
+    }));
+  })()), activeTab === 'games' && /*#__PURE__*/React.createElement("div", {
+    className: "space-y-4"
+  }, /*#__PURE__*/React.createElement("h2", {
+    className: `text-2xl font-bold mb-4 ${headingClass}`
+  }, "Game Log"), Object.keys(allGames).length === 0 ? /*#__PURE__*/React.createElement("div", {
+    className: `${cardClass} rounded-lg border ${borderClass} p-6 text-center ${textClass}`
+  }, /*#__PURE__*/React.createElement(Calendar, {
+    size: 48,
+    className: "mx-auto mb-4 opacity-50"
+  }), /*#__PURE__*/React.createElement("p", null, "No games found for this season."), /*#__PURE__*/React.createElement("p", {
+    className: "text-sm mt-2"
+  }, "Make sure your data/games/ folder contains game files and games_index.json is updated.")) : /*#__PURE__*/React.createElement("div", {
+    className: "space-y-3"
+  }, Object.entries(allGames).filter(([_, game]) => {
+    if (gameType === 'regular') return !game.isPlayoff;
+    if (gameType === 'playoff') return game.isPlayoff;
+    return true;
+  }).sort((a, b) => new Date(b[1].date) - new Date(a[1].date)).map(([gameId, game]) => {
+    const totalPts = Object.values(game.stats || {}).reduce((s, p) => s + (p.pts || 0), 0);
+    return /*#__PURE__*/React.createElement("div", {
+      key: gameId,
+      className: `${cardClass} p-4 rounded-lg border ${borderClass} hover:shadow-lg transition-shadow cursor-pointer`,
+      onClick: () => {
+        setSelectedGameId(gameId);
+        setCurrentView('boxscore');
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "flex justify-between items-start mb-3"
+    }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+      className: `font-bold text-lg flex items-center gap-2 ${headingClass}`
+    }, /*#__PURE__*/React.createElement("span", {
+      className: `font-bold ${game.result === 'W' ? 'text-green-600' : 'text-red-600'}`
+    }, game.result), "vs ", game.opponent), /*#__PURE__*/React.createElement("div", {
+      className: `text-sm ${textClass}`
+    }, game.date, " • ", game.homeAway === 'home' ? 'Home' : 'Away', game.isPlayoff && /*#__PURE__*/React.createElement("span", {
+      className: "ml-2 px-2 py-0.5 bg-yellow-500 text-white text-xs rounded"
+    }, "PLAYOFF"))), /*#__PURE__*/React.createElement("div", {
+      className: "text-right"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: `text-2xl font-bold ${game.result === 'W' ? 'text-green-600' : 'text-red-600'}`
+    }, game.score.us, " - ", game.score.them), /*#__PURE__*/React.createElement("div", {
+      className: `text-xs ${textClass}`
+    }, "Click for box score →"))), /*#__PURE__*/React.createElement("div", {
+      className: "grid grid-cols-3 gap-4 text-sm"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: `text-center p-2 rounded ${darkMode ? 'bg-gray-700' : 'bg-gray-100'}`
+    }, /*#__PURE__*/React.createElement("div", {
+      className: `font-bold text-${accentColor}`
+    }, totalPts), /*#__PURE__*/React.createElement("div", {
+      className: textClass
+    }, "Team PTS")), /*#__PURE__*/React.createElement("div", {
+      className: `text-center p-2 rounded ${darkMode ? 'bg-gray-700' : 'bg-gray-100'}`
+    }, /*#__PURE__*/React.createElement("div", {
+      className: `font-bold text-${accentColor}`
+    }, Object.values(game.stats || {}).reduce((s, p) => s + (p.reb || 0), 0)), /*#__PURE__*/React.createElement("div", {
+      className: textClass
+    }, "Team REB")), /*#__PURE__*/React.createElement("div", {
+      className: `text-center p-2 rounded ${darkMode ? 'bg-gray-700' : 'bg-gray-100'}`
+    }, /*#__PURE__*/React.createElement("div", {
+      className: `font-bold text-${accentColor}`
+    }, Object.values(game.stats || {}).reduce((s, p) => s + (p.asst || 0), 0)), /*#__PURE__*/React.createElement("div", {
+      className: textClass
+    }, "Team AST"))));
+  })))), /*#__PURE__*/React.createElement("footer", {
+    className: `${cardClass} border-t ${borderClass} mt-12 py-6`
+  }, /*#__PURE__*/React.createElement("div", {
+    className: `max-w-7xl mx-auto px-4 text-center ${textClass}`
+  }, /*#__PURE__*/React.createElement("p", null, teamConfig.name, " • Season Stats • Powered by EasyStats"))));
+}
+ReactDOM.render(/*#__PURE__*/React.createElement(BasketballStatsApp, null), document.getElementById('root'));
     </script>
 </body>
 </html>
