@@ -336,7 +336,37 @@ function BasketballStatsApp() {
   const [playerDetailTab, setPlayerDetailTab] = useState('stats');
   const [currentView, setCurrentView] = useState('main');
   const [selectedPlayerNumber, setSelectedPlayerNumber] = useState(null);
-  const [selectedGameId, setSelectedGameId] = useState(null);
+    const [selectedGameId, setSelectedGameId] = useState(null);
+  const navigateTo = (view, playerNumber = null, gameId = null) => {
+    setCurrentView(view);
+    setSelectedPlayerNumber(playerNumber);
+    setSelectedGameId(gameId);
+    window.scrollTo(0, 0);
+    try {
+      window.history.pushState({
+        view,
+        playerNumber,
+        gameId
+      }, '');
+    } catch (e) {}
+  };
+  useEffect(() => {
+    try {
+      window.history.replaceState({
+        view: 'main',
+        playerNumber: null,
+        gameId: null
+      }, '');
+    } catch (e) {}
+    const handlePopState = e => {
+      const s = e.state || {};
+      setCurrentView(s.view || 'main');
+      setSelectedPlayerNumber(s.playerNumber || null);
+      setSelectedGameId(s.gameId || null);
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
   const [players, setPlayers] = useState({});
   const [allPlayersData, setAllPlayersData] = useState({});
   const [seasonStats, setSeasonStats] = useState({});
@@ -697,7 +727,7 @@ function BasketballStatsApp() {
     }, "data/"), " folder to your GitHub repo"), /*#__PURE__*/React.createElement("li", null, "Commit and push to GitHub"), /*#__PURE__*/React.createElement("li", null, "Wait 5-10 minutes for GitHub Pages to update"))))));
   }
   if (currentView === 'boxscore' && selectedGameId) {
-    const game = allGames[selectedGameId];
+    const game = allGames[selectedGameId] || allTimeGames[selectedGameId];
     if (!game) {
       setCurrentView('main');
       return null;
@@ -709,7 +739,7 @@ function BasketballStatsApp() {
     }, /*#__PURE__*/React.createElement("div", {
       className: "max-w-7xl mx-auto px-4 py-4"
     }, /*#__PURE__*/React.createElement("button", {
-      onClick: () => setCurrentView('main'),
+      onClick: () => window.history.back(),
       className: "inline-flex items-center gap-2 text-white/80 hover:text-white mb-3 transition-colors text-sm"
     }, /*#__PURE__*/React.createElement(ArrowLeft, {
       size: 16
@@ -910,7 +940,7 @@ function BasketballStatsApp() {
     }, /*#__PURE__*/React.createElement("div", {
       className: "max-w-7xl mx-auto px-4 py-4"
     }, /*#__PURE__*/React.createElement("button", {
-      onClick: () => setCurrentView('main'),
+      onClick: () => window.history.back(),
       className: "inline-flex items-center gap-2 text-white/80 hover:text-white mb-3 transition-colors text-sm"
     }, /*#__PURE__*/React.createElement(ArrowLeft, {
       size: 16
@@ -933,7 +963,13 @@ function BasketballStatsApp() {
       className: "text-3xl font-bold"
     }, playerStats.gp || 0), /*#__PURE__*/React.createElement("div", {
       className: "text-white/80 text-sm"
-    }, "Games Played")), /*#__PURE__*/React.createElement("button", {
+    }, "Games Played")), /*#__PURE__*/React.createElement("a", {
+      href: "index.html",
+      title: "Team Select",
+      className: "p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors inline-flex"
+    }, /*#__PURE__*/React.createElement(Users, {
+      size: 24
+    })), /*#__PURE__*/React.createElement("button", {
       onClick: () => setDarkMode(!darkMode),
       className: "p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors"
     }, darkMode ? /*#__PURE__*/React.createElement(Sun, {
@@ -947,6 +983,26 @@ function BasketballStatsApp() {
     }, /*#__PURE__*/React.createElement("div", {
       className: "flex items-center gap-3"
     }, /*#__PURE__*/React.createElement("span", {
+      className: `text-sm font-medium ${textClass}`
+    }, "Player:"), /*#__PURE__*/React.createElement("select", {
+      value: selectedPlayerNumber || '',
+      onChange: e => {
+        const num = e.target.value;
+        setSelectedPlayerNumber(num);
+        window.scrollTo(0, 0);
+        try {
+          window.history.replaceState({
+            view: 'player',
+            playerNumber: num,
+            gameId: null
+          }, '');
+        } catch (err) {}
+      },
+      className: `px-3 py-2 rounded-lg border ${borderClass} ${cardClass} text-sm font-medium`
+    }, Object.values(players).sort((a, b) => (a.display_name || a.name || '').localeCompare(b.display_name || b.name || '')).map(p => /*#__PURE__*/React.createElement("option", {
+      key: p.number,
+      value: p.number
+    }, `#${p.number} ${p.display_name || p.name}`))), /*#__PURE__*/React.createElement("span", {
       className: `text-sm font-medium ${textClass}`
     }, "Season:"), /*#__PURE__*/React.createElement("select", {
       value: selectedSeason,
@@ -1199,8 +1255,7 @@ function BasketballStatsApp() {
         key: gameId,
         className: `border-t ${borderClass} cursor-pointer hover:opacity-80`,
         onClick: () => {
-          setSelectedGameId(gameId);
-          setCurrentView('boxscore');
+          navigateTo('boxscore', selectedPlayerNumber, gameId);
         }
       }, /*#__PURE__*/React.createElement("td", {
         className: `px-4 py-3 ${headingClass}`
@@ -1277,13 +1332,7 @@ function BasketballStatsApp() {
     className: `${accentClass} text-white sticky top-0 z-50 shadow-lg`
   }, /*#__PURE__*/React.createElement("div", {
     className: "max-w-7xl mx-auto px-4 py-4"
-  }, /*#__PURE__*/React.createElement("a", {
-    href: "index.html",
-    className: "inline-flex items-center gap-2 text-white/80 hover:text-white mb-3 transition-colors text-sm"
-  }, /*#__PURE__*/React.createElement(ChevronDown, {
-    size: 16,
-    className: "rotate-90"
-  }), /*#__PURE__*/React.createElement("span", null, "Back to Team Selection")), /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("div", {
     className: "flex items-center justify-between"
   }, /*#__PURE__*/React.createElement("div", {
     className: "flex items-center gap-4"
@@ -1298,14 +1347,22 @@ function BasketballStatsApp() {
     className: "text-2xl font-bold"
   }, teamConfig.displayName), /*#__PURE__*/React.createElement("p", {
     className: "text-white/80 text-sm"
-  }, "Team Statistics"))), /*#__PURE__*/React.createElement("button", {
+  }, "Team Statistics"))), /*#__PURE__*/React.createElement("div", {
+    className: "flex items-center gap-2"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "index.html",
+    title: "Team Select",
+    className: "p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors inline-flex"
+  }, /*#__PURE__*/React.createElement(Users, {
+    size: 24
+  })), /*#__PURE__*/React.createElement("button", {
     onClick: () => setDarkMode(!darkMode),
     className: "p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors"
   }, darkMode ? /*#__PURE__*/React.createElement(Sun, {
     size: 24
   }) : /*#__PURE__*/React.createElement(Moon, {
     size: 24
-  }))))), /*#__PURE__*/React.createElement("div", {
+  })))))), /*#__PURE__*/React.createElement("div", {
     className: `${cardClass} sticky top-[72px] z-40 border-b ${borderClass} shadow-md`
   }, /*#__PURE__*/React.createElement("div", {
     className: "max-w-7xl mx-auto px-4 py-3"
@@ -1390,8 +1447,7 @@ function BasketballStatsApp() {
       key: player.number,
       className: `${cardClass} rounded-lg border ${borderClass} p-4 hover:shadow-lg transition-shadow cursor-pointer`,
       onClick: () => {
-        setSelectedPlayerNumber(player.number);
-        setCurrentView('player');
+        navigateTo('player', player.number);
       }
     }, /*#__PURE__*/React.createElement("div", {
       className: "flex items-center gap-4"
@@ -1425,8 +1481,7 @@ function BasketballStatsApp() {
       key: player.number,
       className: `${cardClass} rounded-lg border ${borderClass} p-4 cursor-pointer hover:shadow-lg transition-shadow`,
       onClick: () => {
-        setSelectedPlayerNumber(player.number);
-        setCurrentView('player');
+        navigateTo('player', player.number);
       }
     }, /*#__PURE__*/React.createElement("div", {
       className: "flex items-center gap-4"
@@ -1586,6 +1641,7 @@ function BasketballStatsApp() {
           if (value && value > 0) {
             const player = players[playerNum] || allPlayersData[playerNum];
             performances.push({
+              gameId,
               playerNum,
               playerName: player?.display_name || player?.name || `#${playerNum}`,
               player,
@@ -1632,8 +1688,7 @@ function BasketballStatsApp() {
         key: `${perf.playerNum}-${perf.date}-${idx}`,
         className: `flex items-center gap-3 p-2 rounded-lg cursor-pointer hover:opacity-80 ${perf.rank === 1 ? darkMode ? 'bg-yellow-900/30' : 'bg-yellow-100' : perf.rank === 2 ? darkMode ? 'bg-gray-600' : 'bg-gray-200' : darkMode ? 'bg-orange-900/30' : 'bg-orange-100'}`,
         onClick: () => {
-          setSelectedPlayerNumber(perf.playerNum);
-          setCurrentView('player');
+          navigateTo('boxscore', perf.playerNum, perf.gameId);
         }
       }, /*#__PURE__*/React.createElement("div", {
         className: `text-xl font-bold w-8 text-center ${perf.rank === 1 ? 'text-yellow-600' : perf.rank === 2 ? darkMode ? 'text-white' : 'text-gray-700' : 'text-orange-500'}`
@@ -1803,8 +1858,7 @@ function BasketballStatsApp() {
         key: `${stat.playerNum}-${stat.season}-${idx}`,
         className: `flex items-center gap-3 p-2 rounded-lg cursor-pointer hover:opacity-80 ${stat.rank === 1 ? darkMode ? 'bg-yellow-900/30' : 'bg-yellow-100' : stat.rank === 2 ? darkMode ? 'bg-gray-600' : 'bg-gray-200' : darkMode ? 'bg-orange-900/30' : 'bg-orange-100'}`,
         onClick: () => {
-          setSelectedPlayerNumber(stat.playerNum);
-          setCurrentView('player');
+          navigateTo('player', stat.playerNum);
         }
       }, /*#__PURE__*/React.createElement("div", {
         className: `text-xl font-bold w-8 text-center ${stat.rank === 1 ? 'text-yellow-600' : stat.rank === 2 ? darkMode ? 'text-white' : 'text-gray-700' : 'text-orange-500'}`
@@ -1844,8 +1898,7 @@ function BasketballStatsApp() {
       key: gameId,
       className: `${cardClass} p-4 rounded-lg border ${borderClass} hover:shadow-lg transition-shadow cursor-pointer`,
       onClick: () => {
-        setSelectedGameId(gameId);
-        setCurrentView('boxscore');
+        navigateTo('boxscore', selectedPlayerNumber, gameId);
       }
     }, /*#__PURE__*/React.createElement("div", {
       className: "flex justify-between items-start mb-3"
