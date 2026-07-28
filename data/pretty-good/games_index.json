@@ -466,5 +466,17 @@
     },
     "result": "L",
     "isPlayoff": false
+  },
+  "2026-07-28-macho-men": {
+    "filename": "2026-07-28-macho-men.json",
+    "date": "2026-07-28",
+    "season": "2026-winter",
+    "opponent": "Macho men",
+    "score": {
+      "us": 32,
+      "them": 30
+    },
+    "result": "W",
+    "isPlayoff": false
   }
 }
