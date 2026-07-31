@@ -286,5 +286,17 @@
     },
     "result": "L",
     "isPlayoff": false
+  },
+  "2026-07-30-playoff-jimmy-buckets": {
+    "filename": "2026-07-30-playoff-jimmy-buckets.json",
+    "date": "2026-07-30",
+    "season": "2026-winter",
+    "opponent": "Playoff jimmy buckets",
+    "score": {
+      "us": 31,
+      "them": 38
+    },
+    "result": "L",
+    "isPlayoff": false
   }
 }

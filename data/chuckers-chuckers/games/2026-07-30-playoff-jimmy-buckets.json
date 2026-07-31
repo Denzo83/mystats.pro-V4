@@ -1,0 +1,45 @@
+{
+  "date": "2026-07-30",
+  "season": "2026-winter",
+  "opponent": "Playoff jimmy buckets",
+  "homeAway": "home",
+  "score": {
+    "us": 31,
+    "them": 38
+  },
+  "result": "L",
+  "isPlayoff": false,
+  "stats": {
+    "22": {
+      "fg": [
+        1,
+        6
+      ],
+      "3pt": [
+        0,
+        3
+      ],
+      "ft": [
+        1,
+        3
+      ],
+      "oreb": 1,
+      "dreb": 3,
+      "foul": 1,
+      "stl": 3,
+      "to": 0,
+      "blk": 1,
+      "asst": 3,
+      "pts": 3,
+      "2pt": [
+        1,
+        3
+      ],
+      "2pt_pct": 33.3,
+      "fg_pct": 16.7,
+      "3pt_pct": 0.0,
+      "ft_pct": 33.3,
+      "reb": 4
+    }
+  }
+}
