@@ -298,5 +298,17 @@
     },
     "result": "L",
     "isPlayoff": false
+  },
+  "2026-08-06-the-grubs": {
+    "filename": "2026-08-06-the-grubs.json",
+    "date": "2026-08-06",
+    "season": "2026-winter",
+    "opponent": "The grubs",
+    "score": {
+      "us": 43,
+      "them": 50
+    },
+    "result": "L",
+    "isPlayoff": false
   }
 }

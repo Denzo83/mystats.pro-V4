@@ -1,0 +1,45 @@
+{
+  "date": "2026-08-06",
+  "season": "2026-winter",
+  "opponent": "The grubs",
+  "homeAway": "home",
+  "score": {
+    "us": 43,
+    "them": 50
+  },
+  "result": "L",
+  "isPlayoff": false,
+  "stats": {
+    "22": {
+      "fg": [
+        4,
+        6
+      ],
+      "3pt": [
+        0,
+        1
+      ],
+      "ft": [
+        0,
+        0
+      ],
+      "oreb": 1,
+      "dreb": 1,
+      "foul": 1,
+      "stl": 4,
+      "to": 0,
+      "blk": 0,
+      "asst": 4,
+      "pts": 8,
+      "2pt": [
+        4,
+        5
+      ],
+      "2pt_pct": 80.0,
+      "fg_pct": 66.7,
+      "3pt_pct": 0.0,
+      "ft_pct": 0.0,
+      "reb": 2
+    }
+  }
+}
