@@ -1,0 +1,45 @@
+{
+  "date": "2026-08-13",
+  "season": "2026-winter",
+  "opponent": "Noideer",
+  "homeAway": "home",
+  "score": {
+    "us": 51,
+    "them": 62
+  },
+  "result": "L",
+  "isPlayoff": false,
+  "stats": {
+    "22": {
+      "fg": [
+        4,
+        9
+      ],
+      "3pt": [
+        0,
+        2
+      ],
+      "ft": [
+        0,
+        0
+      ],
+      "oreb": 1,
+      "dreb": 1,
+      "foul": 0,
+      "stl": 4,
+      "to": 1,
+      "blk": 1,
+      "asst": 2,
+      "pts": 8,
+      "2pt": [
+        4,
+        7
+      ],
+      "2pt_pct": 57.1,
+      "fg_pct": 44.4,
+      "3pt_pct": 0.0,
+      "ft_pct": 0.0,
+      "reb": 2
+    }
+  }
+}

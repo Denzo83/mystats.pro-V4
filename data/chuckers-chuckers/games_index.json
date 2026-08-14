@@ -310,5 +310,17 @@
     },
     "result": "L",
     "isPlayoff": false
+  },
+  "2026-08-13-noideer": {
+    "filename": "2026-08-13-noideer.json",
+    "date": "2026-08-13",
+    "season": "2026-winter",
+    "opponent": "Noideer",
+    "score": {
+      "us": 51,
+      "them": 62
+    },
+    "result": "L",
+    "isPlayoff": false
   }
 }
