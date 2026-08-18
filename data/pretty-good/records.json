@@ -1,11 +1,11 @@
 {
   "regular": {
     "most_pts": {
-      "player": "Josh Todd",
-      "player_number": "11",
-      "value": 32,
-      "date": "2026-03-11",
-      "opponent": "Rice"
+      "player": "Rhys Ogle",
+      "player_number": "6",
+      "value": 33,
+      "date": "2026-08-18",
+      "opponent": "Rippit good"
     },
     "most_reb": {
       "player": "Callan Beamish",
@@ -43,11 +43,11 @@
       "opponent": "Taco tuesdays"
     },
     "most_fg": {
-      "player": "Josh Todd",
-      "player_number": "11",
-      "value": 12,
-      "date": "2026-03-11",
-      "opponent": "Rice"
+      "player": "Rhys Ogle",
+      "player_number": "6",
+      "value": 13,
+      "date": "2026-08-18",
+      "opponent": "Rippit good"
     },
     "most_3pt": {
       "player": "Josh Todd",
@@ -173,11 +173,11 @@
   },
   "all": {
     "most_pts": {
-      "player": "Josh Todd",
-      "player_number": "11",
-      "value": 32,
-      "date": "2026-03-11",
-      "opponent": "Rice"
+      "player": "Rhys Ogle",
+      "player_number": "6",
+      "value": 33,
+      "date": "2026-08-18",
+      "opponent": "Rippit good"
     },
     "most_reb": {
       "player": "Callan Beamish",
@@ -215,11 +215,11 @@
       "opponent": "Taco tuesdays"
     },
     "most_fg": {
-      "player": "Josh Todd",
-      "player_number": "11",
-      "value": 12,
-      "date": "2026-03-11",
-      "opponent": "Rice"
+      "player": "Rhys Ogle",
+      "player_number": "6",
+      "value": 13,
+      "date": "2026-08-18",
+      "opponent": "Rippit good"
     },
     "most_3pt": {
       "player": "Josh Todd",
