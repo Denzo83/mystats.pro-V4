@@ -322,5 +322,17 @@
     },
     "result": "L",
     "isPlayoff": false
+  },
+  "2026-08-20-btk": {
+    "filename": "2026-08-20-btk.json",
+    "date": "2026-08-20",
+    "season": "2026-winter",
+    "opponent": "BTK",
+    "score": {
+      "us": 41,
+      "them": 55
+    },
+    "result": "L",
+    "isPlayoff": false
   }
 }
