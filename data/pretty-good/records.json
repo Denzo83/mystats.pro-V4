@@ -87,11 +87,11 @@
   },
   "playoff": {
     "most_pts": {
-      "player": "Findlay Wendtman",
-      "player_number": "28",
-      "value": 16,
-      "date": "2025-12-09",
-      "opponent": "Zero altitude"
+      "player": "Callan Beamish",
+      "player_number": "21",
+      "value": 18,
+      "date": "2026-08-25",
+      "opponent": "Rice"
     },
     "most_reb": {
       "player": "Callan Beamish",
@@ -108,11 +108,11 @@
       "opponent": "Zero altitude"
     },
     "most_stl": {
-      "player": "Tim Pendlebury",
-      "player_number": "1",
-      "value": 5,
-      "date": "2026-05-05",
-      "opponent": "Wins n tins"
+      "player": "Jarren Owen",
+      "player_number": "5",
+      "value": 6,
+      "date": "2026-08-25",
+      "opponent": "Rice"
     },
     "most_blk": {
       "player": "Callan Beamish",
