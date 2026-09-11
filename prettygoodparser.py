@@ -199,7 +199,28 @@ class EasyStatsParser:
         if not stats_table:
             raise ValueError("No stats table found")
         
-        rows = stats_table.find_all('tr')[1:]
+        all_rows = stats_table.find_all('tr')
+        if not all_rows:
+            raise ValueError("Stats table has no rows")
+
+        # Column positions are read from the header row rather than hardcoded.
+        # EasyStats exports vary: some include fg%/3pt%/ft% columns (15 cols),
+        # some omit them (12 cols). Percentages are recalculated downstream
+        # anyway, so only the raw counting columns are needed.
+        STAT_COLUMNS = ['fg', '3pt', 'ft', 'oreb', 'dreb',
+                        'foul', 'stl', 'to', 'blk', 'asst', 'pts']
+
+        col_index = {}
+        for i, cell in enumerate(all_rows[0].find_all(['th', 'td'])):
+            label = cell.text.strip().lower()
+            if label and label not in col_index:
+                col_index[label] = i
+
+        missing = [c for c in STAT_COLUMNS if c not in col_index]
+        if missing:
+            print(f"\u26a0\ufe0f  Columns absent from export, recorded as blank: {', '.join(missing)}")
+
+        rows = all_rows[1:]
         
         player_stats = {}
         for row in rows:
@@ -217,20 +238,14 @@ class EasyStatsParser:
             
             if all(col.text.strip() == '-' for col in cols[1:]):
                 continue
-            
-            stats = {
-                'fg': self.parse_stat_value(cols[1].text.strip()),
-                '3pt': self.parse_stat_value(cols[3].text.strip()),
-                'ft': self.parse_stat_value(cols[5].text.strip()),
-                'oreb': self.parse_stat_value(cols[7].text.strip()),
-                'dreb': self.parse_stat_value(cols[8].text.strip()),
-                'foul': self.parse_stat_value(cols[9].text.strip()),
-                'stl': self.parse_stat_value(cols[10].text.strip()),
-                'to': self.parse_stat_value(cols[11].text.strip()),
-                'blk': self.parse_stat_value(cols[12].text.strip()),
-                'asst': self.parse_stat_value(cols[13].text.strip()),
-                'pts': self.parse_stat_value(cols[14].text.strip())
-            }
+
+            def cell_text(key):
+                idx = col_index.get(key)
+                if idx is None or idx >= len(cols):
+                    return '-'
+                return cols[idx].text.strip()
+
+            stats = {key: self.parse_stat_value(cell_text(key)) for key in STAT_COLUMNS}
             
             derived = self.calculate_derived_stats(stats)
             stats.update(derived)

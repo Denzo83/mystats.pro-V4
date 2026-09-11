@@ -1,1 +1,14 @@
-{}
+{
+  "2026-09-07-hoops-i-did-it-again": {
+    "filename": "2026-09-07-hoops-i-did-it-again.json",
+    "date": "2026-09-07",
+    "season": "2026-spring",
+    "opponent": "Hoops, I Did it Again",
+    "score": {
+      "us": 43,
+      "them": 26
+    },
+    "result": "W",
+    "isPlayoff": false
+  }
+}

@@ -1,1 +1,67 @@
-{}
+{
+  "17": {
+    "id": "l-denzin",
+    "display_name": "L. Denzin",
+    "name": "L. Denzin",
+    "number": "17",
+    "position": "",
+    "teams": [
+      "All Stars"
+    ],
+    "images": {
+      "portrait": "Assets/players/l-denzin.png"
+    }
+  },
+  "15": {
+    "id": "t-ajayi",
+    "display_name": "T. Ajayi",
+    "name": "T. Ajayi",
+    "number": "15",
+    "position": "",
+    "teams": [
+      "All Stars"
+    ],
+    "images": {
+      "portrait": "Assets/players/t-ajayi.png"
+    }
+  },
+  "95": {
+    "id": "t-johnson",
+    "display_name": "T. Johnson",
+    "name": "T. Johnson",
+    "number": "95",
+    "position": "",
+    "teams": [
+      "All Stars"
+    ],
+    "images": {
+      "portrait": "Assets/players/t-johnson.png"
+    }
+  },
+  "43": {
+    "id": "o-diamante",
+    "display_name": "O. Diamante",
+    "name": "O. Diamante",
+    "number": "43",
+    "position": "",
+    "teams": [
+      "All Stars"
+    ],
+    "images": {
+      "portrait": "Assets/players/o-diamante.png"
+    }
+  },
+  "5": {
+    "id": "j-summers",
+    "display_name": "J. Summers",
+    "name": "J. Summers",
+    "number": "5",
+    "position": "",
+    "teams": [
+      "All Stars"
+    ],
+    "images": {
+      "portrait": "Assets/players/j-summers.png"
+    }
+  }
+}

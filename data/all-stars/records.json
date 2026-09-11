@@ -1,5 +1,260 @@
 {
-  "regular": {},
-  "playoff": {},
-  "all": {}
+  "regular": {
+    "most_pts": {
+      "player": "L. Denzin",
+      "player_number": "17",
+      "value": 24,
+      "date": "2026-09-07",
+      "opponent": "Hoops, I Did it Again"
+    },
+    "most_reb": {
+      "player": "L. Denzin",
+      "player_number": "17",
+      "value": 10,
+      "date": "2026-09-07",
+      "opponent": "Hoops, I Did it Again"
+    },
+    "most_asst": {
+      "player": "T. Ajayi",
+      "player_number": "15",
+      "value": 4,
+      "date": "2026-09-07",
+      "opponent": "Hoops, I Did it Again"
+    },
+    "most_stl": {
+      "player": "J. Summers",
+      "player_number": "5",
+      "value": 4,
+      "date": "2026-09-07",
+      "opponent": "Hoops, I Did it Again"
+    },
+    "most_blk": {
+      "player": "O. Diamante",
+      "player_number": "43",
+      "value": 2,
+      "date": "2026-09-07",
+      "opponent": "Hoops, I Did it Again"
+    },
+    "most_to": {
+      "player": "J. Summers",
+      "player_number": "5",
+      "value": 4,
+      "date": "2026-09-07",
+      "opponent": "Hoops, I Did it Again"
+    },
+    "most_fg": {
+      "player": "L. Denzin",
+      "player_number": "17",
+      "value": 10,
+      "date": "2026-09-07",
+      "opponent": "Hoops, I Did it Again"
+    },
+    "most_3pt": {
+      "player": "L. Denzin",
+      "player_number": "17",
+      "value": 4,
+      "date": "2026-09-07",
+      "opponent": "Hoops, I Did it Again"
+    },
+    "most_ft": {
+      "player": "O. Diamante",
+      "player_number": "43",
+      "value": 3,
+      "date": "2026-09-07",
+      "opponent": "Hoops, I Did it Again"
+    },
+    "most_oreb": {
+      "player": "L. Denzin",
+      "player_number": "17",
+      "value": 3,
+      "date": "2026-09-07",
+      "opponent": "Hoops, I Did it Again"
+    },
+    "most_dreb": {
+      "player": "L. Denzin",
+      "player_number": "17",
+      "value": 7,
+      "date": "2026-09-07",
+      "opponent": "Hoops, I Did it Again"
+    },
+    "most_foul": {
+      "player": "O. Diamante",
+      "player_number": "43",
+      "value": 3,
+      "date": "2026-09-07",
+      "opponent": "Hoops, I Did it Again"
+    }
+  },
+  "playoff": {
+    "most_pts": {
+      "player": null,
+      "player_number": null,
+      "value": 0,
+      "date": null,
+      "opponent": null
+    },
+    "most_reb": {
+      "player": null,
+      "player_number": null,
+      "value": 0,
+      "date": null,
+      "opponent": null
+    },
+    "most_asst": {
+      "player": null,
+      "player_number": null,
+      "value": 0,
+      "date": null,
+      "opponent": null
+    },
+    "most_stl": {
+      "player": null,
+      "player_number": null,
+      "value": 0,
+      "date": null,
+      "opponent": null
+    },
+    "most_blk": {
+      "player": null,
+      "player_number": null,
+      "value": 0,
+      "date": null,
+      "opponent": null
+    },
+    "most_to": {
+      "player": null,
+      "player_number": null,
+      "value": 0,
+      "date": null,
+      "opponent": null
+    },
+    "most_fg": {
+      "player": null,
+      "player_number": null,
+      "value": 0,
+      "date": null,
+      "opponent": null
+    },
+    "most_3pt": {
+      "player": null,
+      "player_number": null,
+      "value": 0,
+      "date": null,
+      "opponent": null
+    },
+    "most_ft": {
+      "player": null,
+      "player_number": null,
+      "value": 0,
+      "date": null,
+      "opponent": null
+    },
+    "most_oreb": {
+      "player": null,
+      "player_number": null,
+      "value": 0,
+      "date": null,
+      "opponent": null
+    },
+    "most_dreb": {
+      "player": null,
+      "player_number": null,
+      "value": 0,
+      "date": null,
+      "opponent": null
+    },
+    "most_foul": {
+      "player": null,
+      "player_number": null,
+      "value": 0,
+      "date": null,
+      "opponent": null
+    }
+  },
+  "all": {
+    "most_pts": {
+      "player": "L. Denzin",
+      "player_number": "17",
+      "value": 24,
+      "date": "2026-09-07",
+      "opponent": "Hoops, I Did it Again"
+    },
+    "most_reb": {
+      "player": "L. Denzin",
+      "player_number": "17",
+      "value": 10,
+      "date": "2026-09-07",
+      "opponent": "Hoops, I Did it Again"
+    },
+    "most_asst": {
+      "player": "T. Ajayi",
+      "player_number": "15",
+      "value": 4,
+      "date": "2026-09-07",
+      "opponent": "Hoops, I Did it Again"
+    },
+    "most_stl": {
+      "player": "J. Summers",
+      "player_number": "5",
+      "value": 4,
+      "date": "2026-09-07",
+      "opponent": "Hoops, I Did it Again"
+    },
+    "most_blk": {
+      "player": "O. Diamante",
+      "player_number": "43",
+      "value": 2,
+      "date": "2026-09-07",
+      "opponent": "Hoops, I Did it Again"
+    },
+    "most_to": {
+      "player": "J. Summers",
+      "player_number": "5",
+      "value": 4,
+      "date": "2026-09-07",
+      "opponent": "Hoops, I Did it Again"
+    },
+    "most_fg": {
+      "player": "L. Denzin",
+      "player_number": "17",
+      "value": 10,
+      "date": "2026-09-07",
+      "opponent": "Hoops, I Did it Again"
+    },
+    "most_3pt": {
+      "player": "L. Denzin",
+      "player_number": "17",
+      "value": 4,
+      "date": "2026-09-07",
+      "opponent": "Hoops, I Did it Again"
+    },
+    "most_ft": {
+      "player": "O. Diamante",
+      "player_number": "43",
+      "value": 3,
+      "date": "2026-09-07",
+      "opponent": "Hoops, I Did it Again"
+    },
+    "most_oreb": {
+      "player": "L. Denzin",
+      "player_number": "17",
+      "value": 3,
+      "date": "2026-09-07",
+      "opponent": "Hoops, I Did it Again"
+    },
+    "most_dreb": {
+      "player": "L. Denzin",
+      "player_number": "17",
+      "value": 7,
+      "date": "2026-09-07",
+      "opponent": "Hoops, I Did it Again"
+    },
+    "most_foul": {
+      "player": "O. Diamante",
+      "player_number": "43",
+      "value": 3,
+      "date": "2026-09-07",
+      "opponent": "Hoops, I Did it Again"
+    }
+  }
 }
