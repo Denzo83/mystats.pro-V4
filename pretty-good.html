@@ -392,6 +392,7 @@ function BasketballStatsApp() {
   const [statCategory, setStatCategory] = useState('ppg');
   const [showTotals, setShowTotals] = useState(false);
   const [showPlayerTotals, setShowPlayerTotals] = useState(false);
+  const [showSeasonBreakdownTotals, setShowSeasonBreakdownTotals] = useState(false);
   const [playerPageGameType, setPlayerPageGameType] = useState('all');
   const [recordsCategory, setRecordsCategory] = useState('all');
   const [recordsType, setRecordsType] = useState('game');
@@ -1212,47 +1213,110 @@ function BasketballStatsApp() {
       className: textClass
     }, "FT: "), /*#__PURE__*/React.createElement("span", {
       className: `font-bold ${headingClass}`
-    }, playerStats.ft?.[0] || 0, "-", playerStats.ft?.[1] || 0, " (", playerStats.ft_pct?.toFixed(1) || 0, "%)"))))), isAllTime && playerSeasonBreakdown.length > 0 && /*#__PURE__*/React.createElement("div", {
-      className: `${cardClass} rounded-lg border ${borderClass} overflow-hidden`
-    }, /*#__PURE__*/React.createElement("div", {
-      className: `p-4 border-b ${borderClass}`
-    }, /*#__PURE__*/React.createElement("h2", {
-      className: `text-xl font-bold ${headingClass}`
-    }, "Season by Season")), /*#__PURE__*/React.createElement("div", {
-      className: "overflow-x-auto"
-    }, /*#__PURE__*/React.createElement("table", {
-      className: "w-full text-sm"
-    }, /*#__PURE__*/React.createElement("thead", {
-      className: darkMode ? 'bg-gray-700' : 'bg-gray-100'
-    }, /*#__PURE__*/React.createElement("tr", null, ['Season', 'GP', 'PPG', 'RPG', 'APG', 'SPG', 'BPG', 'TPG', 'FG%', '3P%', 'FT%'].map((h, i) => /*#__PURE__*/React.createElement("th", {
-      key: h,
-      className: `px-3 py-3 text-${i === 0 ? 'left' : 'center'} font-semibold ${headingClass}`
-    }, h)))), /*#__PURE__*/React.createElement("tbody", null, playerSeasonBreakdown.map(s => /*#__PURE__*/React.createElement("tr", {
-      key: s.seasonKey,
-      className: `border-t ${borderClass} hover:opacity-80`
-    }, /*#__PURE__*/React.createElement("td", {
-      className: `px-3 py-3 font-medium ${headingClass}`
-    }, getSeasonDisplayName(s.seasonKey)), /*#__PURE__*/React.createElement("td", {
-      className: "px-3 py-3 text-center"
-    }, s.gp), /*#__PURE__*/React.createElement("td", {
-      className: `px-3 py-3 text-center font-bold text-${accentColor}`
-    }, s.ppg?.toFixed(1) || '0.0'), /*#__PURE__*/React.createElement("td", {
-      className: "px-3 py-3 text-center"
-    }, s.rpg?.toFixed(1) || '0.0'), /*#__PURE__*/React.createElement("td", {
-      className: "px-3 py-3 text-center"
-    }, s.apg?.toFixed(1) || '0.0'), /*#__PURE__*/React.createElement("td", {
-      className: "px-3 py-3 text-center"
-    }, s.spg?.toFixed(1) || '0.0'), /*#__PURE__*/React.createElement("td", {
-      className: "px-3 py-3 text-center"
-    }, s.bpg?.toFixed(1) || '0.0'), /*#__PURE__*/React.createElement("td", {
-      className: "px-3 py-3 text-center"
-    }, s.tpg?.toFixed(1) || '0.0'), /*#__PURE__*/React.createElement("td", {
-      className: "px-3 py-3 text-center"
-    }, s.fg_pct?.toFixed(1) || '0.0', "%"), /*#__PURE__*/React.createElement("td", {
-      className: "px-3 py-3 text-center"
-    }, s['3pt_pct']?.toFixed(1) || '0.0', "%"), /*#__PURE__*/React.createElement("td", {
-      className: "px-3 py-3 text-center"
-    }, s.ft_pct?.toFixed(1) || '0.0', "%"))))))), !isAllTime && /*#__PURE__*/React.createElement("div", {
+    }, playerStats.ft?.[0] || 0, "-", playerStats.ft?.[1] || 0, " (", playerStats.ft_pct?.toFixed(1) || 0, "%)"))))), isAllTime && playerSeasonBreakdown.length > 0 && (() => {
+      const seasonBreakdownCols = showSeasonBreakdownTotals ? [{
+        label: 'PTS',
+        render: s => s.pts ?? 0
+      }, {
+        label: 'REB',
+        render: s => s.reb ?? 0
+      }, {
+        label: 'AST',
+        render: s => s.asst ?? 0
+      }, {
+        label: 'STL',
+        render: s => s.stl ?? 0
+      }, {
+        label: 'BLK',
+        render: s => s.blk ?? 0
+      }, {
+        label: 'TO',
+        render: s => s.to ?? 0
+      }, {
+        label: 'FG',
+        render: s => `${s.fg?.[0] || 0}-${s.fg?.[1] || 0}`
+      }, {
+        label: '3PT',
+        render: s => `${s['3pt']?.[0] || 0}-${s['3pt']?.[1] || 0}`
+      }, {
+        label: 'FT',
+        render: s => `${s.ft?.[0] || 0}-${s.ft?.[1] || 0}`
+      }] : [{
+        label: 'PPG',
+        render: s => s.ppg?.toFixed(1) || '0.0'
+      }, {
+        label: 'RPG',
+        render: s => s.rpg?.toFixed(1) || '0.0'
+      }, {
+        label: 'APG',
+        render: s => s.apg?.toFixed(1) || '0.0'
+      }, {
+        label: 'SPG',
+        render: s => s.spg?.toFixed(1) || '0.0'
+      }, {
+        label: 'BPG',
+        render: s => s.bpg?.toFixed(1) || '0.0'
+      }, {
+        label: 'TPG',
+        render: s => s.tpg?.toFixed(1) || '0.0'
+      }, {
+        label: 'FG%',
+        render: s => `${s.fg_pct?.toFixed(1) || '0.0'}%`
+      }, {
+        label: '3P%',
+        render: s => `${s['3pt_pct']?.toFixed(1) || '0.0'}%`
+      }, {
+        label: 'FT%',
+        render: s => `${s.ft_pct?.toFixed(1) || '0.0'}%`
+      }];
+      const headerCells = ['Season', 'GP', ...seasonBreakdownCols.map(c => c.label)].map((h, i) => /*#__PURE__*/React.createElement("th", {
+        key: h,
+        className: `px-3 py-3 text-${i === 0 ? 'left' : 'center'} font-semibold ${headingClass}`
+      }, h));
+      const bodyRows = playerSeasonBreakdown.map(s => {
+        const cells = [/*#__PURE__*/React.createElement("td", {
+          key: "season",
+          className: `px-3 py-3 font-medium ${headingClass}`
+        }, getSeasonDisplayName(s.seasonKey)), /*#__PURE__*/React.createElement("td", {
+          key: "gp",
+          className: "px-3 py-3 text-center"
+        }, s.gp), ...seasonBreakdownCols.map((c, i) => /*#__PURE__*/React.createElement("td", {
+          key: c.label,
+          className: `px-3 py-3 text-center${i === 0 && !showSeasonBreakdownTotals ? ` font-bold text-${accentColor}` : ''}`
+        }, c.render(s)))];
+        return /*#__PURE__*/React.createElement("tr", {
+          key: s.seasonKey,
+          className: `border-t ${borderClass} hover:opacity-80`
+        }, ...cells);
+      });
+      const headerRow = /*#__PURE__*/React.createElement("tr", null, ...headerCells);
+      const theadEl = /*#__PURE__*/React.createElement("thead", {
+        className: darkMode ? 'bg-gray-700' : 'bg-gray-100'
+      }, headerRow);
+      const tbodyEl = /*#__PURE__*/React.createElement("tbody", null, ...bodyRows);
+      const tableEl = /*#__PURE__*/React.createElement("table", {
+        className: "w-full text-sm"
+      }, theadEl, tbodyEl);
+      const toggleEl = /*#__PURE__*/React.createElement("div", {
+        className: `flex rounded-lg border ${borderClass} overflow-hidden`
+      }, /*#__PURE__*/React.createElement("button", {
+        onClick: () => setShowSeasonBreakdownTotals(false),
+        className: `px-3 py-1.5 text-sm font-medium transition-colors ${!showSeasonBreakdownTotals ? `${accentClass} text-white` : `${cardClass} hover:opacity-80`}`
+      }, "Per Game"), /*#__PURE__*/React.createElement("button", {
+        onClick: () => setShowSeasonBreakdownTotals(true),
+        className: `px-3 py-1.5 text-sm font-medium transition-colors ${showSeasonBreakdownTotals ? `${accentClass} text-white` : `${cardClass} hover:opacity-80`}`
+      }, "Totals"));
+      const headerBar = /*#__PURE__*/React.createElement("div", {
+        className: `p-4 border-b ${borderClass} flex items-center justify-between flex-wrap gap-2`
+      }, /*#__PURE__*/React.createElement("h2", {
+        className: `text-xl font-bold ${headingClass}`
+      }, "Season by Season"), toggleEl);
+      return /*#__PURE__*/React.createElement("div", {
+        className: `${cardClass} rounded-lg border ${borderClass} overflow-hidden`
+      }, headerBar, /*#__PURE__*/React.createElement("div", {
+        className: "overflow-x-auto"
+      }, tableEl));
+    })(), !isAllTime && /*#__PURE__*/React.createElement("div", {
       className: `${cardClass} rounded-lg border ${borderClass} p-6`
     }, /*#__PURE__*/React.createElement("div", {
       className: "flex items-center justify-between mb-4"
