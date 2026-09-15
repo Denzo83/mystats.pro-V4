@@ -63,5 +63,31 @@
     "images": {
       "portrait": "Assets/players/j-summers.png"
     }
+  },
+  "23": {
+    "id": "t-noonan",
+    "display_name": "T. Noonan",
+    "name": "T. Noonan",
+    "number": "23",
+    "position": "",
+    "teams": [
+      "All Stars"
+    ],
+    "images": {
+      "portrait": "Assets/players/t-noonan.png"
+    }
+  },
+  "0": {
+    "id": "k-denzin",
+    "display_name": "K. Denzin",
+    "name": "K. Denzin",
+    "number": "0",
+    "position": "",
+    "teams": [
+      "All Stars"
+    ],
+    "images": {
+      "portrait": "Assets/players/k-denzin.png"
+    }
   }
 }

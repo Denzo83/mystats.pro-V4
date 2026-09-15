@@ -10,5 +10,17 @@
     },
     "result": "W",
     "isPlayoff": false
+  },
+  "2026-09-14-tadpoles": {
+    "filename": "2026-09-14-tadpoles.json",
+    "date": "2026-09-14",
+    "season": "2026-spring",
+    "opponent": "Tadpoles",
+    "score": {
+      "us": 49,
+      "them": 29
+    },
+    "result": "W",
+    "isPlayoff": false
   }
 }
