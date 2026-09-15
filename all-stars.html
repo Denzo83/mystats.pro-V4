@@ -382,6 +382,19 @@ const aggregateAllTimeStats = (allTimeSeasonStats, gameType) => {
   };
 };
 const round1 = n => Math.round(n * 10) / 10;
+// Sort season keys most-recent-first using each season's real start date (from seasons_meta.json),
+// so seasons are ordered chronologically instead of alphabetically by key (e.g. "2026-spring" would
+// otherwise sort after "2026-winter" even though it started later).
+const sortSeasonKeysDesc = (keys, meta) => {
+  return [...keys].sort((a, b) => {
+    const dateA = meta?.[a]?.start_date;
+    const dateB = meta?.[b]?.start_date;
+    if (dateA && dateB) return dateA < dateB ? 1 : dateA > dateB ? -1 : 0;
+    if (dateA) return -1;
+    if (dateB) return 1;
+    return b.localeCompare(a);
+  });
+};
 function BasketballStatsApp() {
   const [darkMode, setDarkMode] = useState(false);
   const [activeTab, setActiveTab] = useState('leaderboards');
@@ -462,7 +475,7 @@ function BasketballStatsApp() {
         if (metaResp && metaResp.ok) {
           const metaData = await metaResp.json();
           setSeasonsMeta(metaData);
-          const seasons = Object.keys(metaData).sort().reverse();
+          const seasons = sortSeasonKeysDesc(Object.keys(metaData), metaData);
           if (seasons.length > 0) {
             activeSeason = seasons[0];
             setSelectedSeason(activeSeason);
@@ -628,8 +641,15 @@ function BasketballStatsApp() {
         seasonKey,
         ...s
       };
-    }).filter(Boolean).sort((a, b) => b.seasonKey.localeCompare(a.seasonKey));
-  }, [allTimeSeasonStats, selectedPlayerNumber, playerPageGameType]);
+    }).filter(Boolean).sort((a, b) => {
+      const dateA = seasonsMeta?.[a.seasonKey]?.start_date;
+      const dateB = seasonsMeta?.[b.seasonKey]?.start_date;
+      if (dateA && dateB) return dateA < dateB ? 1 : dateA > dateB ? -1 : 0;
+      if (dateA) return -1;
+      if (dateB) return 1;
+      return b.seasonKey.localeCompare(a.seasonKey);
+    });
+  }, [allTimeSeasonStats, selectedPlayerNumber, playerPageGameType, seasonsMeta]);
   const averageCategories = [{
     key: 'ppg',
     label: 'PPG',
@@ -773,7 +793,7 @@ function BasketballStatsApp() {
   const availableSeasons = useMemo(() => {
     const seasons = Object.keys(seasonsMeta);
     if (seasons.length === 0) return ['all-time'];
-    return ['all-time', ...seasons.sort().reverse()];
+    return ['all-time', ...sortSeasonKeysDesc(seasons, seasonsMeta)];
   }, [seasonsMeta]);
   const bgClass = darkMode ? 'bg-gray-900' : 'bg-gray-50';
   const cardClass = darkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-900';

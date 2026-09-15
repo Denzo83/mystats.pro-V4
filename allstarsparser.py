@@ -285,6 +285,17 @@ class EasyStatsParser:
         }
         self._save_json(self.games_index_file, self.games_index)
         
+        # Keep seasons_meta start_date in sync so the site can sort seasons chronologically
+        # (rather than alphabetically by key) regardless of naming.
+        if season_key not in self.seasons_meta:
+            self.seasons_meta[season_key] = {
+                'key': season_key,
+                'display_name': f"{season_key} Season"
+            }
+        if not self.seasons_meta[season_key].get('start_date') or date < self.seasons_meta[season_key]['start_date']:
+            self.seasons_meta[season_key]['start_date'] = date
+        self._save_json(self.seasons_meta_file, self.seasons_meta)
+        
         return filepath
     
     def update_records(self):
