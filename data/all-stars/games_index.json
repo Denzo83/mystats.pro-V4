@@ -22,5 +22,17 @@
     },
     "result": "W",
     "isPlayoff": false
+  },
+  "2026-09-21-castle-rollers": {
+    "filename": "2026-09-21-castle-rollers.json",
+    "date": "2026-09-21",
+    "season": "2026-spring",
+    "opponent": "Castle rollers",
+    "score": {
+      "us": 47,
+      "them": 31
+    },
+    "result": "W",
+    "isPlayoff": false
   }
 }
