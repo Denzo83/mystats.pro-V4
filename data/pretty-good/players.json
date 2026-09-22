@@ -180,5 +180,18 @@
     "images": {
       "portrait": "Assets/players/tunde.png"
     }
+  },
+  "00": {
+    "id": "e-swift",
+    "display_name": "E. Swift",
+    "name": "E. Swift",
+    "number": "00",
+    "position": "",
+    "teams": [
+      "Pretty Good"
+    ],
+    "images": {
+      "portrait": "Assets/players/e-swift.png"
+    }
   }
 }
