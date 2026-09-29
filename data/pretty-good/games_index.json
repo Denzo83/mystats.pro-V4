@@ -550,5 +550,17 @@
     },
     "result": "W",
     "isPlayoff": false
+  },
+  "2026-09-29-rice": {
+    "filename": "2026-09-29-rice.json",
+    "date": "2026-09-29",
+    "season": "2026-spring",
+    "opponent": "Rice",
+    "score": {
+      "us": 65,
+      "them": 32
+    },
+    "result": "W",
+    "isPlayoff": false
   }
 }
