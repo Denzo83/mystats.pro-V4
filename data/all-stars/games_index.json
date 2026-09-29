@@ -34,5 +34,17 @@
     },
     "result": "W",
     "isPlayoff": false
+  },
+  "2026-09-28-zef-zone": {
+    "filename": "2026-09-28-zef-zone.json",
+    "date": "2026-09-28",
+    "season": "2026-spring",
+    "opponent": "Zef zone",
+    "score": {
+      "us": 41,
+      "them": 24
+    },
+    "result": "W",
+    "isPlayoff": false
   }
 }
