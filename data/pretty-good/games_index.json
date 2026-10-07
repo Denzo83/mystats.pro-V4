@@ -562,5 +562,17 @@
     },
     "result": "W",
     "isPlayoff": false
+  },
+  "2026-10-06-swish-cheese": {
+    "filename": "2026-10-06-swish-cheese.json",
+    "date": "2026-10-06",
+    "season": "2026-spring",
+    "opponent": "Swish cheese",
+    "score": {
+      "us": 62,
+      "them": 33
+    },
+    "result": "W",
+    "isPlayoff": false
   }
 }
