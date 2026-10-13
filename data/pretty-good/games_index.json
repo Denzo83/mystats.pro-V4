@@ -574,5 +574,17 @@
     },
     "result": "W",
     "isPlayoff": false
+  },
+  "2026-10-13-the-unction": {
+    "filename": "2026-10-13-the-unction.json",
+    "date": "2026-10-13",
+    "season": "2026-spring",
+    "opponent": "The unction",
+    "score": {
+      "us": 80,
+      "them": 43
+    },
+    "result": "W",
+    "isPlayoff": false
   }
 }
