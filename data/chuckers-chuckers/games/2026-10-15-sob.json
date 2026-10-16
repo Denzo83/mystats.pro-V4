@@ -1,0 +1,45 @@
+{
+  "date": "2026-10-15",
+  "season": "2026-spring",
+  "opponent": "SOB",
+  "homeAway": "home",
+  "score": {
+    "us": 40,
+    "them": 30
+  },
+  "result": "W",
+  "isPlayoff": false,
+  "stats": {
+    "22": {
+      "fg": [
+        3,
+        9
+      ],
+      "3pt": [
+        3,
+        5
+      ],
+      "ft": [
+        0,
+        0
+      ],
+      "oreb": 0,
+      "dreb": 3,
+      "foul": 2,
+      "stl": 4,
+      "to": 2,
+      "blk": 0,
+      "asst": 4,
+      "pts": 9,
+      "2pt": [
+        0,
+        4
+      ],
+      "2pt_pct": 0.0,
+      "fg_pct": 33.3,
+      "3pt_pct": 60.0,
+      "ft_pct": 0.0,
+      "reb": 3
+    }
+  }
+}

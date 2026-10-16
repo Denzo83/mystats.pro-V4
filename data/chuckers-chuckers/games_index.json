@@ -334,5 +334,17 @@
     },
     "result": "L",
     "isPlayoff": false
+  },
+  "2026-10-15-sob": {
+    "filename": "2026-10-15-sob.json",
+    "date": "2026-10-15",
+    "season": "2026-spring",
+    "opponent": "SOB",
+    "score": {
+      "us": 40,
+      "them": 30
+    },
+    "result": "W",
+    "isPlayoff": false
   }
 }
