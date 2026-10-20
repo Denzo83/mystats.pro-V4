@@ -46,5 +46,17 @@
     },
     "result": "W",
     "isPlayoff": false
+  },
+  "2026-10-19-revo-rim-shots": {
+    "filename": "2026-10-19-revo-rim-shots.json",
+    "date": "2026-10-19",
+    "season": "2026-spring",
+    "opponent": "Revo rim shots",
+    "score": {
+      "us": 54,
+      "them": 24
+    },
+    "result": "W",
+    "isPlayoff": false
   }
 }
