@@ -1,53 +1,53 @@
 {
   "regular": {
     "22": {
-      "gp": 1,
-      "pts": 9,
-      "reb": 3,
-      "asst": 4,
-      "stl": 4,
-      "blk": 0,
-      "to": 2,
-      "foul": 2,
+      "gp": 2,
+      "pts": 16,
+      "reb": 5,
+      "asst": 7,
+      "stl": 9,
+      "blk": 3,
+      "to": 4,
+      "foul": 4,
       "fg": [
-        3,
-        9
+        6,
+        20
       ],
       "2pt": [
-        0,
-        4
+        3,
+        11
       ],
       "3pt": [
         3,
-        5
+        9
       ],
       "ft": [
-        0,
-        0
+        1,
+        2
       ],
       "oreb": 0,
-      "dreb": 3,
-      "ppg": 9.0,
-      "rpg": 3.0,
-      "apg": 4.0,
-      "spg": 4.0,
-      "bpg": 0.0,
+      "dreb": 5,
+      "ppg": 8.0,
+      "rpg": 2.5,
+      "apg": 3.5,
+      "spg": 4.5,
+      "bpg": 1.5,
       "tpg": 2.0,
       "fpg": 2.0,
       "orebpg": 0.0,
-      "drebpg": 3.0,
-      "fga_pg": 9.0,
-      "3pa_pg": 5.0,
-      "fta_pg": 0.0,
-      "2pa_pg": 4.0,
+      "drebpg": 2.5,
+      "fga_pg": 10.0,
+      "3pa_pg": 4.5,
+      "fta_pg": 1.0,
+      "2pa_pg": 5.5,
       "fgm_pg": 3.0,
-      "3pm_pg": 3.0,
-      "ftm_pg": 0.0,
-      "2pm_pg": 0.0,
-      "fg_pct": 33.3,
-      "2pt_pct": 0.0,
-      "3pt_pct": 60.0,
-      "ft_pct": 0.0
+      "3pm_pg": 1.5,
+      "ftm_pg": 0.5,
+      "2pm_pg": 1.5,
+      "fg_pct": 30.0,
+      "2pt_pct": 27.3,
+      "3pt_pct": 33.3,
+      "ft_pct": 50.0
     }
   },
   "playoff": {
@@ -82,53 +82,53 @@
   },
   "all": {
     "22": {
-      "gp": 1,
-      "pts": 9,
-      "reb": 3,
-      "asst": 4,
-      "stl": 4,
-      "blk": 0,
-      "to": 2,
-      "foul": 2,
+      "gp": 2,
+      "pts": 16,
+      "reb": 5,
+      "asst": 7,
+      "stl": 9,
+      "blk": 3,
+      "to": 4,
+      "foul": 4,
       "fg": [
-        3,
-        9
+        6,
+        20
       ],
       "2pt": [
-        0,
-        4
+        3,
+        11
       ],
       "3pt": [
         3,
-        5
+        9
       ],
       "ft": [
-        0,
-        0
+        1,
+        2
       ],
       "oreb": 0,
-      "dreb": 3,
-      "ppg": 9.0,
-      "rpg": 3.0,
-      "apg": 4.0,
-      "spg": 4.0,
-      "bpg": 0.0,
+      "dreb": 5,
+      "ppg": 8.0,
+      "rpg": 2.5,
+      "apg": 3.5,
+      "spg": 4.5,
+      "bpg": 1.5,
       "tpg": 2.0,
       "fpg": 2.0,
       "orebpg": 0.0,
-      "drebpg": 3.0,
-      "fga_pg": 9.0,
-      "3pa_pg": 5.0,
-      "fta_pg": 0.0,
-      "2pa_pg": 4.0,
+      "drebpg": 2.5,
+      "fga_pg": 10.0,
+      "3pa_pg": 4.5,
+      "fta_pg": 1.0,
+      "2pa_pg": 5.5,
       "fgm_pg": 3.0,
-      "3pm_pg": 3.0,
-      "ftm_pg": 0.0,
-      "2pm_pg": 0.0,
-      "fg_pct": 33.3,
-      "2pt_pct": 0.0,
-      "3pt_pct": 60.0,
-      "ft_pct": 0.0
+      "3pm_pg": 1.5,
+      "ftm_pg": 0.5,
+      "2pm_pg": 1.5,
+      "fg_pct": 30.0,
+      "2pt_pct": 27.3,
+      "3pt_pct": 33.3,
+      "ft_pct": 50.0
     }
   }
 }

@@ -346,5 +346,17 @@
     },
     "result": "W",
     "isPlayoff": false
+  },
+  "2026-10-22-iceman": {
+    "filename": "2026-10-22-iceman.json",
+    "date": "2026-10-22",
+    "season": "2026-spring",
+    "opponent": "Iceman",
+    "score": {
+      "us": 32,
+      "them": 29
+    },
+    "result": "W",
+    "isPlayoff": false
   }
 }

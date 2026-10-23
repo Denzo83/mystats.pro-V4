@@ -1,0 +1,45 @@
+{
+  "date": "2026-10-22",
+  "season": "2026-spring",
+  "opponent": "Iceman",
+  "homeAway": "home",
+  "score": {
+    "us": 32,
+    "them": 29
+  },
+  "result": "W",
+  "isPlayoff": false,
+  "stats": {
+    "22": {
+      "fg": [
+        3,
+        11
+      ],
+      "3pt": [
+        0,
+        4
+      ],
+      "ft": [
+        1,
+        2
+      ],
+      "oreb": 0,
+      "dreb": 2,
+      "foul": 2,
+      "stl": 5,
+      "to": 2,
+      "blk": 3,
+      "asst": 3,
+      "pts": 7,
+      "2pt": [
+        3,
+        7
+      ],
+      "2pt_pct": 42.9,
+      "fg_pct": 27.3,
+      "3pt_pct": 0.0,
+      "ft_pct": 50.0,
+      "reb": 2
+    }
+  }
+}
