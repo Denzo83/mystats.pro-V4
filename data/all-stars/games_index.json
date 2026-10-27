@@ -58,5 +58,17 @@
     },
     "result": "W",
     "isPlayoff": false
+  },
+  "2026-10-26-rec-randoms": {
+    "filename": "2026-10-26-rec-randoms.json",
+    "date": "2026-10-26",
+    "season": "2026-spring",
+    "opponent": "Rec randoms",
+    "score": {
+      "us": 59,
+      "them": 39
+    },
+    "result": "W",
+    "isPlayoff": false
   }
 }
