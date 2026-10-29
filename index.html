@@ -1,150 +1,63 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Basketball Stats - Select Team</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body { 
-            margin: 0; 
-            padding: 0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-        }
-        .team-card {
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-        .team-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-        }
-        .logo-container {
-            width: 160px;
-            height: 160px;
-            background: transparent;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1.5rem;
-        }
-        .logo-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
-        .logo-placeholder {
-            font-size: 3rem;
-            font-weight: bold;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MyStatsPro</title>
+<meta name="theme-color" content="#0B0D12">
+<link rel="icon" href="Assets/teams/pretty-good-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0B0D12; --card: #171A21; --line: #2A2F3A; --text: #F4F6FA; --sub: #A3ABBA;
+    --blue: #2456E5; --blue-hi: #5B9BFF;
+    --display: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+    --body: Inter, system-ui, -apple-system, 'Segoe UI', sans-serif;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; min-height: 100%; background: var(--bg); color: var(--text); font-family: var(--body); }
+  body {
+    min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    padding: max(24px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(24px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+  }
+  main { width: 100%; max-width: 440px; display: flex; flex-direction: column; gap: 22px; }
+  .logos { display: flex; gap: 10px; }
+  .logos img { width: 64px; height: 64px; object-fit: contain; border-radius: 16px; background: #fff; padding: 6px; }
+  h1 { margin: 0; font-family: var(--display); font-weight: 800; font-size: 52px; line-height: .95; text-transform: uppercase; }
+  p { margin: 0; color: var(--sub); line-height: 1.5; }
+  .choice { display: flex; flex-direction: column; gap: 4px; padding: 18px 20px; border-radius: 18px; text-decoration: none; color: var(--text); border: 1px solid var(--line); background: var(--card); }
+  .choice b { font-size: 18px; }
+  .choice span { font-size: 14px; color: var(--sub); }
+  .choice.primary { background: var(--blue); border-color: var(--blue); }
+  .choice.primary span { color: rgba(255,255,255,.85); }
+  .choice:hover { border-color: var(--blue-hi); }
+  .choice:focus-visible { outline: 3px solid var(--blue-hi); outline-offset: 3px; }
+  .tag { align-self: flex-start; font-size: 11px; font-weight: 700; letter-spacing: .08em; padding: 3px 8px; border-radius: 6px; background: rgba(255,255,255,.2); margin-bottom: 4px; }
+</style>
 </head>
 <body>
-    <div class="min-h-screen flex items-center justify-center p-4">
-        <div class="max-w-6xl w-full">
-            <!-- Header -->
-            <div class="text-center mb-12">
-                <h1 class="text-5xl md:text-6xl font-bold text-white mb-4">
-                    Basketball Stats
-                </h1>
-                <p class="text-xl text-white/80">
-                    Select Your Team
-                </p>
-            </div>
-
-            <!-- Team Cards -->
-            <div class="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
-                <!-- Pretty Good Card -->
-                <a href="pretty-good.html" class="team-card">
-                    <div class="bg-white rounded-2xl p-6 shadow-2xl">
-                        <div class="logo-container">
-                            <img 
-                                src="Assets/teams/pretty-good-logo.png" 
-                                alt="Pretty Good Logo"
-                                class="w-full h-full object-contain"
-                                onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
-                            />
-                            <div class="logo-placeholder" style="display: none;">PG</div>
-                        </div>
-                        <h2 class="text-2xl font-bold text-center mb-2 text-gray-800">
-                            Pretty Good
-                        </h2>
-                        <p class="text-center text-gray-600 text-sm">
-                            Basketball Team
-                        </p>
-                        <div class="mt-4 text-center">
-                            <span class="inline-block px-5 py-2 bg-gradient-to-r from-blue-600 to-blue-400 text-white rounded-full font-semibold text-sm">
-                                View Stats →
-                            </span>
-                        </div>
-                    </div>
-                </a>
-
-                <!-- Chuckers Chuckers Card -->
-                <a href="chuckers-chuckers.html" class="team-card">
-                    <div class="bg-white rounded-2xl p-6 shadow-2xl">
-                        <div class="logo-container">
-                            <img 
-                                src="Assets/teams/chuckers-chuckers-logo.png" 
-                                alt="Chuckers Chuckers Logo"
-                                class="w-full h-full object-contain"
-                                onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
-                            />
-                            <div class="logo-placeholder" style="display: none;">CC</div>
-                        </div>
-                        <h2 class="text-2xl font-bold text-center mb-2 text-gray-800">
-                            Chuckers Chuckers
-                        </h2>
-                        <p class="text-center text-gray-600 text-sm">
-                            Basketball Team
-                        </p>
-                        <div class="mt-4 text-center">
-                            <span class="inline-block px-5 py-2 bg-gradient-to-r from-purple-600 to-purple-400 text-white rounded-full font-semibold text-sm">
-                                View Stats →
-                            </span>
-                        </div>
-                    </div>
-                </a>
-
-                <!-- All Stars Card -->
-                <a href="all-stars.html" class="team-card">
-                    <div class="bg-white rounded-2xl p-6 shadow-2xl">
-                        <div class="logo-container">
-                            <img 
-                                src="Assets/teams/all-stars-logo.png" 
-                                alt="All Stars Logo"
-                                class="w-full h-full object-contain"
-                                onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
-                            />
-                            <div class="logo-placeholder" style="display: none;">AS</div>
-                        </div>
-                        <h2 class="text-2xl font-bold text-center mb-2 text-gray-800">
-                            All Stars
-                        </h2>
-                        <p class="text-center text-gray-600 text-sm">
-                            Basketball Team
-                        </p>
-                        <div class="mt-4 text-center">
-                            <span class="inline-block px-5 py-2 bg-gradient-to-r from-orange-800 to-amber-500 text-white rounded-full font-semibold text-sm">
-                                View Stats →
-                            </span>
-                        </div>
-                    </div>
-                </a>
-            </div>
-
-            <!-- Footer -->
-            <div class="text-center mt-12">
-                <p class="text-white/60 text-sm">
-                    Powered by EasyStats
-                </p>
-            </div>
-        </div>
-    </div>
+<main>
+  <div class="logos" aria-hidden="true">
+    <img src="Assets/teams/pretty-good-logo.png" alt="">
+    <img src="Assets/teams/chuckers-chuckers-logo.png" alt="">
+    <img src="Assets/teams/all-stars-logo.png" alt="">
+  </div>
+  <div>
+    <h1>MyStatsPro</h1>
+    <p>Stats for Pretty Good, Chuckers Chuckers and All Stars have moved to a new site.</p>
+  </div>
+  <a class="choice primary" href="https://denzo83.github.io/msp.v5/">
+    <span class="tag">NEW</span>
+    <b>Go to MyStatsPro v5</b>
+    <span>All three teams in one place, with player pages, leaders, records and box scores.</span>
+  </a>
+  <a class="choice" href="teams.html">
+    <b>Continue to the old site (v4)</b>
+    <span>Pick a team on the original stats pages.</span>
+  </a>
+</main>
 </body>
 </html>

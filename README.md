@@ -13,7 +13,8 @@
 
 
 ```
-├── index.html                      # Landing page - team selection
+├── index.html                      # Landing page - go to v5 or continue to v4
+├── teams.html                      # v4 team selection
 ├── pretty-good.html                # Pretty Good stats viewer
 ├── chuckers-chuckers.html          # Chuckers Chuckers stats viewer
 ├── just-jokic-ing.html             # Just Jokic-ing stats viewer
@@ -86,7 +87,7 @@ python boardmangetspaidparser.py game.html --season "2025 Spring"
    ```
 3. Copy any team HTML file to `new-team-name.html`
 4. Add the team to `TEAM_CONFIG` in the HTML file
-5. Add a card for the new team in `index.html`
+5. Add a card for the new team in `teams.html`
 
 ## Notes
 
